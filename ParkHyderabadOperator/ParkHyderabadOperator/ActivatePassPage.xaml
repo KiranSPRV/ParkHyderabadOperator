@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ParkHyderabadOperator.ActivatePassPage"
+              NavigationPage.HasBackButton="True" >
+    <NavigationPage.TitleView >
+        <Label Text="ACTIVATE PASS"  Style="{StaticResource LabelRegularPageTitlesStyle}" Padding="0,0,70,0"/>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <AbsoluteLayout VerticalOptions="FillAndExpand" >
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,0.85"  AbsoluteLayout.LayoutFlags="All"  HorizontalOptions="FillAndExpand" >
+                <StackLayout Margin="15,0,15,0" >
+                    <Grid ColumnSpacing="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="9*"/>
+                        </Grid.RowDefinitions>
+                        <Frame  Grid.Row="0" CornerRadius="25" Padding="5" BorderColor="#f9f9f9" BackgroundColor="#f9f9f9"  HeightRequest="32">
+                            <SearchBar  BackgroundColor="Transparent" Margin="-20,0,0,0" FontSize="14" FontFamily="FontsFree-Net-proxima_nova_reg-webfont.ttf#FontsFree-Net-proxima_nova_reg-webfont"   Placeholder="Search..."   PlaceholderColor="#676767" x:Name="searchBar"   TextChanged="SearchBar_OnTextChanged"  VerticalOptions="EndAndExpand" HorizontalOptions="FillAndExpand"/>
+                        </Frame>
+                        <StackLayout Grid.Row="1"   Orientation="Vertical" Spacing="5" Margin="0,35,0,0">
+                            <StackLayout Orientation="Vertical"  Spacing="0">
+                                <Label Text="Name" Style="{StaticResource LabelPlaceHolderStyle}" ></Label>
+                                <Entry x:Name="entryCustomerName" Style="{StaticResource EntryProximaBlackStyle}"></Entry>
+                            </StackLayout>
+
+                            <StackLayout Orientation="Vertical"  Spacing="0">
+                                <Label Text="Phone Number" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
+                                <Entry x:Name="entryPhoneNumber" Style="{StaticResource EntryProximaBlackStyle}"></Entry>
+                            </StackLayout>
+
+                            <StackLayout Orientation="Horizontal"  Spacing="0">
+                                <StackLayout HorizontalOptions="FillAndExpand">
+                                    <Label Text="Registration Number" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
+                                    <Entry x:Name="entryRegistrationNumber" Style="{StaticResource EntryProximaBlackStyle}"></Entry>
+                                </StackLayout>
+                                <StackLayout  VerticalOptions="CenterAndExpand">
+                                    <Image x:Name="imgCustomerVehcileType"  HeightRequest="25" VerticalOptions="CenterAndExpand" HorizontalOptions="EndAndExpand"/>
+                                </StackLayout>
+                            </StackLayout>
+
+                            <StackLayout Orientation="Horizontal"  Spacing="0" x:Name="slNFC">
+                                <StackLayout Orientation="Vertical" Spacing="0"  BackgroundColor="#f4f4f4" HorizontalOptions="FillAndExpand">
+                                    <Label Text="Tap NFC Card" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
+                                    <Entry x:Name="labelNFCCard" Style="{StaticResource EntryProximaBlackStyle}"></Entry>
+                                    <Label x:Name="labelNFCSuccessMsg" Style="{StaticResource EntryProximaBlackStyle}" TextColor="#2ECC71"/>
+                                </StackLayout>
+                                <ImageButton Source="NFC_Card_New.png" HeightRequest="25"  x:Name="imgBtnNFCCard"   VerticalOptions="Center" BackgroundColor="Transparent"/>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal">
+                                <StackLayout    x:Name="slBARCodeReader"  BackgroundColor="#f4f4f4" HorizontalOptions="FillAndExpand"  Spacing="0">
+                                    <Label Text="BARCode" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
+                                    <Entry x:Name="labelBARCode" Style="{StaticResource EntryProximaBlackStyle}" HorizontalOptions="FillAndExpand"></Entry>
+                                </StackLayout>
+                                <ImageButton x:Name="imgbtnScanBarCode" Source="QR_White.png" HeightRequest="25"     VerticalOptions="Center" BackgroundColor="Transparent" Clicked="ImgbtnScanBarCode_Clicked"/>
+                            </StackLayout>
+
+
+                        </StackLayout>
+                        <ListView  Grid.Row="1" x:Name="listViewVehicleRegistrationNumbers" IsVisible="False"   CachingStrategy="RecycleElement" BackgroundColor="White" ItemTapped="listViewVehicleRegistrationNumbers_OnItemTapped" >
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <ViewCell>
+                                        <Frame CornerRadius="5" BackgroundColor="#FFFFFF" Padding="5" Margin="5">
+                                            <StackLayout >
+                                                <Label Text="{Binding RegistrationNumber}" Style="{StaticResource LabelRegularEndBoldStyle}" />
+                                            </StackLayout>
+                                        </Frame>
+                                    </ViewCell>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </StackLayout>
+            </StackLayout>
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,1,1,0.15"  AbsoluteLayout.LayoutFlags="All"  HorizontalOptions="FillAndExpand" >
+                <StackLayout VerticalOptions="StartAndExpand" Margin="15,5,15,5" x:Name="slContinue">
+                    <Frame CornerRadius="5" Padding="0"   BorderColor="#efefef"    BackgroundColor="#FFFFFF">
+                        <StackLayout  Orientation="Vertical"  VerticalOptions="CenterAndExpand" Spacing="5">
+                            <Button Text="CONTINUE" x:Name="BtnContinue" Style="{StaticResource ButtonRegularDodgerBlueStyle}" Clicked="BtnContinue_Clicked"></Button>
+                        </StackLayout>
+                    </Frame>
+                </StackLayout>
+            </StackLayout>
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>

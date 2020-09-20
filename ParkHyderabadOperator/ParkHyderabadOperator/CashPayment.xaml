@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ParkHyderabadOperator.CashPayment"
+             NavigationPage.HasBackButton="True">
+    <NavigationPage.TitleView >
+        <Label Text="CONFIRMATION"    VerticalOptions="Center"  Style="{StaticResource LabelPageHeadingStyle}" Margin="0,0,70,0"/>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <AbsoluteLayout VerticalOptions="FillAndExpand" >
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,0.85"  AbsoluteLayout.LayoutFlags="All"  HorizontalOptions="FillAndExpand" >
+                <StackLayout Spacing="30" Margin="15">
+                    <Frame CornerRadius="10" Padding="10" HasShadow="False"  BorderColor="#f6f6f7" BackgroundColor="#FFFFFF" >
+                        <StackLayout Spacing="15">
+                            <StackLayout>
+                                <StackLayout Orientation="Horizontal" VerticalOptions="Center"   HorizontalOptions="CenterAndExpand">
+                                    <Image x:Name="ImgVehicleType" Source="bike_black.png" HeightRequest="26"/>
+                                    <Label x:Name="labelVehicleRegNumber" Text="TS 05 08 FL 060"  Style="{StaticResource LabelMediumBlackStyle}"    />
+                                </StackLayout>
+                                <Label x:Name="labelParkingLocation" Text="KPHB Colony - A2, Bay Number 01-10" Style="{StaticResource LabelBoldPlaceHolderStyle}"  VerticalOptions="CenterAndExpand"   HorizontalOptions="CenterAndExpand"/>
+                            </StackLayout>
+                            <StackLayout  Orientation="Vertical"  >
+                                <StackLayout Orientation="Horizontal" VerticalOptions="Center"   HorizontalOptions="CenterAndExpand" Spacing="10">
+                                    <Label Text="AMOUNT"  Style="{StaticResource LabelExtraLargeProximaBoldStyle}" FontSize="26"   />
+                                    <StackLayout Orientation="Horizontal" Spacing="2">
+                                        <Image Source="rupee_icon.png" HeightRequest="20"/>
+                                        <Label x:Name="labelPassAmount"   Style="{StaticResource LabelProximaRegBoldDodgerBlueStyle}" FontSize="26" />
+                                        <Label Text="/-"  Style="{StaticResource LabelProximaRegBoldDodgerBlueStyle}"    FontSize="26" />
+                                    </StackLayout>
+                                    
+                                </StackLayout>
+                                <Label x:Name="labelAmountDetails"  Style="{StaticResource LabelBoldPlaceHolderStyle}"  VerticalOptions="CenterAndExpand"   HorizontalOptions="CenterAndExpand"/>
+                            </StackLayout>
+                        </StackLayout>
+
+                    </Frame>
+
+                    <Grid RowSpacing="20" ColumnSpacing="20" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="4*"></ColumnDefinition>
+                            <ColumnDefinition Width="6*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="Cash Received" Style="{StaticResource LabelRegularBlackColorStyle}" VerticalOptions="CenterAndExpand" HorizontalOptions="EndAndExpand" Grid.Row="0" Grid.Column="0"></Label>
+                        <Frame CornerRadius="1" Padding="10"  BorderColor="#f6f6f7" BackgroundColor="#f4f4f4" Grid.Row="0" Grid.Column="1" >
+                            <Entry x:Name="entryCashReceived"  VerticalOptions="End" />
+                        </Frame>
+
+                        <Label Text="Cash Return" Style="{StaticResource LabelRegularBlackColorStyle}" VerticalOptions="CenterAndExpand" HorizontalOptions="EndAndExpand"  Grid.Row="1" Grid.Column="0"></Label>
+                        <Frame CornerRadius="1" Padding="10"  BorderColor="#f6f6f7" BackgroundColor="#f4f4f4" Grid.Row="1" Grid.Column="1" >
+                            <Entry x:Name="entryCashReturn"   IsReadOnly="True"/>
+                        </Frame>
+                    
+                    
+                    </Grid>
+
+                    <StackLayout Orientation="Horizontal"   x:Name="slNFCCard">
+                        <StackLayout Orientation="Vertical" Spacing="2" HorizontalOptions="FillAndExpand">
+                            <StackLayout BackgroundColor="#f4f4f4" HorizontalOptions="FillAndExpand"  Spacing="0">
+                                <Label Text="Tap NFC Card" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
+                                <Entry x:Name="labelNFCCard" Style="{StaticResource EntryProximaBlackStyle}"></Entry>
+                            </StackLayout>
+                            <Label x:Name="labelNFCSuccessMsg" Style="{StaticResource EntryProximaBlackStyle}" TextColor="#2ECC71"/>
+                        </StackLayout>
+                        <ImageButton Source="NFC_Card_New.png" HeightRequest="25"  x:Name="imgBtnNFCCard" Clicked="ImgBtnNFCCard_Clicked"  VerticalOptions="Center" BackgroundColor="Transparent"/>
+                    </StackLayout>
+                    <StackLayout x:Name="stlayoutYESNO" Spacing="15">
+                        <Label Text="HAVE YOU RECEIVED PAYMENT?" Style="{StaticResource LabelProximaRegMediumStyle}"  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" FontSize="16" TextColor="#010101"/>
+                        <StackLayout Orientation="Horizontal"  Spacing="10">
+                            <Button x:Name="btnYes" Style="{StaticResource ButtonRegularShamrockStyle}"   TextColor="#FFFFFF"  BorderWidth="1" Text="YES"  HorizontalOptions="FillAndExpand" Clicked="BtnYes_Clicked"/>
+                            <Button x:Name="btnNo" Style="{StaticResource ButtonRegularTreePoppyStyle}"  TextColor="#FFFFFF"  BorderWidth="1" Text="NO" HorizontalOptions="FillAndExpand" Clicked="BtnNo_Clicked" />
+                        </StackLayout>
+                    </StackLayout>
+
+                </StackLayout>
+
+
+
+            </StackLayout>
+
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,1,1,0.15"  AbsoluteLayout.LayoutFlags="All"  HorizontalOptions="FillAndExpand" x:Name="slCashPaymentGeneratePass">
+                <StackLayout Padding="10" VerticalOptions="CenterAndExpand">
+                    <Button x:Name="btnGeneratePass" Style="{StaticResource ButtonRegularShamrockStyle}" Text="GENERATE PASS" Clicked="BtnGeneratePass_Clicked"/>
+                </StackLayout>
+            </StackLayout>
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>

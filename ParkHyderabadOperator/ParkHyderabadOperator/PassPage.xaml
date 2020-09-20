@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ParkHyderabadOperator.PassPage"
+             NavigationPage.HasBackButton="False" >
+    <NavigationPage.TitleView >
+        <Label Text="PASS"  Style="{StaticResource LabelRegularPageTitlesStyle}" Padding="0,0,70,0"/>
+    </NavigationPage.TitleView>
+
+    <ContentPage.Content>
+        <AbsoluteLayout VerticalOptions="FillAndExpand" x:Name="absLayoutpasspage" >
+
+            <StackLayout x:Name="stackLayOutHeadder" Orientation="Horizontal"  Spacing="0"  VerticalOptions="FillAndExpand"  AbsoluteLayout.LayoutBounds="0,0,1,0.1"     AbsoluteLayout.LayoutFlags="All">
+                <StackLayout.GestureRecognizers >
+                    <TapGestureRecognizer x:Name="slBackbuttonClick" Tapped="SlBackbuttonClick_Tapped"  NumberOfTapsRequired="1"/>
+                </StackLayout.GestureRecognizers>
+                <ImageButton x:Name="BtnBack" Margin="15,0,0,0"  Source="Navigatinbar_back.png" HeightRequest="16"  HorizontalOptions="Start" VerticalOptions="CenterAndExpand"  BackgroundColor="Transparent" Clicked="BtnBack_Clicked" ></ImageButton>
+                <Label Text="PASS"  Style="{StaticResource LabelPageHeadingStyle}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Padding="0,0,25,0"></Label>
+            </StackLayout>
+
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,0.35,1,0.7"  AbsoluteLayout.LayoutFlags="All"  >
+                <StackLayout  Spacing="15" Margin="15">
+                    <Frame CornerRadius="10"   BackgroundColor="#3293fa" Padding="0">
+                        <Button x:Name="btnNewPass" FontSize="18" HeightRequest="100" Text="NEW PASS"  Style="{StaticResource ButtonTransparentStyle}" FontAttributes="Bold" Clicked="BtnNewPass_Clicked" VerticalOptions="FillAndExpand"></Button>
+                    </Frame>
+                    <Frame CornerRadius="10"  BackgroundColor="#ffa500" Padding="0">
+                        <Button x:Name="btnRenewPass" FontSize="18" HeightRequest="100" FontAttributes="Bold" Text="RENEW PASS" Style="{StaticResource ButtonTransparentStyle}" Clicked="BtnRenewPass_Clicked"  VerticalOptions="FillAndExpand"></Button>
+                    </Frame>
+                    <Frame CornerRadius="10" BackgroundColor="#008000" Padding="0">
+                        <Button x:Name="btnActivatePass" FontSize="18" HeightRequest="100"  FontAttributes="Bold" Text="ACTIVATE PASS" Style="{StaticResource ButtonTransparentStyle}" Clicked="BtnActivatePass_Clicked" VerticalOptions="FillAndExpand"></Button>
+                    </Frame>
+                    <Frame CornerRadius="10"   BackgroundColor="#353535" Padding="0">
+                        <Button x:Name="btnValidatePass" FontSize="18"  HeightRequest="100" FontAttributes="Bold" Text="VALIDATE PASS" Style="{StaticResource ButtonTransparentStyle}" Clicked="BtnValidatePass_Clicked"></Button>
+                    </Frame>
+
+                </StackLayout>
+            </StackLayout>
+            <ContentView x:Name="StklauoutactivityIndicator" BackgroundColor="Transparent"  IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                <StackLayout Orientation="Vertical" HeightRequest="150" WidthRequest="100" BackgroundColor="Transparent" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="0">
+                    <ActivityIndicator  x:Name="activity" IsEnabled="False" IsVisible="False" IsRunning="False"   HeightRequest="80" Color="#010101"  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></ActivityIndicator>
+                    <Label x:Name="LabelLodaingMsg" Text="Loading..."  Style="{StaticResource LabelProximaBoldStyle}" FontSize="18" TextColor="#010101"   VerticalOptions="StartAndExpand" HorizontalOptions="CenterAndExpand"></Label>
+                </StackLayout>
+            </ContentView>
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>

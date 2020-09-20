@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ParkHyderabadOperator.ReceiptPrint">
+    <ContentPage.Content>
+        <StackLayout VerticalOptions="CenterAndExpand" BackgroundColor="Coral">
+
+            <Label Text="Printer Name:"></Label>
+            <Label x:Name="labelPrinterName"></Label>
+            <Label x:Name="labelReceipt" FontSize="20" Text="Sample Text Size"></Label>
+            <Button x:Name="btnPrintReceipt" Clicked="BtnPrintReceipt_Clicked" Text="Print"  HorizontalOptions="StartAndExpand"></Button>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

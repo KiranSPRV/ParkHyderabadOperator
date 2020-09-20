@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"  
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"  
+               x:Class="ParkHyderabadOperator.NFCPopup"  
+             xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"  
+                 xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"  
+             BackgroundColor="Transparent">
+  
+    <StackLayout   BackgroundColor="#4d4d4d" Opacity="1" Padding="15">
+        <Frame CornerRadius="10" Padding="10" BackgroundColor="#ffffff"  VerticalOptions="CenterAndExpand">
+            <StackLayout Padding="10" Spacing="10">
+                <StackLayout HorizontalOptions="EndAndExpand">
+                    <ImageButton x:Name="imgbtnClose" Source="Close.png" HeightRequest="20" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Clicked="ImgbtnClose_Clicked" Margin="0,0,15,0"/>
+                </StackLayout>
+                <StackLayout Spacing="10">
+                    <Image Source="NFC_Card_New.png" HeightRequest="100" VerticalOptions="Center" HorizontalOptions="Center"></Image>
+                    <Label Text="NFC CARD" CharacterSpacing="5" Style="{StaticResource LabelLargeStyle}" TextColor="#008000" VerticalOptions="Center" HorizontalOptions="Center"></Label>
+                    <Label Text="ACTIVATED SUCCESSFULLY" CharacterSpacing="2" Style="{StaticResource LabelRegularStyle}" TextColor="#008000" VerticalOptions="Center" HorizontalOptions="CenterAndExpand"></Label>
+                </StackLayout>
+               
+            </StackLayout>
+        </Frame>
+    </StackLayout>
+</pages:PopupPage>

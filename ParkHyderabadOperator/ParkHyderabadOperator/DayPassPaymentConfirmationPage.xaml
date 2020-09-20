@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ParkHyderabadOperator.DayPassPaymentConfirmationPage"
+             NavigationPage.HasBackButton="True">
+    <NavigationPage.TitleView >
+        <Label Text="CONFIRMATION"    VerticalOptions="Center"  Style="{StaticResource LabelPageHeadingStyle}" Margin="0,0,70,0"/>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <AbsoluteLayout VerticalOptions="FillAndExpand" >
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,0.85"  AbsoluteLayout.LayoutFlags="All"  HorizontalOptions="FillAndExpand" >
+                <StackLayout Spacing="30" Margin="15">
+
+                    <Frame CornerRadius="1" Padding="10"  BorderColor="#f6f6f7" BackgroundColor="#FFFFFF" >
+                        <StackLayout Spacing="30">
+                            <StackLayout  >
+                                <StackLayout Orientation="Horizontal" VerticalOptions="Center"   HorizontalOptions="CenterAndExpand">
+                                    <Image x:Name="ImgVehicleType"  HeightRequest="25"/>
+                                    <Label x:Name="labelVehicleRegNumber"   Style="{StaticResource LabelMediumBlackStyle}"   VerticalOptions="CenterAndExpand" />
+                                </StackLayout>
+                                <Label x:Name="labelParkingLocation"  Style="{StaticResource LabelBoldPlaceHolderStyle}"  VerticalOptions="CenterAndExpand"   HorizontalOptions="CenterAndExpand"/>
+                            </StackLayout>
+                            <StackLayout  >
+                                <StackLayout Orientation="Horizontal" VerticalOptions="Center"   HorizontalOptions="CenterAndExpand" Spacing="10">
+                                    <Label Text="AMOUNT"  Style="{StaticResource LabelExtraLargeProximaBoldStyle}"    />
+                                    <StackLayout Orientation="Horizontal" Spacing="2">
+                                        <Image Source="rupee_icon.png" HeightRequest="20"/>
+                                        <Label x:Name="labelPassAmount"   Style="{StaticResource LabelProximaRegBoldDodgerBlueStyle}"  FontSize="22" />
+                                    </StackLayout>
+                                </StackLayout>
+                                <Label  x:Name="labelPassType" Text="( Daily Pass )" Style="{StaticResource LabelBoldPlaceHolderStyle}"  VerticalOptions="CenterAndExpand"   HorizontalOptions="CenterAndExpand"/>
+                            </StackLayout>
+                        </StackLayout>
+
+                    </Frame>
+
+                    <StackLayout x:Name="stlayoutYESNO" Spacing="20">
+                        <Label Text="HAVE YOU RECEIVED PAYMENT?" Style="{StaticResource LabelProximaRegMediumStyle}"  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
+                        <StackLayout Orientation="Horizontal" >
+                            <Button x:Name="btnYes" Style="{StaticResource ButtonRegularShamrockStyle}"   TextColor="#FFFFFF" Text="YES"  HorizontalOptions="FillAndExpand" Clicked="BtnYes_Clicked"/>
+                            <Button x:Name="btnNo" Style="{StaticResource ButtonRegularTreePoppyStyle}"  TextColor="#FFFFFF"  Text="NO" HorizontalOptions="FillAndExpand" Clicked="BtnNo_Clicked"/>
+                        </StackLayout>
+                    </StackLayout>
+                    
+                    <StackLayout Padding="10" VerticalOptions="CenterAndExpand" x:Name="stLayoutDailyPassGeneratePassReceipt">
+                        <Button x:Name="btnGeneratePassReceipt" Style="{StaticResource ButtonRegularShamrockStyle}" Text="GENERATE PASS" TextColor="#FFFFFF" Clicked="BtnGeneratePassReceipt_Clicked"/>
+                    </StackLayout>
+                </StackLayout>
+
+
+
+            </StackLayout>
+
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,1,1,0.15"  AbsoluteLayout.LayoutFlags="All"  HorizontalOptions="FillAndExpand" >
+
+            </StackLayout>
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>

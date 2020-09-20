@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ParkHyderabadOperator.NewPassPage"
+             xmlns:local="clr-namespace:ParkHyderabadOperator.CustomXamarinElementsModel"
+             NavigationPage.HasBackButton="True" >
+    <NavigationPage.TitleView >
+        <Label x:Name="PassTypePageHeading"   HorizontalOptions="CenterAndExpand" VerticalOptions="Center"  Style="{StaticResource LabelPageHeadingStyle}" Margin="0,0,70,0"/>
+    </NavigationPage.TitleView>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="evenTemplate">
+                <ViewCell>
+                    <StackLayout VerticalOptions="CenterAndExpand"  BackgroundColor="Transparent" Margin="0,10,0,10">
+                        <Frame CornerRadius="5" Padding="1"  BorderColor="#efefef" >
+                            <AbsoluteLayout >
+                                <StackLayout  BackgroundColor="#FFFFFF"  AbsoluteLayout.LayoutBounds="0,0,1,1"  AbsoluteLayout.LayoutFlags="All">
+                                    <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand"  VerticalOptions="CenterAndExpand"  Padding="0,0,0,0" Spacing="1">
+                                        <Image Source="rupee_black.png" HeightRequest="15" VerticalOptions="Center" />
+                                        <Label Text="{Binding Price , StringFormat=' {0:F2}'}" Style="{StaticResource LabelProximaRegMediumStyle}"  VerticalOptions="Center" />
+                                        <Label Text="/-" Style="{StaticResource LabelProximaRegMediumStyle}"  VerticalOptions="Center" />
+                                    </StackLayout>
+                                </StackLayout>
+
+                                <Frame CornerRadius="5" Padding="10"  BorderColor="#3293fa" BackgroundColor="#3293fa"  AbsoluteLayout.LayoutBounds="0,0,0.7,1"  AbsoluteLayout.LayoutFlags="All" >
+                                    <StackLayout  Orientation="Vertical"    VerticalOptions="Center">
+                                        <Label Text="{Binding PassTypeID.PassTypeName}"  Style="{StaticResource LabelProximaRegBoldWhiteStyle}" HorizontalOptions="Center"   VerticalOptions="Center"/>
+                                        <Label Text="{Binding StationAccess}" Style="{StaticResource LabelProximaRegBoldWhiteStyle}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+
+                                    </StackLayout>
+                                </Frame>
+
+
+                            </AbsoluteLayout>
+                        </Frame>
+                    </StackLayout>
+
+                </ViewCell>
+            </DataTemplate>
+            <DataTemplate x:Key="unevenTemplate" >
+                <ViewCell >
+                    <StackLayout VerticalOptions="CenterAndExpand" BackgroundColor="Transparent"  Margin="0,10,0,10">
+                        <Frame CornerRadius="5" Padding="1"  BorderColor="#efefef" >
+                            <AbsoluteLayout >
+                                <StackLayout BackgroundColor="#FFFFFF"  AbsoluteLayout.LayoutBounds="0,0,1,1"  AbsoluteLayout.LayoutFlags="All">
+                                    <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand"  VerticalOptions="CenterAndExpand" Padding="0,0,5,0" Spacing="1">
+                                        <Image Source="rupee_black.png" HeightRequest="15" VerticalOptions="Center" />
+                                        <Label Text="{Binding Price , StringFormat=' {0:F2}'}" Style="{StaticResource LabelProximaRegMediumStyle}"  VerticalOptions="Center" />
+                                        <Label Text="/-" Style="{StaticResource LabelProximaRegMediumStyle}"  VerticalOptions="Center" />
+                                    </StackLayout>
+                                </StackLayout>
+                                <Frame CornerRadius="5" Padding="10"  BorderColor="#f6f6f7" BackgroundColor="#FFFFFF"  AbsoluteLayout.LayoutBounds="0,0,0.7,1"  AbsoluteLayout.LayoutFlags="All" >
+                                    <StackLayout  Orientation="Vertical"    VerticalOptions="Center">
+                                        <Label Text="{Binding PassTypeID.PassTypeName}"  Style="{StaticResource LabelRegularBlackColorStyle}"  VerticalOptions="Center" HorizontalOptions="Center"/>
+                                        <Label Text="{Binding StationAccess}" Style="{StaticResource LabelRegularBlackColorStyle}"    HorizontalOptions="CenterAndExpand"/>
+                                    </StackLayout>
+                                </Frame>
+                            </AbsoluteLayout>
+
+                        </Frame>
+                    </StackLayout>
+                </ViewCell>
+            </DataTemplate>
+            <local:AlternateColorDataTemplateSelector x:Key="alternateColorDataTemplateSelector"
+                EvenTemplate="{StaticResource evenTemplate}"
+                UnevenTemplate="{StaticResource unevenTemplate}" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <AbsoluteLayout VerticalOptions="FillAndExpand" x:Name="absLayoutNewPassPage">
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,1"  AbsoluteLayout.LayoutFlags="All" >
+                <StackLayout Spacing="5">
+                    <StackLayout Orientation="Horizontal" x:Name="slPassTypePageHeadingImages" Spacing="10" VerticalOptions="FillAndExpand" HorizontalOptions="CenterAndExpand">
+                        <StackLayout Orientation="Vertical" Padding="8" Spacing="10" HorizontalOptions="CenterAndExpand"  x:Name="slTwoWheelerImage">
+                            <StackLayout.GestureRecognizers >
+                                <TapGestureRecognizer x:Name="slTwoWheeler" Tapped="SlTwoWheeler_Tapped"/>
+                            </StackLayout.GestureRecognizers>
+                            <Image x:Name="imgTwoWheeler"  HeightRequest="50"   BackgroundColor="Transparent"  Source="Twowheeler_circle_ticked.png" >
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer   Tapped="SlTwoWheeler_Tapped"  />
+                                </Image.GestureRecognizers>
+                            </Image>
+                            <Label Text="Two Wheeler" HorizontalOptions="CenterAndExpand" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
+                        </StackLayout>
+                        <StackLayout Orientation="Vertical" Padding="8" Spacing="10" x:Name="slFourWheelerImage">
+                            <StackLayout.GestureRecognizers>
+                                <TapGestureRecognizer x:Name="slFourWheeler" Tapped="SlFourWheeler_Tapped"/>
+                            </StackLayout.GestureRecognizers>
+                            <Image x:Name="imgFourWheeler" BackgroundColor="Transparent" HeightRequest="50"    Source="Fourwheeler_circle.png" >
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer   Tapped="SlFourWheeler_Tapped"  />
+                                </Image.GestureRecognizers>
+                            </Image>
+                            <Label Text="Four Wheeler" HorizontalOptions="Center" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout  Padding="10" >
+                        <ListView x:Name="LstVehiclePasses" SeparatorVisibility="None" BackgroundColor="Transparent" ItemSelected="LstVehiclePasses_ItemSelected"
+                                HasUnevenRows="True"  ItemTemplate="{StaticResource alternateColorDataTemplateSelector}" >
+                        </ListView>
+                    </StackLayout>
+                </StackLayout>
+               
+            </StackLayout>
+            <ContentView x:Name="StklauoutactivityIndicator" BackgroundColor="Transparent"  IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                <StackLayout Orientation="Vertical" HeightRequest="150" WidthRequest="100" BackgroundColor="Transparent" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="0">
+                    <ActivityIndicator  x:Name="activity" IsEnabled="True" IsVisible="False" IsRunning="False"   HeightRequest="80" Color="#010101"  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></ActivityIndicator>
+                    <Label x:Name="LabelLodaingMsg" Text="Loading..."  Style="{StaticResource LabelProximaBoldStyle}" FontSize="18" TextColor="#010101"   VerticalOptions="StartAndExpand" HorizontalOptions="CenterAndExpand"></Label>
+                </StackLayout>
+
+            </ContentView>
+
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>

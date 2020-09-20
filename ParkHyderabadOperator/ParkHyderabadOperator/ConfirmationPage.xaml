@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ParkHyderabadOperator.ConfirmationPage"
+             NavigationPage.HasBackButton="True">
+    <NavigationPage.TitleView >
+        <Label Text="CONFIRMATION"    VerticalOptions="Center"  Style="{StaticResource LabelPageHeadingStyle}" Margin="0,0,70,0"/>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <AbsoluteLayout VerticalOptions="FillAndExpand" x:Name="absLayoutCheckInConfirmationPage">
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,0.85"  AbsoluteLayout.LayoutFlags="All"  HorizontalOptions="FillAndExpand" >
+                <StackLayout Spacing="30" Margin="15">
+
+                    <Frame CornerRadius="1" Padding="10"  BorderColor="#f6f6f7" BackgroundColor="#FFFFFF" >
+                        <StackLayout Spacing="30">
+                            <StackLayout  >
+                                <StackLayout Orientation="Horizontal" VerticalOptions="Center"   HorizontalOptions="CenterAndExpand">
+                                    <Image x:Name="ImgVehicleType" Source="bike_black.png" HeightRequest="25"/>
+                                    <Label x:Name="labelVehicleRegNumber"   Style="{StaticResource LabelMediumBlackStyle}"   VerticalOptions="CenterAndExpand" />
+                                </StackLayout>
+                                <Label x:Name="labelParkingLocation"  Style="{StaticResource LabelBoldPlaceHolderStyle}"  VerticalOptions="CenterAndExpand"   HorizontalOptions="CenterAndExpand"/>
+                            </StackLayout>
+                            <StackLayout  >
+                                <StackLayout Orientation="Horizontal" VerticalOptions="Center"   HorizontalOptions="CenterAndExpand" Spacing="10">
+                                    <Label Text="AMOUNT"  Style="{StaticResource LabelExtraLargeProximaBoldStyle}"    />
+                                    <StackLayout Orientation="Horizontal" Spacing="2">
+                                        <Image Source="rupee_icon.png" HeightRequest="20"/>
+                                        <Label  x:Name="labelChekInAmount"   Style="{StaticResource LabelProximaRegBoldDodgerBlueStyle}"  FontSize="22" />
+                                    </StackLayout>
+                                </StackLayout>
+                                <Label x:Name="labelClampAmount"  Style="{StaticResource LabelBoldPlaceHolderStyle}"  VerticalOptions="CenterAndExpand"   HorizontalOptions="CenterAndExpand"/>
+                                <Label x:Name="labelChekInAmountDetails"  Style="{StaticResource LabelBoldPlaceHolderStyle}"  VerticalOptions="CenterAndExpand"   HorizontalOptions="CenterAndExpand"/>
+                            </StackLayout>
+                        </StackLayout>
+
+                    </Frame>
+
+
+
+                    <StackLayout x:Name="stlayoutYESNO" Spacing="25">
+                        <Label Text="HAVE YOU RECEIVED PAYMENT?" Style="{StaticResource LabelProximaRegMediumStyle}"  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
+                        <StackLayout Orientation="Horizontal" Spacing="10" >
+                            <Button x:Name="btnYes" Style="{StaticResource ButtonRegularShamrockStyle}"   TextColor="#FFFFFF"  BorderWidth="1" Text="YES"  HorizontalOptions="FillAndExpand" Clicked="BtnYes_Clicked"/>
+                            <Button x:Name="btnNo" Style="{StaticResource ButtonRegularTreePoppyStyle}"  TextColor="#FFFFFF"  BorderWidth="1" Text="NO" HorizontalOptions="FillAndExpand" Clicked="BtnNo_Clicked" />
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout Padding="10" VerticalOptions="CenterAndExpand" x:Name="stLayoutConfirmCheckIn">
+                        <Button x:Name="btnCheckIn" Style="{StaticResource ButtonRegularShamrockStyle}" Text="CHECK IN" TextColor="#FFFFFF" Clicked="BtnCheckIn_Clicked"/>
+                    </StackLayout>
+                </StackLayout>
+
+
+
+            </StackLayout>
+
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,1,1,0.15"  AbsoluteLayout.LayoutFlags="All"  HorizontalOptions="FillAndExpand" >
+
+            </StackLayout>
+       
+        <ContentView x:Name="StklauoutactivityIndicator" BackgroundColor="Transparent"  IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+            <StackLayout Orientation="Vertical" HeightRequest="150" WidthRequest="100" BackgroundColor="Transparent" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="0">
+                <ActivityIndicator  x:Name="activity" IsEnabled="True" IsVisible="False" IsRunning="False"   HeightRequest="80" Color="#010101"  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></ActivityIndicator>
+                <Label x:Name="LabelLodaingMsg" Text="Loading..."  Style="{StaticResource LabelProximaBoldStyle}" FontSize="18" TextColor="#010101"   VerticalOptions="StartAndExpand" HorizontalOptions="CenterAndExpand"></Label>
+            </StackLayout>
+
+        </ContentView>
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ParkHyderabadOperator.TimeSheet"
+              NavigationPage.HasBackButton="True" >
+    <NavigationPage.TitleView >
+        <Label Text="TIME SHEET"  Style="{StaticResource LabelRegularPageTitlesStyle}" Padding="0,0,70,0"/>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <AbsoluteLayout VerticalOptions="FillAndExpand" x:Name="absLayoutTimeSheetpage">
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,0.2"  AbsoluteLayout.LayoutFlags="All">
+                <Frame CornerRadius="3"   BackgroundColor="#f4f4f4" Padding="2" >
+                    <Grid VerticalOptions="FillAndExpand" ColumnSpacing="10" HorizontalOptions="CenterAndExpand">
+                        <Frame  Grid.Column="0" CornerRadius="5" Padding="0" BackgroundColor="#3192F9" BorderColor="#f4f4f4" VerticalOptions="CenterAndExpand" >
+                            <Button x:Name="btnPreviousMonth" FontSize="16" HeightRequest="40" WidthRequest="150"  Style="{StaticResource ButtonRegularWhiteStyle}" FontAttributes="Bold" Clicked="BtnPreviousMonth_Clicked"  VerticalOptions="Center" HorizontalOptions="FillAndExpand"></Button>
+                        </Frame>
+                        <Frame Grid.Column="1" CornerRadius="5" Padding="0" BackgroundColor="#3293FA" VerticalOptions="CenterAndExpand" >
+                            <Button x:Name="btnCurrentMonth" FontSize="16"  HeightRequest="40" WidthRequest="150"  Style="{StaticResource ButtonRegularWhiteStyle}" FontAttributes="Bold" Clicked="BtnCurrentMonth_Clicked"  VerticalOptions="Center" HorizontalOptions="FillAndExpand"></Button>
+                        </Frame>
+                    </Grid>
+                </Frame>
+            </StackLayout>
+            <StackLayout AbsoluteLayout.LayoutBounds="0,0.55,1,0.85"  AbsoluteLayout.LayoutFlags="All" >
+                <Frame CornerRadius="3"   BackgroundColor="#FFFFFF" BorderColor="#F4F4F4" Padding="10" HorizontalOptions="FillAndExpand">
+                    <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal"  >
+                        <Label    Style="{StaticResource LabelProximaRegBlackStyle}"  FontSize="14"    HorizontalOptions="StartAndExpand"   VerticalOptions="Center" >
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Supervisor:" />
+                                    <Span  x:Name="spanSupervisorName"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label    Style="{StaticResource LabelProximaRegBlackStyle}"  FontSize="14"    HorizontalOptions="EndAndExpand"   VerticalOptions="Center" >
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Employee:" />
+                                    <Span  x:Name="spanOperatorName"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </StackLayout>
+                </Frame>
+                <Frame CornerRadius="3" Padding="0"  BorderColor="#f4f4f4"  BackgroundColor="#FFFFFF" >
+                    <ListView x:Name="lvTimeSheetSummary"    HasUnevenRows="True" SeparatorVisibility="Default" SeparatorColor="Black" RowHeight="40" VerticalOptions="FillAndExpand">
+                        <ListView.Header >
+                            <StackLayout BackgroundColor="#f4f4f4">
+                                <Grid   Margin="15,5,15,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1.3*"></ColumnDefinition>
+                                        <ColumnDefinition Width="3*"></ColumnDefinition>
+                                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                                        <ColumnDefinition Width="2.2*"></ColumnDefinition>
+                                        <ColumnDefinition Width="1.5*"></ColumnDefinition>
+
+                                    </Grid.ColumnDefinitions>
+                                    <Label Text="Date" Grid.Column="0"   Style="{StaticResource LabelProximaRegBoldGreenStyle}"  FontSize="16"    HorizontalOptions="StartAndExpand"   VerticalOptions="Center" />
+                                    <Label Text="Loc-Lot" Grid.Column="1"   Style="{StaticResource LabelProximaRegBoldGreenStyle}"  FontSize="16"    HorizontalOptions="CenterAndExpand"   VerticalOptions="Center" />
+                                    <Label Text="Time In" Grid.Column="2"   Style="{StaticResource LabelProximaRegBoldGreenStyle}"  FontSize="16"    HorizontalOptions="CenterAndExpand"   VerticalOptions="Center" />
+                                    <Label Text="Time Out" Grid.Column="3"   Style="{StaticResource LabelProximaRegBoldGreenStyle}"  FontSize="16"    HorizontalOptions="CenterAndExpand"   VerticalOptions="Center" />
+                                    <Label Text="Hours" Grid.Column="4"   Style="{StaticResource LabelProximaRegBoldGreenStyle}"  FontSize="16"    HorizontalOptions="EndAndExpand"   VerticalOptions="Center" />
+                                </Grid>
+                            </StackLayout>
+                        </ListView.Header>
+                        <ListView.ItemTemplate>
+
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout  BackgroundColor="#FFFFF">
+                                        <Grid  Margin="15,5,15,5" VerticalOptions="FillAndExpand">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="1.3*"></ColumnDefinition>
+                                                <ColumnDefinition Width="3*"></ColumnDefinition>
+                                                <ColumnDefinition Width="2*"></ColumnDefinition>
+                                                <ColumnDefinition Width="2.2*"></ColumnDefinition>
+                                                <ColumnDefinition Width="1.5*"></ColumnDefinition>
+                                            </Grid.ColumnDefinitions>
+                                            <Label Text="{Binding TimeSheetDate , StringFormat=' {0:dd}'}" Grid.Column="0"   Style="{StaticResource LabelProximaRegStyle}"   HorizontalOptions="StartAndExpand"   VerticalOptions="CenterAndExpand" />
+                                            <Label Text="{Binding LocationParkingLotID.LocationParkingLotName }" Grid.Column="1"   Style="{StaticResource LabelProximaRegStyle}"  HorizontalOptions="CenterAndExpand"   VerticalOptions="CenterAndExpand" >
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span  Text="{Binding LocationParkingLotID.LocationID.LocationName}"/>
+                                                        <Span  Text="-"/>
+                                                        <Span  Text="{Binding LocationParkingLotID.LocationParkingLotName}"/>
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                            <Label Text="{Binding LoginTime }" Grid.Column="2"   Style="{StaticResource LabelProximaRegStyle}"  HorizontalOptions="CenterAndExpand"   VerticalOptions="CenterAndExpand" />
+                                            <Label Text="{Binding LogoutTime }" Grid.Column="3"   Style="{StaticResource LabelProximaRegStyle}"    HorizontalOptions="CenterAndExpand"   VerticalOptions="CenterAndExpand" />
+                                            <Label Text="{Binding NoofHours}"  Grid.Column="4"   Style="{StaticResource LabelProximaRegStyle}"     HorizontalOptions="EndAndExpand"   VerticalOptions="CenterAndExpand" />
+                                        </Grid>
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Frame>
+            </StackLayout>
+            <StackLayout AbsoluteLayout.LayoutBounds="0,1,1,0.05"  AbsoluteLayout.LayoutFlags="All" BackgroundColor="#F4F4F4" >
+                <Grid   Margin="10,0,10,0" VerticalOptions="StartAndExpand">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3.25*"></ColumnDefinition>
+                        <ColumnDefinition Width="3.25*"></ColumnDefinition>
+                        <ColumnDefinition Width="3.50*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label  Grid.Column="0"   Style="{StaticResource LabelProximaRegBoldStyle}"  FontSize="12" HorizontalOptions="Center"   VerticalOptions="Center" >
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Absent Days: "/>
+                                <Span x:Name="spanAbsentDays"  />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label  Grid.Column="1"   Style="{StaticResource LabelProximaRegBoldStyle}"  FontSize="12"  HorizontalOptions="StartAndExpand"   VerticalOptions="Center" >
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Worked Days: "/>
+                                <Span x:Name="spanWorkedDays"  />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+
+                    <Label  Grid.Column="2"   Style="{StaticResource LabelProximaRegBoldStyle}"  FontSize="12"  HorizontalOptions="EndAndExpand"   VerticalOptions="Center" >
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Total Hours: "/>
+                                <Span x:Name="spanTotalHours"  />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+
+                </Grid>
+            </StackLayout>
+            <ContentView x:Name="StklauoutactivityIndicator" BackgroundColor="Transparent"  IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                <StackLayout Orientation="Vertical" HeightRequest="150" WidthRequest="100" BackgroundColor="Transparent" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="0">
+                    <ActivityIndicator  x:Name="activity" IsEnabled="True" IsVisible="False" IsRunning="False"   HeightRequest="80" Color="#010101"  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></ActivityIndicator>
+                    <Label x:Name="LabelLodaingMsg" Text="Loading..."  Style="{StaticResource LabelProximaBoldStyle}" FontSize="18" TextColor="#010101"   VerticalOptions="StartAndExpand" HorizontalOptions="CenterAndExpand"></Label>
+                </StackLayout>
+
+            </ContentView>
+            
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>

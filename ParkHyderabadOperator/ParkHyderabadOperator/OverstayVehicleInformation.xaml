@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ParkHyderabadOperator.OverstayVehicleInformation"
+             NavigationPage.HasBackButton="True" >
+    <NavigationPage.TitleView >
+        <Label Text="VEHICLE INFO" HorizontalTextAlignment="Center"  VerticalOptions="CenterAndExpand" Style="{StaticResource LabelPageHeadingStyle}" Margin="0,0,70,0"/>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <AbsoluteLayout VerticalOptions="FillAndExpand" >
+            <StackLayout AbsoluteLayout.LayoutBounds="0,1,1,1"  AbsoluteLayout.LayoutFlags="All"  x:Name="absLayoutOverstaypage">
+                <AbsoluteLayout VerticalOptions="FillAndExpand">
+
+                    <StackLayout  BackgroundColor="#3293fa"  AbsoluteLayout.LayoutBounds="0,1,1,0.7"  AbsoluteLayout.LayoutFlags="All"   VerticalOptions="FillAndExpand">
+                    </StackLayout>
+
+                    <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1"  AbsoluteLayout.LayoutFlags="All"   VerticalOptions="FillAndExpand"  Padding="15,0,15,0">
+                        <Frame CornerRadius="10" BorderColor="#D4D5D9" HasShadow ="False" Padding="15"   BackgroundColor="#FFFFFF" >
+                            <FlexLayout Direction="Column" AlignItems="Stretch"  JustifyContent="SpaceEvenly">
+                                <StackLayout Spacing="10">
+                                    <StackLayout Orientation="Vertical"  Spacing="2">
+                                        <Label x:Name="labelParkingLocation" Style="{StaticResource LabelProximaBoldStyle}" FontSize="20"  ></Label>
+                                        <StackLayout Orientation="Horizontal" Spacing="10">
+                                            <Label x:Name="labelBayNumber"  Style="{StaticResource LabelProximaRegStyle}" ></Label>
+                                            <Label x:Name="labelCheckInBy"  Style="{StaticResource LabelProximaRegStyle}" />
+                                        </StackLayout>
+                                    </StackLayout>
+                                    <StackLayout Orientation="Horizontal" Spacing="0">
+                                        <Frame CornerRadius="1"  Padding="0" BorderColor="#efefef"  HorizontalOptions="FillAndExpand">
+                                            <StackLayout  Spacing="5"   Padding="6">
+                                                <Label  Text="FROM" Style="{StaticResource LabelProximaRegBoldStyle}" HorizontalOptions="Center"/>
+                                                <Label x:Name="labelOverstayFrom" LineBreakMode="WordWrap" Style="{StaticResource LabelProximaRegBlackStyle}" HorizontalOptions="FillAndExpand" />
+                                            </StackLayout>
+                                        </Frame>
+                                        <Frame CornerRadius="1"   Padding="0"  BorderColor="#efefef" HorizontalOptions="FillAndExpand">
+                                            <StackLayout    Spacing="5" VerticalOptions="CenterAndExpand" Padding="6">
+                                                <Label  Text="TO" Style="{StaticResource LabelProximaRegBoldStyle}" HorizontalOptions="Center"/>
+                                                <Label x:Name="labelOverstayTo" LineBreakMode="WordWrap" Style="{StaticResource LabelProximaRegBlackStyle}" HorizontalOptions="FillAndExpand"/>
+                                            </StackLayout>
+                                        </Frame>
+                                    </StackLayout>
+                                    <StackLayout Spacing="2">
+                                        <StackLayout Orientation="Horizontal"  >
+                                            <Image x:Name="imageVehicleImage"  HeightRequest="20"  ></Image>
+                                            <Label  x:Name="labelVehicleDetails"  Style="{StaticResource LabelProximaBoldStyle}" VerticalOptions="Center"></Label>
+                                            <Label x:Name="lblWarningCount" Style="{StaticResource LabelProximaRegRedStyle}" FontSize="12" HorizontalOptions="EndAndExpand" VerticalOptions="CenterAndExpand"/>
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal" Margin="5,0,0,0 ">
+                                            <Image x:Name="imageParkingFeeImage"  HeightRequest="20" ></Image>
+                                            <Label  x:Name="labelParkingFeesDetails"  Style="{StaticResource LabelNormalEndBoldStyle}" ></Label>
+                                            <Label  x:Name="labelParkingPaymentType" Style="{StaticResource LabelProximaBoldStyle}" VerticalOptions="Center"></Label>
+                                        </StackLayout>
+                                    </StackLayout>
+                                    <StackLayout Spacing="0">
+                                        <StackLayout Orientation="Vertical"  Spacing="1" HorizontalOptions="Center">
+                                            <Label x:Name="labelOverstayTimeDetails"  Style="{StaticResource LabelProximaRegSunStyle}" HorizontalOptions="Center" VerticalOptions="Center" FontSize="16"></Label>
+                                            <Label x:Name="labelOverstayTime" CharacterSpacing="3" FontSize="30" Style="{StaticResource LabelRegularLargeSunStyle}" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" ></Label>
+                                        </StackLayout>
+
+                                    </StackLayout>
+                                    <StackLayout Spacing="2">
+                                        <!--CLAMP STACKLAYOUT-->
+                                        <StackLayout Spacing="5">
+                                            <StackLayout Orientation="Horizontal" Spacing="5" HorizontalOptions="FillAndExpand">
+                                                <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="Start">
+                                                    <CheckBox x:Name="checkBoxClampVehicle"  IsChecked="False" CheckedChanged="CheckBoxClampVehicle_CheckedChanged"  Style="{StaticResource ChekBoxRegularBlueStyle}" />
+                                                    <Label Style="{StaticResource LabelRegularStartCenterStyle}" Text="CLAMP VEHICLE" ></Label>
+                                                </StackLayout>
+                                                <StackLayout x:Name="slVehicleWarning" Orientation="Horizontal" Spacing="0" HorizontalOptions="EndAndExpand" >
+                                                    <CheckBox x:Name="chkWarning" IsChecked="False"  Style="{StaticResource ChekBoxRegularRedStyle}"  CheckedChanged="ChkWarning_CheckedChanged" HorizontalOptions="EndAndExpand"/>
+                                                    <Label Style="{StaticResource LabelProximaRegRedStyle}" Text="WARNING" VerticalOptions="CenterAndExpand" HorizontalOptions="EndAndExpand"></Label>
+                                                </StackLayout>
+                                            </StackLayout>
+                                            <StackLayout x:Name="slClampVehicle" Spacing="0">
+                                                <StackLayout  Orientation="Vertical"  x:Name="stackLayoutClampVehicle" Spacing="0">
+                                                    <Label Text="Reason" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
+                                                    <Picker x:Name="pickerViolationReason"  ItemDisplayBinding="{Binding Reason}" SelectedItem="{Binding Reason, Mode=TwoWay}" Title="-Select Reason-" Style="{StaticResource PickerProximaRegStyle}"  ></Picker>
+                                                </StackLayout>
+                                                <Frame CornerRadius="5" Padding="0" x:Name="frmClampbutton"  BorderColor="#efefef"   AbsoluteLayout.LayoutBounds="0,1,1,0.1"  AbsoluteLayout.LayoutFlags="All"  BackgroundColor="#FFFFFF">
+                                                    <Button Text="Clamp" x:Name="BtnClamp" Style="{StaticResource ButtonRegularRedStyle}" Clicked="BtnClamp_Clicked" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"></Button>
+                                                </Frame>
+                                            </StackLayout>
+                                        </StackLayout>
+
+                                        <StackLayout x:Name="slPaymentAndExpand" Spacing="2">
+                                            <Label  HeightRequest="1" HorizontalOptions="FillAndExpand" BackgroundColor="#E3E3E6" />
+                                            <StackLayout x:Name="slFeesDetails" Orientation="Horizontal" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Spacing="10" Margin="0,5,0,0">
+                                                <StackLayout Spacing="0">
+                                                    <Label x:Name="lblParkingFees" Style="{StaticResource LabelProximaRegBoldStyle}" FontSize="22"  HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+                                                    <Label   Text="Overstay Fees" Style="{StaticResource LabelRegularStyle}" FontSize="12" HorizontalOptions="CenterAndExpand" VerticalOptions="End"/>
+                                                </StackLayout>
+                                                <Label Text="+" Style="{StaticResource LabelProximaRegBoldStyle}" HorizontalOptions="CenterAndExpand" VerticalOptions="StartAndExpand" Margin="0,5,0,0"/>
+                                                <StackLayout Spacing="0">
+                                                    <Label x:Name="lblClampFees" Style="{StaticResource LabelProximaRegBoldStyle}" FontSize="22"  TextColor="#E74C3C" HorizontalOptions="CenterAndExpand" VerticalOptions="End"/>
+                                                    <Label   Text="Clamp Fees" Style="{StaticResource LabelRegularStyle}"  FontSize="12" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+                                                </StackLayout>
+                                                <Label Text="=" Style="{StaticResource LabelProximaRegBoldStyle}" HorizontalOptions="CenterAndExpand" VerticalOptions="StartAndExpand" Margin="0,5,0,0"/>
+                                                <StackLayout Spacing="1">
+                                                    <StackLayout Orientation="Horizontal" VerticalOptions="CenterAndExpand" Spacing="0">
+                                                        <Label Text="₹" Style="{StaticResource LabelProximaRegBoldStyle}"  HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"  TextColor="#2ECC71" Margin="0,5,0,0"/>
+                                                        <Label x:Name="lblTotal" Style="{StaticResource LabelProximaRegBoldStyle}" FontSize="22"  HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" TextColor="#2ECC71"/>
+                                                        <Label Text="/-" Style="{StaticResource LabelProximaRegBoldStyle}" HorizontalOptions="Center" VerticalOptions="CenterAndExpand"  TextColor="#2ECC71"/>
+                                                    </StackLayout>
+                                                    <Label  Style="{StaticResource LabelRegularStyle}" Text="Total"  HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+
+                                                </StackLayout>
+                                            </StackLayout>
+                                            <StackLayout x:Name="slCashAndEpay" Orientation="Horizontal" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" Spacing="5">
+                                                <StackLayout   HorizontalOptions="FillAndExpand" BackgroundColor="#2ecc71" Padding="5" HeightRequest="30" x:Name="slCash">
+                                                    <StackLayout.GestureRecognizers >
+                                                        <TapGestureRecognizer x:Name="slCashPayment" Tapped="SlCashPayment_Tapped"/>
+                                                    </StackLayout.GestureRecognizers>
+                                                    <StackLayout Orientation="Horizontal" Spacing="5" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                                                        <ImageButton Source="rupee_icon_white.png" HeightRequest="20"  BackgroundColor="Transparent"  HorizontalOptions="Center" />
+                                                        <Label  Text="CASH" Style="{StaticResource LabelProximaRegBoldWhiteStyle}" VerticalOptions="Center"  HorizontalOptions="Center" />
+                                                    </StackLayout>
+                                                </StackLayout>
+                                                <StackLayout  BackgroundColor="#353535" Padding="5" x:Name="slFOC" HorizontalOptions="FillAndExpand" HeightRequest="30">
+                                                    <StackLayout.GestureRecognizers >
+                                                        <TapGestureRecognizer x:Name="slFOCPayment" Tapped="SlFOCPayment_Tapped"/>
+                                                    </StackLayout.GestureRecognizers>
+                                                    <StackLayout Orientation="Horizontal" Spacing="5" HorizontalOptions="Center"  VerticalOptions="CenterAndExpand">
+                                                        <Image Source="foc_icon.png" HeightRequest="20"  BackgroundColor="Transparent"  HorizontalOptions="Center" />
+                                                        <Label  Text="FOC" Style="{StaticResource LabelProximaRegBoldWhiteStyle}" VerticalOptions="Center"  HorizontalOptions="Center" />
+                                                    </StackLayout>
+                                                </StackLayout>
+                                                <StackLayout   HorizontalOptions="FillAndExpand" BackgroundColor="#3293FA" Padding="5" HeightRequest="30" x:Name="slEPay">
+                                                    <StackLayout Orientation="Horizontal" Spacing="5" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                                                        <StackLayout.GestureRecognizers >
+                                                            <TapGestureRecognizer x:Name="slEPAYPayment" Tapped="SlEPAYPayment_Tapped"/>
+                                                        </StackLayout.GestureRecognizers>
+                                                        <ImageButton Source="QR_White_BackGround.png" HeightRequest="20"  BackgroundColor="Transparent"  HorizontalOptions="Center" />
+                                                        <Label  Text="EPAY" Style="{StaticResource LabelProximaRegBoldWhiteStyle}" VerticalOptions="Center"  HorizontalOptions="Center" />
+                                                    </StackLayout>
+                                                </StackLayout>
+                                            </StackLayout>
+                                            <StackLayout x:Name="FOCAndExtend" Orientation="Horizontal" Spacing="8" HorizontalOptions="FillAndExpand">
+                                                <StackLayout HorizontalOptions="FillAndExpand" x:Name="slExtendedTime">
+                                                    <Button Text="EXTEND TIME" x:Name="BtnExtendedTime"  Style="{StaticResource LabelProximaRegBoldWhiteStyle}" BackgroundColor="#f7941d" TextColor="#FFFFFF"   Clicked="BtnExtendedTime_Clicked"  HeightRequest="40"/>
+                                                </StackLayout>
+                                                <StackLayout HorizontalOptions="FillAndExpand" x:Name="slCheckOut">
+                                                    <Button Text="CHECK OUT" x:Name="BtnCheckOut"  Style="{StaticResource ButtonRegularShamrockStyle}" TextColor="#FFFFFF"  Clicked="BtnCheckOut_Clicked" />
+                                                </StackLayout>
+                                            </StackLayout>
+                                        </StackLayout>
+
+                                    </StackLayout>
+                                </StackLayout>
+                            </FlexLayout>
+                        </Frame>
+                    </ScrollView>
+                    <ContentView x:Name="StklauoutactivityIndicator" BackgroundColor="Transparent"  IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                        <StackLayout Orientation="Vertical" HeightRequest="150" WidthRequest="100" BackgroundColor="Transparent" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="0">
+                            <ActivityIndicator  x:Name="activity" IsEnabled="False" IsVisible="False" IsRunning="False"   HeightRequest="80" Color="#010101"  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></ActivityIndicator>
+                            <Label x:Name="LabelLodaingMsg" Text="Loading..."  Style="{StaticResource LabelProximaBoldStyle}" FontSize="18" TextColor="#010101"   VerticalOptions="StartAndExpand" HorizontalOptions="CenterAndExpand"></Label>
+                        </StackLayout>
+                    </ContentView>
+
+                </AbsoluteLayout>
+            </StackLayout>
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>

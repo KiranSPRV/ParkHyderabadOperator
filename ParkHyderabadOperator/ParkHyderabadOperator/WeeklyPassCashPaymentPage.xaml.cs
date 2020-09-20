@@ -1,0 +1,142 @@
+﻿using ParkHyderabadOperator.DAL.DALExceptionLog;
+using ParkHyderabadOperator.DAL.DALPass;
+using ParkHyderabadOperator.Model;
+using ParkHyderabadOperator.Model.APIInputModel;
+using ParkHyderabadOperator.Model.APIOutPutModel;
+using System;
+using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
+
+namespace ParkHyderabadOperator
+{
+	[XamlCompilation(XamlCompilationOptions.Compile)]
+	public partial class WeeklyPassCashPaymentPage : ContentPage
+	{
+        string IsNewOrReNew = string.Empty;
+        CustomerVehiclePass objCustomerweeklyPass;
+        DALPass dal_CustomerPass;
+        DALExceptionManagment dal_Exceptionlog;
+        public WeeklyPassCashPaymentPage ()
+		{
+			InitializeComponent ();
+            dal_CustomerPass = new DALPass();
+            dal_Exceptionlog = new DALExceptionManagment();
+        }
+        public WeeklyPassCashPaymentPage(string NewOrReNew, CustomerVehiclePass objCustomerPass)
+        {
+            InitializeComponent();
+            dal_CustomerPass = new DALPass();
+            dal_Exceptionlog = new DALExceptionManagment();
+            IsNewOrReNew = NewOrReNew;
+            try
+            {
+                stLayoutDailyPassGeneratePassReceipt.IsVisible = false;
+                objCustomerweeklyPass = objCustomerPass;
+                if (objCustomerweeklyPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "2W")
+                {
+                    ImgVehicleType.Source = ImageSource.FromFile("bike_black.png");
+                }
+                else if (objCustomerweeklyPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "4W")
+                {
+                    ImgVehicleType.Source = ImageSource.FromFile("car_black.png");
+                }
+
+                labelVehicleRegNumber.Text = objCustomerweeklyPass.CustomerVehicleID.RegistrationNumber;
+                labelParkingLocation.Text = objCustomerweeklyPass.LocationID.LocationName + "-" + "Single Station";
+                labelPassAmount.Text = objCustomerweeklyPass.Amount.ToString("N2") + "/-";
+            }
+            catch (Exception ex)
+            {
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "WeeklyPassCashPaymentPage.xaml.cs", "", "WeeklyPassCashPaymentPage");
+            }
+        }
+        private async void BtnYes_Clicked(object sender, EventArgs e)
+        {
+            try
+            {
+                stlayoutYESNO.IsVisible = false;
+                stLayoutDailyPassGeneratePassReceipt.IsVisible = true;
+            }
+            catch (Exception ex) { }
+
+        }
+        private async void BtnNo_Clicked(object sender, EventArgs e)
+        {
+            try
+            {
+                stlayoutYESNO.IsVisible = false;
+                slCashPaymentGeneratePass.IsVisible = false;
+                var passPage = new PassPage();
+                await Navigation.PushAsync(passPage);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+       
+        private async void BtnGeneratePassReceipt_Clicked(object sender, EventArgs e)
+        {
+            try
+            {
+                if (DeviceInternet.InternetConnected())
+                {
+                    if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
+                    {
+
+                        CustomerVehiclePass resultPass = dal_CustomerPass.CreateCustomerPass(Convert.ToString(App.Current.Properties["apitoken"]), objCustomerweeklyPass);
+                        if (resultPass != null && resultPass.CustomerVehiclePassID != 0)
+                        {
+                            await DisplayAlert("Alert", "Customer vehicle pass created successfully", "Ok");
+                            var PassPaymentReceiptPage = new PassPaymentReceiptPage(resultPass);
+                            await Navigation.PushAsync(PassPaymentReceiptPage);
+                        }
+                        else
+                        {
+                            await DisplayAlert("Alert", "Fail,Please contact admin", "Ok");
+                        }
+
+
+                    }
+                }
+                else
+                {
+                    await DisplayAlert("Alert", "Please check your internet.", "Ok");
+                }
+            }
+            catch (Exception ex)
+            {
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "WeeklyPassPaymentConfirmationPage.xaml.cs", "", "BtnGeneratePassReceipt_Clicked");
+            }
+        }
+
+        #region Payment Calculation
+        private async void EntryCashReceived_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                if (entryCashReceived.Text.Length > 0 && entryCashReceived.Text != null)
+                {
+                    decimal passAmount = (objCustomerweeklyPass.TotalAmount == null || objCustomerweeklyPass.TotalAmount == 0) ? objCustomerweeklyPass.Amount : objCustomerweeklyPass.TotalAmount;
+                    decimal returnAmount = Math.Abs((Convert.ToDecimal(entryCashReceived.Text) - passAmount));
+                    entryCashReturn.Text = returnAmount.ToString("N2");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "MonthlyPassCashPaymentPage.xaml.cs", "", "EntryCashReceived_TextChanged");
+            }
+        }
+        #endregion
+        
+        public void ShowLoading(bool show)
+        {
+            StklauoutactivityIndicator.IsVisible = show;
+            activity.IsVisible = show;
+            activity.IsRunning = show;
+
+
+        }
+    }
+}

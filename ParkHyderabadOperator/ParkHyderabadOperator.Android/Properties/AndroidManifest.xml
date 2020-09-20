@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.1.10.2" package="com.companyname.ParkHyderabadOperator" android:installLocation="preferExternal">
+	<uses-sdk android:minSdkVersion="20" android:targetSdkVersion="28" />
+	<application android:usesCleartextTraffic="true" android:icon="@drawable/launcher" android:label="InstaOperator">
+		<provider android:name="android.support.v4.content.FileProvider" android:authorities="${applicationId}.fileprovider" android:exported="false" android:grantUriPermissions="true">
+			<meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths"></meta-data>
+		</provider>
+	</application>
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+	<uses-permission android:name="android.permission.ACCESS_CHECKIN_PROPERTIES" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.CAMERA" />
+	<uses-permission android:name="android.permission.FLASHLIGHT" />
+	<uses-feature android:name="android.hardware.location" android:required="false" />
+	<uses-feature android:name="android.hardware.location.gps" android:required="false" />
+	<uses-feature android:name="android.hardware.location.network" android:required="false" />
+	<uses-permission android:name="android.permission.BLUETOOTH" />
+	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+	<uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" />
+	<uses-permission android:name="android.permission.NFC" />
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<application android:label="INSTAOperator" android:icon="@drawable/launcher" />
+</manifest>

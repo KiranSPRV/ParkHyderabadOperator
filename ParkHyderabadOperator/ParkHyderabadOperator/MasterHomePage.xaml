@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ParkHyderabadOperator.MasterHomePage"
+             NavigationPage.HasNavigationBar="False" >
+
+    
+    <MasterDetailPage.Master >
+        <ContentPage Title="Master Page"  IconImageSource="Menu.png" HeightRequest="50">
+            <ContentPage.Content>
+                <AbsoluteLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" >
+                    <StackLayout Padding="20,10,0,0"    AbsoluteLayout.LayoutBounds="0,0,1,0.1"  AbsoluteLayout.LayoutFlags="All" Orientation="Vertical"  HorizontalOptions="FillAndExpand" BackgroundColor="#f4f4f4">
+                        <StackLayout Orientation="Horizontal" Spacing="20" VerticalOptions="CenterAndExpand" >
+                            <Image Source="profilepic.png" HeightRequest="40" VerticalOptions="CenterAndExpand"></Image>
+                            <StackLayout Orientation="Vertical" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" Spacing="2">
+                                <Label x:Name="labelUserName"  Style="{StaticResource LabelProximaRegBlackStyle}" FontSize="16"/>
+                                <Label x:Name="labelUserID" Text="#User ID" Style="{StaticResource LabelProximaRegStyle}" FontSize="16" TextColor="#7E708C"/>
+                            </StackLayout>
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout   BackgroundColor="#FFFFFF"  AbsoluteLayout.LayoutBounds="0,1,1,0.9"  AbsoluteLayout.LayoutFlags="All" Orientation="Vertical">
+                        <StackLayout Orientation="Vertical" Spacing="5" Margin="20,2,0,0" >
+                            <StackLayout Orientation="Horizontal" Padding="10" Spacing="20" HorizontalOptions="FillAndExpand" >
+                                <StackLayout.GestureRecognizers >
+                                    <TapGestureRecognizer x:Name="slChangePassword" Tapped="slChangePassword_Tapped"/>
+                                </StackLayout.GestureRecognizers>
+                                <Image Source="change_password.png" HeightRequest="18" ></Image>
+                                <Label Text="Change Password" Style="{StaticResource LabelProximaRegBlackStyle}"  VerticalOptions="CenterAndExpand"  FontSize="16"    ></Label>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" Padding="10" Spacing="20" HorizontalOptions="FillAndExpand" >
+                                <StackLayout.GestureRecognizers >
+                                    <TapGestureRecognizer x:Name="slReports" Tapped="SlReports_Tapped"/>
+                                </StackLayout.GestureRecognizers>
+                                <Image Source="reports.png" HeightRequest="18" ></Image>
+                                <Label Text="Generate Reports" Style="{StaticResource LabelProximaRegBlackStyle}"  VerticalOptions="CenterAndExpand" FontSize="16"   ></Label>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" Padding="10" Spacing="20" x:Name="slHistoryLink" HorizontalOptions="FillAndExpand"  >
+                                <StackLayout.GestureRecognizers >
+                                    <TapGestureRecognizer x:Name="slHistory" Tapped="SlHistory_Tapped"/>
+                                </StackLayout.GestureRecognizers>
+                                <Image Source="history.png" HeightRequest="18" VerticalOptions="FillAndExpand" ></Image>
+                                <Label Text="Vehicle History" Style="{StaticResource LabelProximaRegBlackStyle}"  VerticalOptions="CenterAndExpand" FontSize="16"    ></Label>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" Padding="10" Spacing="20" HorizontalOptions="FillAndExpand">
+                                <StackLayout.GestureRecognizers >
+                                    <TapGestureRecognizer x:Name="slTimeSheet" Tapped="SlTimeSheet_Tapped"/>
+                                </StackLayout.GestureRecognizers>
+                                <Image Source="Timesheet.png" HeightRequest="18" ></Image>
+                                <Label Text="Time Sheet" Style="{StaticResource LabelProximaRegBlackStyle}" VerticalOptions="CenterAndExpand" FontSize="16"    ></Label>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" Padding="10" Spacing="20" HorizontalOptions="FillAndExpand" >
+                                <StackLayout.GestureRecognizers >
+                                    <TapGestureRecognizer x:Name="slLogout" Tapped="SlLogout_Tapped"/>
+                                </StackLayout.GestureRecognizers>
+                                <Image Source="logout.png" HeightRequest="18" ></Image>
+                                <Label Text="Log Out" Style="{StaticResource LabelProximaRegBlackStyle}" VerticalOptions="CenterAndExpand"  FontSize="16" ></Label>
+                            </StackLayout>
+                        </StackLayout>
+                    </StackLayout>
+                    <ContentView x:Name="StklauoutactivityIndicator" BackgroundColor="Transparent"  IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                        <StackLayout Orientation="Vertical" HeightRequest="150" WidthRequest="100" BackgroundColor="Transparent" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="0">
+                            <ActivityIndicator   x:Name="activity" IsEnabled="True" IsVisible="True" IsRunning="True"   HeightRequest="80" Color="#010101"  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></ActivityIndicator>
+                            <Label x:Name="LabelLodaingMsg" Text="Loading..."  Style="{StaticResource LabelProximaBoldStyle}" FontSize="18" TextColor="#010101"   VerticalOptions="StartAndExpand" HorizontalOptions="CenterAndExpand"></Label>
+                        </StackLayout>
+                    </ContentView>
+                </AbsoluteLayout>
+            </ContentPage.Content>
+        </ContentPage>
+    </MasterDetailPage.Master>
+    <MasterDetailPage.Detail>
+        <ContentPage>
+            <ContentPage.Content>
+                <StackLayout Padding="1">
+                    
+                </StackLayout>
+                
+            </ContentPage.Content>
+            
+        </ContentPage>
+    </MasterDetailPage.Detail>
+</MasterDetailPage>

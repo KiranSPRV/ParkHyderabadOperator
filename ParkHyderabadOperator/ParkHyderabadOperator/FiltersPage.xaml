@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ParkHyderabadOperator.FiltersPage"
+             NavigationPage.HasBackButton="True">
+
+    <NavigationPage.TitleView >
+        <Label Text="FILTERS"  Style="{StaticResource LabelRegularPageTitlesStyle}" Padding="0,0,70,0"/>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <AbsoluteLayout VerticalOptions="FillAndExpand"  >
+            <StackLayout    AbsoluteLayout.LayoutBounds="0,0,1,0.12"  AbsoluteLayout.LayoutFlags="All" Orientation="Vertical" >
+                <StackLayout Margin="15,5,15,5">
+                    <StackLayout Orientation="Horizontal"  Spacing="30" VerticalOptions="Center" HorizontalOptions="Center">
+                        <StackLayout Orientation="Vertical" Spacing="10">
+                            <ImageButton x:Name="imgBtnTwoWheeler" HeightRequest="50"  BackgroundColor="Transparent"  Source="Twowheeler_circle.png" Clicked="ImgBtnTwoWheeler_Clicked"></ImageButton>
+                            <Label Text="Two Wheeler" HorizontalOptions="Center" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
+                        </StackLayout>
+                        <StackLayout Orientation="Vertical" Spacing="10">
+                            <ImageButton x:Name="imgBtnFourWheeler" BackgroundColor="Transparent" HeightRequest="50"   Source="Fourwheeler_circle.png" Clicked="ImgBtnFourWheeler_Clicked" ></ImageButton>
+                            <Label Text="Four Wheeler" HorizontalOptions="Center" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
+                        </StackLayout>
+                    </StackLayout>
+
+                </StackLayout>
+            </StackLayout>
+            <StackLayout   AbsoluteLayout.LayoutBounds="0,0.45,1,0.7"   AbsoluteLayout.LayoutFlags="All" Orientation="Vertical" >
+                <StackLayout Margin="30,5,30,5" Spacing="10">
+                    <ListView x:Name="LstApplicationTypes"    RowHeight="50" SeparatorVisibility="None" >
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Grid  VerticalOptions="FillAndExpand">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="7*"/>
+                                            <ColumnDefinition Width="3*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackLayout Orientation="Horizontal" Spacing="10" Grid.Row="0" Grid.Column="0">
+                                            <Frame  CornerRadius="3" Padding="0" HorizontalOptions="Start" BorderColor="#3293fa" BackgroundColor="#3293fa" VerticalOptions="Center">
+                                                <StackLayout HeightRequest="20" WidthRequest="21">
+                                                    <Label    Text="{Binding ApplicationTypeCode}"   TextColor="#FFFFFF"  Style="{StaticResource LabelProximaBoldStyle}" VerticalOptions="Center" HorizontalOptions="Center" FontSize="16" Margin="1,0,0,0"></Label>
+                                                </StackLayout>
+                                            </Frame>
+                                            <Label Text="{Binding ApplicationTypeName}"  Style="{StaticResource LabelProximaBoldStyle}" VerticalOptions="Center" FontSize="16"/>
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal" Spacing="0" Grid.Row="0" Grid.Column="1">
+                                            <Switch Scale="1"  x:Name="switchApplicationType" BindingContext="{Binding .}" Toggled="SwitchApplicationType_Toggled"  Style="{StaticResource SwitchRegularBlueStyle}" HeightRequest="40"/>
+                                        </StackLayout>
+
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <BoxView HeightRequest="0.1" HorizontalOptions="FillAndExpand" BackgroundColor="Black"/>
+                </StackLayout>
+                <StackLayout Margin="30,5,30,5"  >
+                    <ListView x:Name="LstStatus" SeparatorVisibility="None" RowHeight="50" >
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Grid VerticalOptions="FillAndExpand" >
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="7*"/>
+                                            <ColumnDefinition Width="3*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackLayout Orientation="Horizontal" Spacing="10" Grid.Row="0" Grid.Column="0" >
+                                            <Image Source="{Binding StatusImage}" HeightRequest="25" IsVisible="{Binding ShowStatusImage}"></Image>
+                                            <Frame CornerRadius="3" Padding="0" HorizontalOptions="Start"  IsVisible="{Binding ShowStatus}"   BorderColor="#FF0000" BackgroundColor="#FF0000" VerticalOptions="Center">
+                                                <StackLayout HeightRequest="20" WidthRequest="21">
+                                                    <Label    Text="{Binding StatusCode}"   TextColor="#FFFFFF"  Margin="1,0,0,0"  Style="{StaticResource LabelProximaBoldStyle}" VerticalOptions="Center" HorizontalOptions="Center" FontSize="16" ></Label>
+                                                </StackLayout>
+                                            </Frame>
+                                            <Label Text="{Binding StatusName}"  Style="{StaticResource LabelProximaBoldStyle}" VerticalOptions="Center" FontSize="16"/>
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal" Spacing="0" Grid.Row="0" Grid.Column="1" >
+                                            <Switch x:Name="switchStatus"  BindingContext="{Binding .}" Toggled="SwitchStatus_Toggled"  Style="{StaticResource SwitchRegularBlueStyle}"/>
+                                        </StackLayout>
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackLayout>
+
+            </StackLayout>
+
+            <StackLayout    AbsoluteLayout.LayoutBounds="0,1,1,0.13"  Padding="5" AbsoluteLayout.LayoutFlags="All"  BackgroundColor="#FFFFFF">
+                <Button x:Name="btnApply"  Style="{StaticResource ButtonRegularDodgerBlueStyle}" VerticalOptions="CenterAndExpand"  Text="APPLY" Clicked="BtnApply_Clicked" Margin="15,0,15,0" />
+            </StackLayout>
+
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>

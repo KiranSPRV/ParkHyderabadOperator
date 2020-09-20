@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:ParkHyderabadOperator.Behaviors"
+             x:Class="ParkHyderabadOperator.ReNewPassPage"
+               NavigationPage.HasBackButton="True" >
+    <NavigationPage.TitleView >
+        <Label Text="RENEW PASS"  Style="{StaticResource LabelRegularPageTitlesStyle}" Padding="0,0,70,0"/>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <AbsoluteLayout VerticalOptions="FillAndExpand" >
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,0.85"  AbsoluteLayout.LayoutFlags="All"  HorizontalOptions="FillAndExpand" >
+                <StackLayout Margin="15" >
+                    <Grid ColumnSpacing="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="9*"/>
+                        </Grid.RowDefinitions>
+                        <Frame  Grid.Row="0" CornerRadius="25" Padding="0" BorderColor="#f9f9f9" BackgroundColor="#f9f9f9"  HeightRequest="32">
+                            <SearchBar  BackgroundColor="Transparent" Margin="-20,0,0,0" FontSize="14" FontFamily="FontsFree-Net-proxima_nova_reg-webfont.ttf#FontsFree-Net-proxima_nova_reg-webfont"   Placeholder="Search..."   PlaceholderColor="#676767" x:Name="searchBar"   TextChanged="SearchBar_OnTextChanged"  VerticalOptions="EndAndExpand" HorizontalOptions="FillAndExpand"/>
+                        </Frame>
+                        <StackLayout Grid.Row="1"   Orientation="Vertical" Spacing="20" Margin="0,35,0,0">
+                            <StackLayout Orientation="Vertical"  Spacing="0">
+                                <Label Text="Name" Style="{StaticResource LabelPlaceHolderStyle}" ></Label>
+                                <Entry x:Name="entryCustomerName" Style="{StaticResource EntryProximaBlackStyle}">
+                                    <Entry.Behaviors>
+                                        <local:AlphaValidation MaxLength="50" MinLength="6"/>
+                                    </Entry.Behaviors>
+                                </Entry>
+                            </StackLayout>
+                            <StackLayout Orientation="Vertical"  Spacing="0">
+                                <Label Text="Phone Number" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
+                                <Entry x:Name="entryPhoneNumber" Style="{StaticResource EntryProximaBlackStyle}" >
+                                    <Entry.Behaviors>
+                                        <local:NumberValidationBehavior MaxLength="10" MinLength="10"/>
+                                    </Entry.Behaviors>
+                                </Entry>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal"  Spacing="0">
+                                <StackLayout HorizontalOptions="FillAndExpand">
+                                    <Label Text="Registration Number" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
+                                    <Entry x:Name="entryRegistrationNumber" Style="{StaticResource EntryProximaBlackStyle}" >
+                                        <Entry.Behaviors>
+                                            <local:AlphaNumericValidatorBehavior MaxLength="10" MinLength="6"/>
+                                        </Entry.Behaviors>
+                                    </Entry>
+                                </StackLayout>
+                                <StackLayout  VerticalOptions="CenterAndExpand">
+                                    <Image x:Name="imgCustomerVehcileType" Source="bike_black.png" HeightRequest="25" VerticalOptions="CenterAndExpand" HorizontalOptions="EndAndExpand"/>
+                                </StackLayout>
+                            </StackLayout>
+
+
+                            <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="Start" x:Name="slNFC">
+                                <CheckBox x:Name="checkBoxLostNFC"  IsChecked="False" Style="{StaticResource ChekBoxRegularBlueStyle}" />
+                                <Label Style="{StaticResource LabelRegularStartCenterStyle}" Text="LOST NFC CARD?" ></Label>
+                                <Label x:Name="labelNFCCardAmount" Style="{StaticResource LabelRegularStartCenterStyle}" ></Label>
+                            </StackLayout>
+
+                        </StackLayout>
+                        <ListView  Grid.Row="1" x:Name="listViewVehicleRegistrationNumbers" IsVisible="False"   CachingStrategy="RecycleElement" BackgroundColor="White" ItemTapped="listViewVehicleRegistrationNumbers_OnItemTapped">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <ViewCell>
+                                        <Frame CornerRadius="5" BackgroundColor="#FFFFFF" Padding="5" Margin="5">
+                                            <StackLayout >
+                                                <Label Text="{Binding RegistrationNumber}" Style="{StaticResource LabelRegularEndBoldStyle}" />
+                                            </StackLayout>
+                                        </Frame>
+                                    </ViewCell>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </StackLayout>
+            </StackLayout>
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,1,1,0.15"  AbsoluteLayout.LayoutFlags="All"  HorizontalOptions="FillAndExpand" >
+                <StackLayout VerticalOptions="CenterAndExpand" Margin="15">
+                    <Frame CornerRadius="5" Padding="0"   BorderColor="#efefef"   AbsoluteLayout.LayoutBounds="0,1,1,0.1"  AbsoluteLayout.LayoutFlags="All"  BackgroundColor="#FFFFFF">
+                        <StackLayout  Orientation="Vertical"  VerticalOptions="CenterAndExpand" Spacing="10">
+                            <Button Text="CHOOSE PASS" x:Name="BtnChoosePass" Style="{StaticResource ButtonRegularDodgerBlueStyle}" Clicked="BtnChoosePass_Clicked"></Button>
+                        </StackLayout>
+                    </Frame>
+                </StackLayout>
+            </StackLayout>
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>

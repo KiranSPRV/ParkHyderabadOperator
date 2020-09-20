@@ -1,0 +1,482 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ParkHyderabadOperator.App">
+    <Application.Resources>
+        <ResourceDictionary>
+
+            <!--Content Page Background-->
+
+            <Style TargetType="ContentPage" ApplyToDerivedTypes="True">
+                <Setter Property="BackgroundColor" Value="#FFFFFF" />
+            </Style>
+
+
+            <Style TargetType="NavigationPage">
+                <Setter Property="BarBackgroundColor" Value="#FFFFFF"/>
+            </Style>
+
+            <!--ENTRY STYLES-->
+
+            <Style x:Key="EntryProximaBlackStyle" TargetType="Entry">
+                <Setter Property="FontFamily" Value="ProximaNova-Regular.otf#ProximaNova-Regular"  />
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="TextColor" Value="#010101"/>
+                
+            </Style>
+
+            <!--LABEL STYLES-->
+
+            <!--Proxima Regular Style-->
+            <Style x:Key="LabelProximaRegStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontFamily" Value="ProximaNova-Regular.otf#ProximaNova-Regular"  />
+            </Style>
+           
+            <Style x:Key="LabelProximaRegMediumStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="FontFamily" Value="ProximaNova-Regular.otf#ProximaNova-Regular"  />
+            </Style>
+            
+            <Style x:Key="LabelProximaRegBlackStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="TextColor" Value="#010101"/>
+                <Setter Property="FontFamily" Value="ProximaNova-Regular.otf#ProximaNova-Regular"  />
+            </Style>
+            <Style x:Key="LabelProximaRegRedStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="TextColor" Value="#ff0000"/>
+                <Setter Property="FontFamily" Value="ProximaNova-Regular.otf#ProximaNova-Regular"  />
+            </Style>
+
+            <!--Proxima COLOR LABEL-->
+            <Style x:Key="LabelProximaRegMalibuStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="TextColor" Value="#61abfa" />
+                <Setter Property="FontFamily" Value="ProximaNova-Regular.otf#ProximaNova-Regular"  />
+            </Style>
+          
+            <Style x:Key="LabelProximaRegBombayStyle" TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="StartAndExpand" />
+                <Setter Property="TextColor" Value="#B6B7BE" />
+                <Setter Property="FontFamily" Value="ProximaNova-Regular.otf#ProximaNova-Regular"  />
+            </Style>
+
+            <Style x:Key="LabelProximaRegGreenStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#2fcc71" />
+                <Setter Property="FontFamily" Value="ProximaNova-Regular.otf#ProximaNova-Regular"  />
+                <Setter Property="FontSize" Value="16"/>
+            </Style>
+            <Style x:Key="LabelProximaRegSunStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#FFAC14"/>
+                <Setter Property="FontFamily" Value="ProximaNova-Regular.otf#ProximaNova-Regular"  />
+                <Setter Property="FontSize" Value="14"/>
+            </Style>
+
+            <!--END Proxima Regular Style-->
+
+            <!--Proxima Bold Style-->
+            <Style x:Key="LabelProximaBoldStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="TextColor" Value="#010101"/>
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
+            </Style>
+            <Style x:Key="LabelExtraLargeProximaBoldStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#010101"/>
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold" />
+                <Setter Property="FontSize" Value="22"/>
+            </Style>
+            <Style x:Key="LabelProximaRegBoldStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
+            </Style>
+
+
+            <!--Proxima BOLD COLOR LABEL-->
+            
+            <Style x:Key="LabelProximaRegBoldMalibuStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="TextColor" Value="#61abfa" />
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
+            </Style>
+            <Style x:Key="LabelProximaRegBoldRedStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#ff0000"/>
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
+                <Setter Property="FontSize" Value="14"/>
+            </Style>
+            <Style x:Key="LabelProximaRegBoldWhiteStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#FFFFFF" />
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold" />
+                <Setter Property="FontSize" Value="14"/>
+            </Style>
+            <Style x:Key="LabelProximaRegBoldGreenStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#008000" />
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
+                <Setter Property="FontSize" Value="14"/>
+            </Style>
+            <Style x:Key="LabelProximaRegBoldDodgerBlueStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#3293FA"/>
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
+                <Setter Property="FontSize" Value="14"/>
+            </Style>
+
+            <!--END Proxima BOLD COLOR LABEL-->
+
+            <!--BLACK LABEL-->
+
+           
+
+            <Style x:Key="LabelPageHeadingStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="#010101"/>
+                <Setter Property="CharacterSpacing" Value="1"/>
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
+            </Style>
+
+           
+           
+            <Style x:Key="LabelRegularBlackColorStyle" TargetType="Label">
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold" />
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+            </Style>
+
+           
+
+            <Style x:Key="LabelMediumBlackStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#010101" />
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold" />
+                <Setter Property="FontSize" Value="16"/>
+            </Style>
+
+            <Style x:Key="LabelExtraLargeBlackColorStyle" TargetType="Label">
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold" />
+                <Setter Property="FontSize" Value="22"/>
+            </Style>
+
+            <Style x:Key="LabelHeadingStyle" TargetType="Label">
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="FontSize" Value="18"/>
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="TextColor" Value="#010101" />
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
+            </Style>
+
+            <Style x:Key="LabelRegularLargeCenterBoldStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#010101" />
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
+                <Setter Property="HorizontalOptions" Value="Fill"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+                <Setter Property="FontSize" Value="22"/>
+            </Style>
+
+            <Style x:Key="LabelRegularPageTitlesStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#010101" />
+                <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                <Setter Property="CharacterSpacing" Value="1"/>
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
+                <Setter Property="FontSize" Value="20"/>
+            </Style>
+
+            <Style x:Key="LabelRegularGreenStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#2fcc71" />
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
+                <Setter Property="FontSize" Value="16"/>
+            </Style>
+
+            <Style x:Key="LabelRegularLargeFontGreenStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#2fcc71" />
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
+                <Setter Property="FontSize" Value="25"/>
+            </Style>
+
+            <Style x:Key="LabelRegularEndBoldStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#010101" />
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
+                <Setter Property="HorizontalOptions" Value="Fill"/>
+                <Setter Property="VerticalOptions" Value="End"/>
+                <Setter Property="FontSize" Value="16"/>
+            </Style>
+
+            <Style x:Key="LabelNormalEndBoldStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#010101" />
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
+                <Setter Property="HorizontalOptions" Value="Fill"/>
+                <Setter Property="VerticalOptions" Value="End"/>
+                <Setter Property="FontSize" Value="14"/>
+            </Style>
+
+            <Style x:Key="LabelRegularEndNormalFontBoldStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#010101" />
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
+                <Setter Property="HorizontalOptions" Value="Fill"/>
+                <Setter Property="VerticalOptions" Value="End"/>
+                <Setter Property="FontSize" Value="14"/>
+            </Style>
+
+            <Style x:Key="LabelPlaceHolderStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#7e808c" />
+                <Setter Property="FontFamily" Value="ProximaNova-Regular.otf#ProximaNova-Regular"  />
+            </Style>
+
+            <Style x:Key="LabelBoldPlaceHolderStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#b6b7be" />
+                <Setter Property="FontFamily" Value="ProximaNova-Regular.otf#ProximaNova-Regular"  />
+            </Style>
+
+            <Style x:Key="LabelRegularWhiteColorStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#FFFFFF" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontFamily" Value="ProximaNova-Regular.otf#ProximaNova-Regular"  />
+            </Style>
+
+            <Style x:Key="LabelRegularStyle" TargetType="Label">
+                <Setter Property="FontFamily" Value="ProximaNova-Regular.otf#ProximaNova-Regular"  />
+                <Setter Property="FontSize" Value="14"/>
+            </Style>
+
+           
+
+            <Style x:Key="LabelLargeStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#010101" />
+                <Setter Property="FontFamily" Value="ProximaNova-Regular.otf#ProximaNova-Regular"  />
+                <Setter Property="FontSize" Value="22"/>
+            </Style>
+
+            <Style x:Key="LabelRegularEndStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#010101" />
+                <Setter Property="FontFamily" Value="ProximaNova-Regular.otf#ProximaNova-Regular"  />
+                <Setter Property="HorizontalOptions" Value="Fill"/>
+                <Setter Property="VerticalOptions" Value="End"/>
+                <Setter Property="FontSize" Value="14"/>
+            </Style>
+
+            <Style x:Key="LabelRegularCenterStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#010101" />
+                <Setter Property="FontFamily" Value="ProximaNova-Regular.otf#ProximaNova-Regular"  />
+                <Setter Property="HorizontalOptions" Value="Fill"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+                <Setter Property="FontSize" Value="14"/>
+            </Style>
+
+            <Style x:Key="LabelRegularStartCenterStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#010101" />
+                <Setter Property="FontFamily" Value="ProximaNova-Regular.otf#ProximaNova-Regular"  />
+                <Setter Property="HorizontalOptions" Value="Start"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+                <Setter Property="FontSize" Value="14"/>
+            </Style>
+
+            <Style x:Key="LabelRegularCenterBoldStyle" TargetType="Label">
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="TextColor" Value="#010101" />
+                <Setter Property="FontFamily" Value="ProximaNova-Black.ttf#ProximaNova"  />
+                <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+                <Setter Property="FontSize" Value="14"/>
+            </Style>
+
+
+            <!--COLOR LABELS-->
+
+
+            <Style x:Key="LabelRegularMalibuStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="TextColor" Value="#61abfa" />
+                <Setter Property="FontFamily" Value="ProximaNova-Black.ttf#ProximaNova"  />
+            </Style>
+
+          
+
+            <Style x:Key="LabelMediumDodgerBlueStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#3293FA"/>
+                <Setter Property="FontFamily" Value="ProximaNova-Black.ttf#ProximaNova"  />
+                <Setter Property="FontSize" Value="18"/>
+            </Style>
+
+            <Style x:Key="LabelRegularWhiteStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#FFFFFF" />
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold" />
+                <Setter Property="FontSize" Value="14"/>
+            </Style>
+
+            <Style x:Key="LabelRegularRedStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#ff0000"/>
+                <Setter Property="FontFamily" Value="ProximaNova-Black.ttf#ProximaNova"  />
+                <Setter Property="FontSize" Value="14"/>
+            </Style>
+
+            <Style x:Key="LabelRegularEmeraldStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#56D68C"/>
+                <Setter Property="FontFamily" Value="ProximaNova-Black.ttf#ProximaNova"  />
+                <Setter Property="FontSize" Value="14"/>
+            </Style>
+
+            <Style x:Key="LabelMediumEmeraldStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#56D68C"/>
+                <Setter Property="FontFamily" Value="ProximaNova-Black.ttf#ProximaNova"  />
+                <Setter Property="FontSize" Value="18"/>
+            </Style>
+
+            <Style x:Key="LabelRegularSunStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#FFAC14"/>
+                <Setter Property="FontFamily" Value="ProximaNova-Black.ttf#ProximaNova"  />
+                <Setter Property="FontSize" Value="14"/>
+            </Style>
+
+            <Style x:Key="LabelRegularLargeSunStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#FFAC14"/>
+                <Setter Property="FontFamily" Value="ProximaNova-Black.ttf#ProximaNova"  />
+                <Setter Property="FontSize" Value="18"/>
+            </Style>
+
+            <!--PICKER STYLES-->
+
+            <Style x:Key="PickerProximaRegStyle" TargetType="Picker">
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="TextColor" Value="#010101"/>
+                <Setter Property="FontFamily" Value="ProximaNova-Regular.otf#ProximaNova-Regular" />
+            </Style>
+
+            <Style x:Key="PickerRegularBlackStyle" TargetType="Picker">
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
+            </Style>
+
+            <Style x:Key="PickerLargeFontStyle" TargetType="Picker">
+                <Setter Property="TextColor" Value="#010101" />
+                <Setter Property="FontSize" Value="25"/>
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
+            </Style>
+
+            <!--BUTTON STYLES-->
+
+            <Style x:Key="ButtonSubmitStyle" TargetType="Button">
+                
+                <Setter Property="HorizontalOptions" Value="Fill" />
+                <Setter Property="TextColor" Value="#ffffff" />
+                <Setter Property="BackgroundColor" Value="#3293FA" />
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
+                <Setter Property="HeightRequest" Value="40" />
+            </Style>
+
+            <Style x:Key="ButtonRegularStyle" TargetType="Button">
+                <Setter Property="HorizontalOptions" Value="Fill" />
+                <Setter Property="TextColor" Value="#ffffff" />
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontFamily" Value="ProximaNova-Regular.otf#ProximaNova-Regular"  />
+                <Setter Property="HeightRequest" Value="40" />
+            </Style>
+
+            <Style x:Key="ButtonTransparentStyle" TargetType="Button">
+
+                <Setter Property="BackgroundColor" Value="Transparent"/>
+                <Setter Property="HorizontalOptions" Value="Fill" />
+                <Setter Property="TextColor" Value="#ffffff" />
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
+                <Setter Property="HeightRequest" Value="40" />
+            </Style>
+
+            <Style x:Key="ButtonRegularRedStyle" TargetType="Button">
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="TextColor" Value="#FFFFFF" />
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="BackgroundColor" Value="#ff0000"/>
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
+                <Setter Property="HeightRequest" Value="40" />
+            </Style>
+
+            <Style x:Key="ButtonRegularBlueStyle" TargetType="Button">
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="TextColor" Value="#FFFFFF" />
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="BackgroundColor" Value="#0000FF"/>
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
+                <Setter Property="HeightRequest" Value="40" />
+            </Style>
+
+            <Style x:Key="ButtonRegularGreenStyle" TargetType="Button">
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="TextColor" Value="#FFFFFF" />
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="BackgroundColor" Value="#008000"/>
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
+                <Setter Property="HeightRequest" Value="40" />
+            </Style>
+
+            <Style x:Key="ButtonRegularShamrockStyle" TargetType="Button">
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="TextColor" Value="#FFFFFF" />
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="BackgroundColor" Value="#2ECC71"/>
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
+                <Setter Property="HeightRequest" Value="40" />
+            </Style>
+
+            <Style x:Key="ButtonRegularDodgerBlueStyle" TargetType="Button">
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="TextColor" Value="#FFFFFF" />
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="BackgroundColor" Value="#3192F9"/>
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
+                <Setter Property="HeightRequest" Value="40" />
+            </Style>
+
+            <Style x:Key="ButtonRegularWhiteStyle" TargetType="Button">
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="BackgroundColor" Value="#FFFFFF"/>
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
+                <Setter Property="HeightRequest" Value="40" />
+            </Style>
+
+            <Style x:Key="ButtonRegularTreePoppyStyle"  TargetType="Button">
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="BackgroundColor" Value="#F7941D"/>
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold" />
+                <Setter Property="HeightRequest" Value="40" />
+            </Style>
+
+            <!--CHECK BOX-->
+            <Style x:Key="ChekBoxRegularBlueStyle" TargetType="CheckBox">
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="Color" Value="#3293fa"/>
+
+            </Style>
+            <Style x:Key="ChekBoxRegularRedStyle" TargetType="CheckBox">
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="Color" Value="#ff0000"/>
+
+            </Style>
+            <Style x:Key="ChekBoxRegularAlabasterStyle" TargetType="CheckBox">
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="Color" Value="#D4D5D9"/>
+                <Setter Property="BackgroundColor" Value="#F9F9F9"/>
+
+            </Style>
+
+            <Style x:Key="SwitchRegularBlueStyle" TargetType="Switch">
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="OnColor" Value="#3293fa"/>
+                <Setter Property="ThumbColor" Value="#FFFFFF"/>
+
+            </Style>
+            <!--GRID COLUMN SPACING-->
+            <Style TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="0" />
+                <Setter Property="RowSpacing" Value="0" />
+            </Style>
+
+            <!--IMAGE BUTTON STYLE-->
+
+            <Style x:Key="ImageButtonRegularStyle" TargetType="ImageButton">
+                <Setter Property="HorizontalOptions" Value="Fill" />
+                <Setter Property="HeightRequest" Value="40" />
+            </Style>
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

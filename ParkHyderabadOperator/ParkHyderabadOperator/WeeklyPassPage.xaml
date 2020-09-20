@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:ParkHyderabadOperator.Behaviors"
+             x:Class="ParkHyderabadOperator.WeeklyPassPage"
+             NavigationPage.HasBackButton="True">
+    <NavigationPage.TitleView >
+        <Label x:Name="labelGeneratePassPageTitle" Text="GENERATE PASS"   VerticalOptions="Center"  Style="{StaticResource LabelPageHeadingStyle}" Margin="0,0,70,0"/>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <AbsoluteLayout VerticalOptions="FillAndExpand" >
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,0.85"  AbsoluteLayout.LayoutFlags="All" Margin="15,0,15,0">
+                <StackLayout Spacing="20" Margin="0,15,0,0">
+                    <StackLayout Spacing="20">
+                        <StackLayout >
+                            <Frame CornerRadius="5" Padding="0"  BorderColor="#E5E5E9" BackgroundColor="#FFFFFF">
+                                <AbsoluteLayout VerticalOptions="FillAndExpand">
+                                    <StackLayout   AbsoluteLayout.LayoutBounds="0,0,1,1"  AbsoluteLayout.LayoutFlags="All" Padding="10">
+                                        <StackLayout HorizontalOptions="EndAndExpand" VerticalOptions="CenterAndExpand" Spacing="0">
+                                            <StackLayout Orientation="Horizontal"  Spacing="0"   Margin="0,0,5,0" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand">
+                                                <Image Source="rupee_icon.png" HeightRequest="15"  />
+                                                <Label x:Name="labelPassAmount" Style="{StaticResource LabelMediumDodgerBlueStyle}"   />
+                                                <Label Text="/-" Style="{StaticResource LabelMediumDodgerBlueStyle}"  />
+                                            </StackLayout>
+                                        </StackLayout>
+                                    </StackLayout>
+
+                                    <Frame CornerRadius="5" Padding="10"  BorderColor="#f6f7f7" BackgroundColor="#f6f7f7"  AbsoluteLayout.LayoutBounds="0,0,0.65,1"  AbsoluteLayout.LayoutFlags="All" >
+                                        <StackLayout  Orientation="Vertical"    VerticalOptions="CenterAndExpand">
+                                            <Label Text="WEEKLY PASS"  Style="{StaticResource LabelProximaBoldStyle}"    VerticalOptions="Center" HorizontalOptions="CenterAndExpand"/>
+                                            <Label Text="*Single Station" Style="{StaticResource LabelProximaRegBlackStyle}"     HorizontalOptions="CenterAndExpand"/>
+                                        </StackLayout>
+                                    </Frame>
+
+
+                                </AbsoluteLayout>
+                            </Frame>
+                            
+                        </StackLayout>
+                        <StackLayout>
+                            <Label x:Name="labelParkingLocation" Text="KPHP Colony Station Only" Style="{StaticResource LabelProximaRegBoldMalibuStyle}"/>
+                            <StackLayout Orientation="Horizontal" Spacing="0"  Padding="0,10,0,10">
+                                <Frame CornerRadius="1"  Padding="10" BorderColor="#efefef"   BackgroundColor="#FFFFFF"  HorizontalOptions="FillAndExpand">
+                                    <StackLayout  Spacing="10" HorizontalOptions="CenterAndExpand">
+                                        <Label  Text="VALID FROM" Style="{StaticResource LabelProximaRegBoldStyle}" HorizontalOptions="CenterAndExpand" />
+                                        <Label x:Name="labelValidFrom" LineBreakMode="WordWrap" Style="{StaticResource LabelProximaRegBlackStyle}" Margin="2,0,0,0"/>
+                                    </StackLayout>
+                                </Frame>
+                                <Frame CornerRadius="1"  Padding="10" BorderColor="#efefef"   BackgroundColor="#FFFFFF" HorizontalOptions="FillAndExpand">
+                                    <StackLayout    Spacing="10"    HorizontalOptions="CenterAndExpand">
+                                        <Label  Text="VALID TO" Style="{StaticResource LabelProximaRegBoldStyle}" HorizontalOptions="CenterAndExpand"/>
+                                        <Label x:Name="labelValidTo" LineBreakMode="WordWrap" Style="{StaticResource LabelProximaRegBlackStyle}" Margin="2,0,0,0"/>
+                                    </StackLayout>
+                                </Frame>
+                            </StackLayout>
+                        </StackLayout>
+                        
+
+                    </StackLayout>
+                    <StackLayout>
+                        <StackLayout Spacing="30">
+                            <StackLayout Orientation="Vertical"    Spacing="0">
+                                <Label Text="Name" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
+                                <Entry x:Name="entryName" Style="{StaticResource EntryProximaBlackStyle}">
+                                    <Entry.Behaviors>
+                                        <local:AlphaValidation MaxLength="10" MinLength="6"/>
+                                    </Entry.Behaviors>
+                                </Entry>
+                            </StackLayout>
+
+                            <StackLayout Orientation="Vertical"    Spacing="0">
+                                <Label Text="Phone Number" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
+                                <Entry x:Name="entryPhoneNumber" Style="{StaticResource EntryProximaBlackStyle}" Keyboard="Numeric">
+                                    <Entry.Behaviors>
+                                        <local:NumberValidationBehavior MaxLength="10" MinLength="10"/>
+                                    </Entry.Behaviors>
+                                    
+                                </Entry>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" Spacing="0" VerticalOptions="EndAndExpand" >
+                                <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
+                                    <Label Text="Registration Number" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
+                                    <Entry x:Name="entryRegistrationNumber" HorizontalOptions="FillAndExpand" Style="{StaticResource EntryProximaBlackStyle}">
+                                        <Entry.Behaviors>
+                                            <local:AlphaNumericValidatorBehavior MaxLength="10" MinLength="6"/>
+                                        </Entry.Behaviors>
+                                    </Entry>
+                                </StackLayout>
+                                <Image x:Name="imgCustomerVehcileType" HeightRequest="30"  VerticalOptions="CenterAndExpand" />
+                            </StackLayout>
+
+
+
+                        </StackLayout>
+                    </StackLayout>
+                </StackLayout>
+
+            </StackLayout>
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,1,1,0.15"  AbsoluteLayout.LayoutFlags="All" >
+                <StackLayout Orientation="Horizontal" VerticalOptions="CenterAndExpand" Margin="15,0,15,0">
+                    <StackLayout   HorizontalOptions="FillAndExpand" BackgroundColor="#2ECC71" Padding="10" >
+                        <StackLayout.GestureRecognizers >
+                            <TapGestureRecognizer x:Name="slCashPayment" Tapped="SlCashPayment_Tapped"/>
+                        </StackLayout.GestureRecognizers>
+                        <StackLayout Orientation="Horizontal" Spacing="5" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                            <ImageButton Source="rupee_icon_white.png" HeightRequest="20"  BackgroundColor="Transparent"  HorizontalOptions="Center" />
+                            <Label  Text="CASH" Style="{StaticResource LabelRegularWhiteStyle}" VerticalOptions="Center"  HorizontalOptions="Center" />
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout  HorizontalOptions="FillAndExpand"  BackgroundColor="#3293fa" Padding="10">
+                        <StackLayout.GestureRecognizers>
+                            <TapGestureRecognizer x:Name="slEpayment" Tapped="SlEpayment_Tapped"/>
+                        </StackLayout.GestureRecognizers>
+                        <StackLayout Orientation="Horizontal" Spacing="5" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                            <ImageButton Source="QR_White_BackGround.png" HeightRequest="30"  BackgroundColor="Transparent"  HorizontalOptions="Center" />
+                            <Label  Text="EPAY" Style="{StaticResource LabelRegularWhiteStyle}" VerticalOptions="Center"  HorizontalOptions="Center" />
+                        </StackLayout>
+                    </StackLayout>
+                </StackLayout>
+            </StackLayout>
+
+
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>
