@@ -44,9 +44,7 @@
                             <Button x:Name="btnNo" Style="{StaticResource ButtonRegularTreePoppyStyle}"  TextColor="#FFFFFF"  BorderWidth="1" Text="NO" HorizontalOptions="FillAndExpand" Clicked="BtnNo_Clicked" />
                         </StackLayout>
                     </StackLayout>
-                    <StackLayout Padding="10" VerticalOptions="CenterAndExpand" x:Name="stLayoutConfirmCheckIn">
-                        <Button x:Name="btnCheckIn" Style="{StaticResource ButtonRegularShamrockStyle}" Text="CHECK IN" TextColor="#FFFFFF" Clicked="BtnCheckIn_Clicked"/>
-                    </StackLayout>
+                   
                 </StackLayout>
 
 

@@ -18,7 +18,6 @@ namespace ParkHyderabadOperator
         protected override void OnStart()
         {
             // Handle when your app starts
-
         }
 
         private Task DisplayAlert(string v1, string v2, string v3)

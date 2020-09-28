@@ -13,8 +13,12 @@ namespace ParkHyderabadOperator.Model.Report
         }
         public VehicleType VehicleTypeID { get; set; }
         public int NoOfClamps { get; set; }
+        public int NoOfWarningClamps { get; set; }
+        public int NoOfPaidClamps { get; set; }
+        public int NoOfUnPaidClamps { get; set; }
         public decimal Cash { get; set; }
         public decimal EPay { get; set; }
         public string Currency { get; set; }
+        
     }
 }

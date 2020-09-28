@@ -42,10 +42,6 @@
                             <Button x:Name="btnNo" Style="{StaticResource ButtonRegularTreePoppyStyle}" TextColor="#FFFFFF"  BorderWidth="1" Text="NO" HorizontalOptions="FillAndExpand" Clicked="BtnNo_Clicked"/>
                         </StackLayout>
                     </StackLayout>
-                    
-                    <StackLayout Padding="5" VerticalOptions="CenterAndExpand" x:Name="stLayoutPaymentConfirmCheckOut">
-                        <Button x:Name="btnCheckOut" Style="{StaticResource ButtonRegularShamrockStyle}" Text="CHECK Out" Clicked="BtnCheckOut_Clicked"/>
-                    </StackLayout>
                 </StackLayout>
 
 

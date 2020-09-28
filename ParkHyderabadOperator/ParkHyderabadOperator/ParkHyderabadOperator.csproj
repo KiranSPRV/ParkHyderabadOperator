@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="Google.Cloud.Firestore" Version="1.1.0" />
     <PackageReference Include="Google.Cloud.Storage.V1" Version="2.5.0" />
+    <PackageReference Include="Microsoft.AppCenter.Distribute" Version="3.4.2" />
     <PackageReference Include="Plugin.NFC" Version="0.1.16" />
     <PackageReference Include="Rg.Plugins.Popup" Version="1.2.0.223" />
     <PackageReference Include="Xam.Plugin.Connectivity" Version="3.2.0" />

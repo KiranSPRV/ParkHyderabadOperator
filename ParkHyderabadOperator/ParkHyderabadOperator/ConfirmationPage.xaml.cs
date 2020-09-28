@@ -16,17 +16,20 @@ namespace ParkHyderabadOperator
         VehicleCheckIn objNewCheckIn;
         DALCheckIn dal_DALCheckIn = null;
         DALExceptionManagment dal_Exceptionlog = null;
+        BlueToothDevicePrinting ObjblueToothDevicePrinting = null;
+        string[] receiptlines = new string[16]; // Receipt Lines
         public ConfirmationPage()
         {
             InitializeComponent();
-            stLayoutConfirmCheckIn.IsVisible = false;
+            ObjblueToothDevicePrinting = new BlueToothDevicePrinting();
+
         }
         public ConfirmationPage(VehicleCheckIn obj)
         {
             InitializeComponent();
             dal_DALCheckIn = new DALCheckIn();
             dal_Exceptionlog = new DALExceptionManagment();
-            stLayoutConfirmCheckIn.IsVisible = false;
+            ObjblueToothDevicePrinting = new BlueToothDevicePrinting();
             LoadVehicleChekInDetails(obj);
 
 
@@ -73,78 +76,118 @@ namespace ParkHyderabadOperator
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ConfirmationPage.xaml.cs", "", "LoadVehicleChekInDetails");
             }
         }
-        private void BtnYes_Clicked(object sender, EventArgs e)
+      
+        private async void BtnYes_Clicked(object sender, EventArgs e)
         {
+
+            ShowLoading(true);
             try
             {
-                stlayoutYESNO.IsVisible = false;
-                stLayoutConfirmCheckIn.IsVisible = true;
+                string printerName = string.Empty;
+                MasterHomePage masterPage = null;
+                btnYes.IsEnabled = false;
+               CustomerParkingSlot objResultCustomerParkingSlot = null;
+                try
+                {
+                    if (DeviceInternet.InternetConnected())
+                    {
+                        if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken") && objNewCheckIn != null)
+                        {
+                            await Task.Run(() =>
+                            {
+                                objResultCustomerParkingSlot = dal_DALCheckIn.SaveVehicleNewCheckIn(Convert.ToString(App.Current.Properties["apitoken"]), objNewCheckIn);
+                                printerName = ObjblueToothDevicePrinting.GetBlueToothDevices();
+                                if (printerName != string.Empty && printerName != "")
+                                {
+                                    if (receiptlines != null && receiptlines.Length > 0)
+                                    {
+                                        string vehicleType = objResultCustomerParkingSlot.VehicleTypeID.VehicleTypeCode == "2W" ? "BIKE" : (objResultCustomerParkingSlot.VehicleTypeID.VehicleTypeCode == "4W" ? "CAR" : objResultCustomerParkingSlot.VehicleTypeID.VehicleTypeCode);
+                                        receiptlines[0] = "\x1B\x21\x12" + "          " + "HMRL PARKING" + "\x1B\x21\x00" + "\n";
+                                        receiptlines[1] = "\x1B\x21\x01" + "       " + objResultCustomerParkingSlot.LocationParkingLotID.LocationID.LocationName + "-" + objResultCustomerParkingSlot.LocationParkingLotID.LocationParkingLotName + "\n";
+                                        receiptlines[2] = " " + "\n";
+                                        receiptlines[3] = "\x1B\x21\x08" + vehicleType + "     " + objResultCustomerParkingSlot.CustomerVehicleID.RegistrationNumber + "\x1B\x21\x00" + "\n";
+                                        receiptlines[4] = "\x1B\x21\x08" + objResultCustomerParkingSlot.ActualStartTime == null ? "" : Convert.ToDateTime(objResultCustomerParkingSlot.ActualStartTime).ToString("dd MMM yyyy,hh:mm tt") + "\x1B\x21\x00\n";
+                                        receiptlines[5] = "" + "\n";
+                                        receiptlines[6] = "\x1B\x21\x01" + "Paid Rs" + objResultCustomerParkingSlot.Amount.ToString("N2") + "\x1B\x21\x00\n";
+                                        receiptlines[7] = "\x1B\x21\x01" + "Parked at - Bays:" + objResultCustomerParkingSlot.LocationParkingLotID.ParkingBayID.ParkingBayRange + "\x1B\x21\x00\n";
+                                        receiptlines[8] = "\x1B\x21\x01" + "OPERATOR ID -" + objResultCustomerParkingSlot.UserCode + "\x1B\x21\x00\n";
+                                        receiptlines[9] = "\x1B\x21\x01" + "Security available " + objResultCustomerParkingSlot.LocationParkingLotID.LotTimmings + "\x1B\x21\x00\n";
+                                        receiptlines[10] = "\x1B\x21\x01" + "We are not responsible for your valuable items like laptop,      wallet,helmet etc." + "\x1B\x21\x00\n";
+                                        receiptlines[11] = "\x1B\x21\x01" + "GST Number 0012" + "\x1B\x21\x00\n";
+                                        receiptlines[12] = "\x1B\x21\x01" + "Amount includes 18% GST" + "\x1B\x21\x00\n";
+                                        receiptlines[13] = "" + "\n";
+                                        receiptlines[14] = "" + "\n";
+                                        receiptlines[15] = "" + "\n";
+                                    }
+                                    for (var l = 0; l < receiptlines.Length; l++)
+                                    {
+                                        string printtext = receiptlines[l];
+                                        if (printtext != "")
+                                        {
+                                            ObjblueToothDevicePrinting.PrintCommand(printerName, printtext);
+                                        }
+                                    }
+                                    masterPage = new MasterHomePage();
+                                }
+                                else
+                                {
+                                    masterPage = new MasterHomePage();
+                                }
+                            });
+                            if (objResultCustomerParkingSlot != null && objResultCustomerParkingSlot.CustomerParkingSlotID != 0)
+                            {
+                                if (printerName != string.Empty && printerName != "")
+                                {
+                                    await Navigation.PushAsync(masterPage);
+                                }
+                                else
+                                {
+                                    await DisplayAlert("Alert", "Unable to find bluetooth device", "Ok");
+                                    await Navigation.PushAsync(masterPage);
+                                }
+                            }
+                            else
+                            {
+
+                                await DisplayAlert("Alert", "Check-In Fail,Please contact admin.", "Ok");
+                                await Navigation.PushAsync(masterPage);
+                            }
+                            ShowLoading(false);
+                        }
+                    }
+                    else
+                    {
+
+                        await DisplayAlert("Alert", "Please check your internet.", "Ok");
+                        ShowLoading(false);
+                    }
+                    btnYes.IsEnabled = true;
+                }
+                catch (Exception ex)
+                {
+                    ShowLoading(false);
+                    btnYes.IsEnabled = true;
+                    dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ReceiptPage.xaml.cs", "", "BtnPrint_Clicked");
+                }
             }
             catch (Exception ex)
             {
 
+                ShowLoading(false);
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ReceiptPage.xaml.cs", "", "BtnPrint_Clicked");
             }
+            ShowLoading(false);
+
         }
         private async void BtnNo_Clicked(object sender, EventArgs e)
         {
             try
             {
-                stLayoutConfirmCheckIn.IsVisible = false;
                 await Navigation.PushAsync(new CheckIn());
             }
             catch (Exception ex)
             {
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ConfirmationPage.xaml.cs", "", "BtnNo_Clicked");
-            }
-        }
-        private async void BtnCheckIn_Clicked(object sender, EventArgs e)
-        {
-            try
-            {
-                btnCheckIn.IsVisible = false;
-                ShowLoading(true);
-                CustomerParkingSlot objResultCustomerParkingSlot = new CustomerParkingSlot();
-                if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken") && objNewCheckIn != null)
-                {
-                    if (DeviceInternet.InternetConnected())
-                    {
-                     await Task.Run(() =>
-                     {
-                         objNewCheckIn.PaymentReceived = true;
-                         objResultCustomerParkingSlot = dal_DALCheckIn.SaveVehicleNewCheckIn(Convert.ToString(App.Current.Properties["apitoken"]), objNewCheckIn);
-
-                     });
-                        // Vehicle New Check In
-                        if (objResultCustomerParkingSlot.CustomerParkingSlotID != 0)
-                        {
-                            await Navigation.PushAsync(new ReceiptPage(objResultCustomerParkingSlot));
-                        }
-                        else
-                        {
-
-                            await DisplayAlert("Alert", "Check-In Fail,Please contact admin.", "Ok");
-                        }
-                    }
-                    else
-                    {
-                        await DisplayAlert("Alert", "Please check your internet.", "Cancel");
-                        ShowLoading(false);
-                    }
-                }
-                else
-                {
-
-                    await DisplayAlert("Alert", "Check-In Fail,Please contact admin.", "Ok");
-                }
-
-                ShowLoading(false);
-                btnCheckIn.IsVisible = true;
-            }
-            catch (Exception ex)
-            {
-                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ConfirmationPage.xaml.cs", "", "BtnCheckIn_Clicked");
-                ShowLoading(false);
-                btnCheckIn.IsVisible = true;
             }
         }
         public void ShowLoading(bool show)
@@ -162,7 +205,7 @@ namespace ParkHyderabadOperator
             }
 
         }
-
+       
 
     }
 }

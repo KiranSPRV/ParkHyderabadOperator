@@ -89,7 +89,6 @@ namespace ParkHyderabadOperator
                         }
                         if (objresult.ApplicationTypeID.ApplicationTypeCode == "P")
                         {
-                            slExtendedTime.IsVisible = false;
                             labelParkingFeesDetails.Text = "Pass Check-In";
                             labelParkingPaymentType.Text = "";
                             imageParkingFeeImage.Source = "";
@@ -102,7 +101,6 @@ namespace ParkHyderabadOperator
                             imgbtnPrint.IsVisible = false;
                             slSpotExpireTimeDisplay.IsVisible = false;
                             slFeesDetails.IsVisible = false;
-                            slExtendedTime.IsVisible = false;
                             slFOC.IsVisible = false;
                             slClamp.IsVisible = false;
                             chkWarning.IsVisible = false;
@@ -180,10 +178,7 @@ namespace ParkHyderabadOperator
                         slPaymentAndExpand.IsVisible = true;
                         #endregion
 
-                        if (objresult.ApplicationTypeID.ApplicationTypeCode == "A")
-                        {
-                            slExtendedTime.IsVisible = false;
-                        }
+                        
 
                         try
                         {

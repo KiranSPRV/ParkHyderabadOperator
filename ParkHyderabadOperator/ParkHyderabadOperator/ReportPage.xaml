@@ -24,7 +24,7 @@
                             <Picker x:Name="pickerLocationLot"  ItemDisplayBinding="{Binding LocationParkingLotName}"  HorizontalOptions="FillAndExpand"    VerticalOptions="CenterAndExpand"   Style="{StaticResource PickerProximaRegStyle}" FontSize="14"  SelectedIndexChanged="PickerLocationLot_SelectedIndexChanged"/>
                         </Frame>
                         <Frame CornerRadius="5" Grid.Row="0" Grid.Column="1"  BackgroundColor="#FFFFFF"   Padding="0" VerticalOptions="EndAndExpand">
-                            <Picker x:Name="pickerOperator" ItemDisplayBinding="{Binding UserCode}"    HorizontalOptions="FillAndExpand"  VerticalOptions="CenterAndExpand"   Style="{StaticResource PickerProximaRegStyle}" FontSize="14"  SelectedIndexChanged="PickerOperator_SelectedIndexChanged"/>
+                            <Picker x:Name="pickerOperator" ItemDisplayBinding="{Binding UserCode}"    HorizontalOptions="FillAndExpand"  VerticalOptions="CenterAndExpand"   Style="{StaticResource PickerProximaRegStyle}" FontSize="14"  />
                         </Frame>
                         <StackLayout Grid.Row="1" Grid.Column="0"  Orientation="Horizontal" VerticalOptions="CenterAndExpand" Padding="0" >
                             <Frame  CornerRadius="5" Padding="0" BackgroundColor="#FFFFFF"  HorizontalOptions="FillAndExpand">
@@ -42,10 +42,14 @@
                                 <TimePicker x:Name="datePickerToTime"   FontSize="14" FontFamily="ProximaNova-Regular.otf#ProximaNova-Regular"/>
                             </Frame>
                         </StackLayout>
-                        <Frame Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" CornerRadius="10" Padding="0" BackgroundColor="#3192F9" VerticalOptions="CenterAndExpand" >
-                            <Button x:Name="buttonGenerateReport" Style="{StaticResource ButtonRegularDodgerBlueStyle}" Text="GENERATE REPORT" Clicked="ButtonGenerateReport_Clicked" HeightRequest="40" />
-                        </Frame>
-
+                        <StackLayout Orientation="Horizontal" Spacing="5" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+                            <Frame  CornerRadius="10" Padding="0" BackgroundColor="#3192F9" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" >
+                                <Button x:Name="buttonGenerateReport" Style="{StaticResource ButtonRegularDodgerBlueStyle}" Text="GENERATE REPORT" Clicked="ButtonGenerateReport_Clicked" HeightRequest="40" />
+                            </Frame>
+                            <Frame  CornerRadius="10" Padding="0" BackgroundColor="#3192F9" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
+                                <Button x:Name="buttonReportPrint" Style="{StaticResource ButtonRegularDodgerBlueStyle}" Text="PRINT REPORT" Clicked="ButtonReportPrint_Clicked"  HeightRequest="40" />
+                            </Frame>
+                        </StackLayout>
                     </Grid>
                 </StackLayout>
             </StackLayout>
@@ -347,14 +351,18 @@
                                 <StackLayout BackgroundColor="#F2F2F2F2" VerticalOptions="FillAndExpand" >
                                     <Grid ColumnSpacing="5"   Margin="15,5,15,5" VerticalOptions="CenterAndExpand" >
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="2*"></ColumnDefinition>
-                                            <ColumnDefinition Width="3*"></ColumnDefinition>
+                                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                                            <ColumnDefinition Width="1.35*"></ColumnDefinition>
+                                            <ColumnDefinition Width="1.6*"></ColumnDefinition>
+                                            <ColumnDefinition Width="1.05*"></ColumnDefinition>
                                             <ColumnDefinition Width="2.5*"></ColumnDefinition>
                                             <ColumnDefinition Width="2.5*"></ColumnDefinition>
                                         </Grid.ColumnDefinitions>
-                                        <Label Text="Violation" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="0" TextColor="#e86355" HorizontalOptions="StartAndExpand"/>
-                                        <Label Text="No.Of Clamps" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="1" TextColor="#e86355" HorizontalOptions="CenterAndExpand"/>
-                                        <Label  Style="{StaticResource LabelRegularBlackColorStyle}"  Grid.Column="2" TextColor="#e86355" HorizontalOptions="EndAndExpand" >
+                                        <Label Text="V" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="0" TextColor="#e86355" HorizontalOptions="StartAndExpand"/>
+                                        <Label Text="#WC" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="1" TextColor="#e86355" HorizontalOptions="CenterAndExpand"/>
+                                        <Label Text="UnPaid" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="2" TextColor="#e86355" HorizontalOptions="StartAndExpand"/>
+                                        <Label Text="Paid" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="3" TextColor="#e86355" HorizontalOptions="CenterAndExpand"/>
+                                        <Label  Style="{StaticResource LabelRegularBlackColorStyle}"  Grid.Column="4" TextColor="#e86355" HorizontalOptions="EndAndExpand" >
                                             <Label.FormattedText>
                                                 <FormattedString>
                                                     <Span Text="Cash ("/>
@@ -363,7 +371,7 @@
                                                 </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
-                                        <Label  Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="3" TextColor="#e86355" HorizontalOptions="EndAndExpand">
+                                        <Label  Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="5" TextColor="#e86355" HorizontalOptions="EndAndExpand">
                                             <Label.FormattedText>
                                                 <FormattedString>
                                                     <Span Text="EPay ("/>
@@ -379,14 +387,18 @@
                                 <StackLayout VerticalOptions="FillAndExpand" >
                                     <Grid ColumnSpacing="1"  Margin="15,5,15,5" VerticalOptions="CenterAndExpand" >
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="2*"></ColumnDefinition>
-                                            <ColumnDefinition Width="3*"></ColumnDefinition>
+                                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                                            <ColumnDefinition Width="1.35*"></ColumnDefinition>
+                                            <ColumnDefinition Width="1.6*"></ColumnDefinition>
+                                            <ColumnDefinition Width="1.05*"></ColumnDefinition>
                                             <ColumnDefinition Width="2.5*"></ColumnDefinition>
                                             <ColumnDefinition Width="2.5*"></ColumnDefinition>
                                         </Grid.ColumnDefinitions>
                                         <Label Text="Total" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="0" TextColor="#e86355" HorizontalOptions="StartAndExpand"/>
-                                        <Label Text="{Binding TotalClamp}" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="1" TextColor="#e86355" HorizontalOptions="CenterAndExpand"/>
-                                        <Label  Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="2" TextColor="#e86355" HorizontalOptions="EndAndExpand">
+                                        <Label Text="{Binding TotalWarningClamps}" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="1" TextColor="#e86355" HorizontalOptions="CenterAndExpand"/>
+                                        <Label Text="{Binding TotalUnPaidClamps}" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="2" TextColor="#e86355" HorizontalOptions="CenterAndExpand"/>
+                                        <Label Text="{Binding TotalPaidClamps}" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="3" TextColor="#e86355" HorizontalOptions="CenterAndExpand"/>
+                                        <Label  Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="4" TextColor="#e86355" HorizontalOptions="EndAndExpand">
                                             <Label.FormattedText>
                                                 <FormattedString>
                                                     <Span Text="{Binding Currency}" />
@@ -394,7 +406,7 @@
                                                 </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
-                                        <Label  Style="{StaticResource LabelRegularBlackColorStyle}"  Grid.Column="3" TextColor="#e86355" HorizontalOptions="EndAndExpand">
+                                        <Label  Style="{StaticResource LabelRegularBlackColorStyle}"  Grid.Column="5" TextColor="#e86355" HorizontalOptions="EndAndExpand">
                                             <Label.FormattedText>
                                                 <FormattedString>
                                                     <Span Text="{Binding Currency}" />
@@ -410,8 +422,10 @@
                                     <ViewCell>
                                         <Grid ColumnSpacing="5" Padding="0" VerticalOptions="Center" Margin="15,0,15,0">
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="2*"></ColumnDefinition>
-                                                <ColumnDefinition Width="3*"></ColumnDefinition>
+                                                <ColumnDefinition Width="1*"></ColumnDefinition>
+                                                <ColumnDefinition Width="1.35*"></ColumnDefinition>
+                                                <ColumnDefinition Width="1.6*"></ColumnDefinition>
+                                                <ColumnDefinition Width="1.05*"></ColumnDefinition>
                                                 <ColumnDefinition Width="2.5*"></ColumnDefinition>
                                                 <ColumnDefinition Width="2.5*"></ColumnDefinition>
                                             </Grid.ColumnDefinitions>
@@ -422,9 +436,11 @@
                                                     </FormattedString>
                                                 </Label.FormattedText>
                                             </Label>
-                                            <Label Text="{Binding NoOfClamps}" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="1"  HorizontalOptions="CenterAndExpand" FontSize="12"/>
-                                            <Label Text="{Binding Cash  , StringFormat=' {0:F2}'}" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="2"  HorizontalOptions="EndAndExpand" FontSize="12"/>
-                                            <Label Text="{Binding EPay, StringFormat=' {0:F2}'}" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="3"  HorizontalOptions="EndAndExpand" FontSize="12"/>
+                                            <Label Text="{Binding NoOfWarningClamps}" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="1"  HorizontalOptions="CenterAndExpand" FontSize="12"/>
+                                            <Label Text="{Binding NoOfUnPaidClamps}" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="2"  HorizontalOptions="CenterAndExpand" FontSize="12"/>
+                                            <Label Text="{Binding NoOfPaidClamps}" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="3"  HorizontalOptions="CenterAndExpand" FontSize="12"/>
+                                            <Label Text="{Binding Cash  , StringFormat=' {0:F2}'}" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="4"  HorizontalOptions="EndAndExpand" FontSize="12"/>
+                                            <Label Text="{Binding EPay, StringFormat=' {0:F2}'}" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="5"  HorizontalOptions="EndAndExpand" FontSize="12"/>
 
                                         </Grid>
                                     </ViewCell>

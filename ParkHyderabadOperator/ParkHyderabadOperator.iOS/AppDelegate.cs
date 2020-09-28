@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Foundation;
 using UIKit;
+
 
 namespace ParkHyderabadOperator.iOS
 {
@@ -27,7 +27,6 @@ namespace ParkHyderabadOperator.iOS
             // Add this...
             ZXing.Net.Mobile.Forms.iOS.Platform.Init();
             LoadApplication(new App());
-
             return base.FinishedLaunching(app, options);
         }
     }

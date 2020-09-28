@@ -11,6 +11,7 @@ using Android.Nfc;
 using Android.Content;
 using System.Linq;
 
+
 namespace ParkHyderabadOperator.Droid
 {
     [Activity(Label = "InstaOperator",  Theme = "@style/MainTheme", MainLauncher = false, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, ScreenOrientation = ScreenOrientation.Portrait)]
@@ -32,6 +33,7 @@ namespace ParkHyderabadOperator.Droid
             global::ZXing.Net.Mobile.Forms.Android.Platform.Init();
             ZXing.Mobile.MobileBarcodeScanner.Initialize(Application);
             Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, savedInstanceState);
+           
             LoadApplication(new App());
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)

@@ -12,6 +12,9 @@ namespace ParkHyderabadOperator.ViewModel.Reports
         }
        
         public int TotalClamp { get; set; }
+        public int TotalWarningClamps { get; set; }
+        public int TotalUnPaidClamps { get; set; }
+        public int TotalPaidClamps { get; set; }
         public decimal TotalCash { get; set; }
         public decimal TotalEPay { get; set; }
         public string Currency { get; set; }

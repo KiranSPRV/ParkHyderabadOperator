@@ -27,32 +27,54 @@ namespace ParkHyderabadOperator.ViewModel.Reports
         private LotParkingReport _selectedRowItem { get; set; }
         public LotParkingReport SelectedRowItem
         {
+
             get { return _selectedRowItem; }
             set
             {
                 if (_selectedRowItem != value)
                 {
                     _selectedRowItem = value;
-                    ExpandOrCollapseSelectedItem();
+                    try
+                    {
+                        ExpandOrCollapseSelectedItem();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
                 }
             }
+
         }
         private void ExpandOrCollapseSelectedItem()
         {
-
-            if (PreviousSelectedRowItem != null || SelectedRowItem == null)
+            try
             {
-                LotParkingReportList.Where(t => t.Id == PreviousSelectedRowItem.Id).FirstOrDefault().IsVisible = false;
-                LotParkingReportList.Where(t => t.Id == PreviousSelectedRowItem.Id).FirstOrDefault().SelectedImageType = "plus.png";
+                if (LotParkingReportList.Count > 0)
+                {
+                    if (PreviousSelectedRowItem != null || SelectedRowItem == null)
+                    {
+                        LotParkingReportList.Where(t => t.Id == PreviousSelectedRowItem.Id).FirstOrDefault().IsVisible = false;
+                        LotParkingReportList.Where(t => t.Id == PreviousSelectedRowItem.Id).FirstOrDefault().SelectedImageType = "plus.png";
+                    }
+
+                    LotParkingReportList.Where(t => t.Id == SelectedRowItem.Id).FirstOrDefault().IsVisible = true;
+                }
+                else
+                {
+                    
+                    SelectedRowItem = null;
+                }
+
+                PreviousSelectedRowItem = SelectedRowItem;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
 
-            LotParkingReportList.Where(t => t.Id == SelectedRowItem.Id).FirstOrDefault().IsVisible = true;
-
-            PreviousSelectedRowItem = SelectedRowItem;
-
-
         }
-        public LocationLotParkingReport(string apitoken,User objLoginUser)
+        public LocationLotParkingReport(string apitoken, User objLoginUser)
         {
 
             SelectedRowItem = null;
@@ -78,44 +100,82 @@ namespace ParkHyderabadOperator.ViewModel.Reports
                 #endregion
 
                 #region Pass Report
-
-                objVMVehiclePassReport = result.VMLocationLotPassReportID;
-
+                try
+                {
+                    objVMVehiclePassReport = result.VMLocationLotPassReportID;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
                 #endregion
 
                 #region Violation Report
-
-                objVMClampedVehiclesSummary = result.VMLocationLotViolationsID;
+                try
+                {
+                    objVMClampedVehiclesSummary = result.VMLocationLotViolationsID;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
 
                 #endregion
-
-                #region Total Cash and Epay
-                objStationVehicleReport = new StationVehicles();
-                objStationVehicleReport.StationVehicleCash = result.Cash;
-                objStationVehicleReport.StationVehicleEPay = result.EPay;
+                try
+                {
+                    #region Total Cash and Epay
+                    objStationVehicleReport = new StationVehicles();
+                    objStationVehicleReport.StationVehicleCash = result.Cash;
+                    objStationVehicleReport.StationVehicleEPay = result.EPay;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
                 #endregion
 
             }
             catch (Exception ex)
             {
+                throw ex;
             }
         }
         public void GetLotParkingRevenueList(string apitoken)
         {
-            
+
         }
         public VMLocationLotPassReport GetLocationLotPassesReport()
         {
-
-            return objVMVehiclePassReport;
+            try
+            {
+                return objVMVehiclePassReport;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         public VMLocationLotViolations GetLocationLotViolationReport()
         {
-            return objVMClampedVehiclesSummary;
+            try
+            {
+                return objVMClampedVehiclesSummary;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         public StationVehicles GetLocationLotTotalRevenue()
         {
-            return objStationVehicleReport;
+            try
+            {
+                return objStationVehicleReport;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
     public class LotParkingReport : INotifyPropertyChanged
@@ -145,7 +205,7 @@ namespace ParkHyderabadOperator.ViewModel.Reports
         public string SelectedImageType { get; set; }
 
         private bool _isExpandVisible { get; set; }
-        private bool _isVisible { get; set; }
+        private bool _isVisible { get; set; } 
         public bool IsVisible
         {
             get { return _isVisible; }

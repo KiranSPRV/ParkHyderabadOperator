@@ -142,10 +142,7 @@ namespace ParkHyderabadOperator
 
                         #endregion
 
-                        if (objresult.ApplicationTypeID.ApplicationTypeCode == "A")
-                        {
-                            slExtendedTime.IsVisible = false;
-                        }
+                        
                     }
                 }
             }

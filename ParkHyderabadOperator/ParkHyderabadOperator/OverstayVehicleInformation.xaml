@@ -135,7 +135,7 @@
                                                 </StackLayout>
                                             </StackLayout>
                                             <StackLayout x:Name="FOCAndExtend" Orientation="Horizontal" Spacing="8" HorizontalOptions="FillAndExpand">
-                                                <StackLayout HorizontalOptions="FillAndExpand" x:Name="slExtendedTime">
+                                                <StackLayout HorizontalOptions="FillAndExpand" x:Name="slExtendedTime" IsVisible="False">
                                                     <Button Text="EXTEND TIME" x:Name="BtnExtendedTime"  Style="{StaticResource LabelProximaRegBoldWhiteStyle}" BackgroundColor="#f7941d" TextColor="#FFFFFF"   Clicked="BtnExtendedTime_Clicked"  HeightRequest="40"/>
                                                 </StackLayout>
                                                 <StackLayout HorizontalOptions="FillAndExpand" x:Name="slCheckOut">
