@@ -108,9 +108,8 @@
                                                     </StackLayout>
                                                 </StackLayout>
                                             </Grid>
-
                                         </StackLayout>
-                                        <StackLayout Orientation="Horizontal" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
+                                        <StackLayout Orientation="Horizontal" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" x:Name="slViolationPaymentbuttons">
                                             <StackLayout   HorizontalOptions="FillAndExpand" BackgroundColor="#2ECC71" Padding="5"  >
                                                 <StackLayout.GestureRecognizers >
                                                     <TapGestureRecognizer x:Name="slCashPayment" Tapped="SlCashPayment_Tapped"/>

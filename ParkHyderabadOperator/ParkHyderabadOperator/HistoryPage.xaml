@@ -50,7 +50,7 @@
                                             <Label.FormattedText>
                                                 <FormattedString>
                                                     <Span  Text="₹ "/>
-                                                    <Span  Text="{Binding PaidAmount }"/>
+                                                    <Span  Text="{Binding Amount }"/>
                                                     <Span  Text="/-"/>
                                                     <Span  Text="Paid for "/>
                                                     <Span  Text="{Binding Duration}"/>
@@ -63,7 +63,7 @@
                                             </Label.FormattedText>
                                         </Label>
                                         <StackLayout Orientation="Horizontal">
-                                            <Label x:Name="labelClamFeesDetails"  Style="{StaticResource LabelProximaRegBlackStyle}"    VerticalOptions="Center" TextColor="{Binding StatusID.StatusColor}">
+                                            <Label x:Name="labelClamFeesDetails"  Style="{StaticResource LabelProximaRegBlackStyle}"    VerticalOptions="Center" TextColor="{Binding StatusID.StatusColor}" >
                                                 <Label.FormattedText>
                                                     <FormattedString>
                                                         <Span  Text="Clamp Fee: " FontAttributes="Bold"/>
@@ -82,14 +82,16 @@
                                                 </Label.FormattedText>
                                             </Label>
                                         </StackLayout>
-                                        <Label x:Name="labelReason"   Style="{StaticResource LabelProximaRegBlackStyle}"    VerticalOptions="Center" TextColor="{Binding StatusID.StatusColor}">
-                                            <Label.FormattedText>
-                                                <FormattedString>
-                                                    <Span  Text="Reason: " FontAttributes="Bold"/>
-                                                    <Span  Text="{Binding ViolationReasonID.Reason}" TextColor="#ff0000" FontAttributes="Bold"/>
-                                                </FormattedString>
-                                            </Label.FormattedText>
-                                        </Label>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label x:Name="labelReason"   Style="{StaticResource LabelProximaRegBlackStyle}"    VerticalOptions="Center" TextColor="{Binding StatusID.StatusColor}" >
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span  Text="Reason: " FontAttributes="Bold"/>
+                                                        <Span  Text="{Binding ViolationReasonID.Reason}" TextColor="#ff0000" FontAttributes="Bold"/>
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                        </StackLayout>
                                         <StackLayout Orientation="Horizontal">
                                             <Label    Style="{StaticResource LabelProximaRegBlackStyle}"    VerticalOptions="Center" TextColor="{Binding StatusID.StatusColor}">
                                                 <Label.FormattedText>
@@ -159,7 +161,7 @@
                                             <Label.FormattedText>
                                                 <FormattedString>
                                                     <Span  Text="₹ "/>
-                                                    <Span  Text="{Binding PaidAmount }"/>
+                                                    <Span  Text="{Binding Amount }"/>
                                                     <Span  Text="/-"/>
                                                     <Span  Text="Paid for "/>
                                                     <Span  Text="{Binding Duration}"/>
@@ -191,14 +193,16 @@
                                                 </Label.FormattedText>
                                             </Label>
                                         </StackLayout>
-                                        <Label x:Name="labelReason"   Style="{StaticResource LabelProximaRegBlackStyle}"    VerticalOptions="Center" TextColor="{Binding StatusID.StatusColor}">
-                                            <Label.FormattedText>
-                                                <FormattedString>
-                                                    <Span  Text="Reason: "  FontAttributes="Bold"/>
-                                                    <Span  Text="{Binding ViolationReasonID.Reason}" TextColor="#ff0000" FontAttributes="Bold"/>
-                                                </FormattedString>
-                                            </Label.FormattedText>
-                                        </Label>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label x:Name="labelReason"   Style="{StaticResource LabelProximaRegBlackStyle}"    VerticalOptions="Center" TextColor="{Binding StatusID.StatusColor}">
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span  Text="Reason: "  FontAttributes="Bold"/>
+                                                        <Span  Text="{Binding ViolationReasonID.Reason}" TextColor="#ff0000" FontAttributes="Bold"/>
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                        </StackLayout>
                                         <StackLayout Orientation="Horizontal">
                                             <Label    Style="{StaticResource LabelProximaRegBlackStyle}"    VerticalOptions="Center" TextColor="{Binding StatusID.StatusColor}">
                                                 <Label.FormattedText>
@@ -217,8 +221,6 @@
                                                 </Label.FormattedText>
                                             </Label>
                                         </StackLayout>
-                                      
-                                    
                                     </StackLayout>
                                 </StackLayout>
                             </StackLayout>

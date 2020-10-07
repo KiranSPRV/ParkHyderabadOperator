@@ -16,7 +16,7 @@
                     <StackLayout  BackgroundColor="#3293fa"  AbsoluteLayout.LayoutBounds="0,1,1,0.7"  AbsoluteLayout.LayoutFlags="All"   VerticalOptions="FillAndExpand">
                         <!--Blue background layout-->
                     </StackLayout>
-                    <ScrollView  AbsoluteLayout.LayoutBounds="0,0,1,1"  AbsoluteLayout.LayoutFlags="All"   VerticalOptions="FillAndExpand"  Padding="15,0,15,0">
+                    <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,1"  AbsoluteLayout.LayoutFlags="All"   VerticalOptions="FillAndExpand"  Padding="15,0,15,0">
                         <StackLayout>
                             <Frame CornerRadius="10" BorderColor="#D4D5D9" Padding="15" HasShadow ="False"  BackgroundColor="#FFFFFF" >
                                 <ScrollView>
@@ -72,7 +72,7 @@
                                                 <Label x:Name="labelSpotExpiresTime" CharacterSpacing="1" FontSize="30" Style="{StaticResource LabelProximaBoldStyle}" HorizontalOptions="CenterAndExpand"  ></Label>
                                             </StackLayout>
                                             <ScrollView>
-                                                <StackLayout Spacing="0">
+                                                <StackLayout Spacing="0" x:Name="slClampAndPayment">
                                                     <Label  HeightRequest="1" HorizontalOptions="FillAndExpand" BackgroundColor="#E3E3E6" />
                                                     <!--CLAMP STACKLAYOUT-->
                                                     <StackLayout Spacing="0" >
@@ -172,7 +172,7 @@
                                
                             </Frame>
                         </StackLayout>
-                    </ScrollView>
+                    </StackLayout>
                     <ContentView x:Name="StklauoutactivityIndicator" BackgroundColor="Transparent"  IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
                         <StackLayout Orientation="Vertical" HeightRequest="150" WidthRequest="100" BackgroundColor="Transparent" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="0">
                             <ActivityIndicator  x:Name="activity" IsEnabled="False" IsVisible="False" IsRunning="False"   HeightRequest="80" Color="#010101"  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></ActivityIndicator>

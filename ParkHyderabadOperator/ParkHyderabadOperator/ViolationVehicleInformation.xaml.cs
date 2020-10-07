@@ -1,12 +1,10 @@
-﻿using ParkHyderabadOperator.DAL;
-using ParkHyderabadOperator.DAL.DALHome;
+﻿using ParkHyderabadOperator.DAL.DALHome;
 using ParkHyderabadOperator.DAL.DALViolation;
 using ParkHyderabadOperator.Model;
 using ParkHyderabadOperator.Model.APIInputModel;
 using ParkHyderabadOperator.Model.APIOutPutModel;
 using System;
 using System.IO;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -39,12 +37,13 @@ namespace ParkHyderabadOperator
         public void GetViolationVehcileInformation(int customerParkingSlotID)
         {
 
-
             if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
             {
                 objresult = dal_Home.GetSelectedParkedVehicleDetails(Convert.ToString(App.Current.Properties["apitoken"]), customerParkingSlotID);
                 if (objresult.CustomerParkingSlotID != 0)
                 {
+
+
                     User objloginuser = (User)App.Current.Properties["LoginUser"];
                     if (objloginuser.UserTypeID.UserTypeName.ToUpper() == "Supervisor".ToUpper())
                     {
@@ -55,7 +54,7 @@ namespace ParkHyderabadOperator
                         imageViolation.IsVisible = true;
                     }
                     labelParkingLocation.Text = objresult.LocationParkingLotID.LocationID.LocationName + "-" + objresult.LocationParkingLotID.LocationParkingLotName;
-                    labelBayNumber.Text ="Bay Number " + objresult.LocationParkingLotID.ParkingBayID.ParkingBayRange;
+                    labelBayNumber.Text = "Bay Number " + objresult.LocationParkingLotID.ParkingBayID.ParkingBayRange;
                     labelCheckInBy.Text = objresult.CreatedByName + " #" + objresult.UserCode;
                     labelVehicleDetails.Text = objresult.CustomerVehicleID.RegistrationNumber;
                     labelValidFrom.Text = objresult.ExpectedStartTime == null ? Convert.ToDateTime(objresult.ActualStartTime).ToString("dd MMM yyyy, hh:mm tt") : Convert.ToDateTime(objresult.ExpectedStartTime).ToString("dd MMM yyyy, hh:mm tt");
@@ -93,14 +92,23 @@ namespace ParkHyderabadOperator
                             labelClampFee.Text = objresult.IsWarning ? "0.00" : objresult.ClampFees.ToString("N2");
                             labelTotalFee.Text = (objresult.ViolationFees + objresult.ClampFees).ToString("N2");
                             objresult.Duration = Convert.ToString(objInputs.TotalHours);
-                            labelParkingHours.Text = "Parked for " + string.Format(objInputs.TotalHours+ "h:" + t.Minutes + "m");
+                            labelParkingHours.Text = "Parked for " + string.Format(objInputs.TotalHours + "h:" + t.Minutes + "m");
 
                         }
 
 
                     }
+                    if (objresult.StatusID.StatusCode.ToUpper() == "FOC".ToUpper() || objresult.StatusID.StatusCode.ToUpper() == "CHKOut".ToUpper())
+                    {
+                        slViolationPaymentbuttons.IsEnabled = false;
+                        DisplayAlert("Alert", "Vehicle already checkout", "Ok");
+                    }
+                }
 
+                else
+                {
 
+                    DisplayAlert("Alert", "Vehicle already checkout", "Ok");
 
                 }
             }
@@ -156,7 +164,7 @@ namespace ParkHyderabadOperator
                     imgViolationpopupImage.Source = ImageSource.FromStream(() => new MemoryStream(ByteArrayCompressionUtility.Decompress(objresult.VehicleParkingImage)));
                     //GeocodingDetails objgeodetails = new GeocodingDetails();
                     // var resultloc =await objgeodetails.GetGeoCodingPlaceMark( Convert.ToDouble(objresult.VehicleImageLottitude), Convert.ToDouble(objresult.VehicleImageLongitude));
-                    labelViolationImageLocation.Text = objresult.VehicleImageLottitude+","+objresult.VehicleImageLongitude+Environment.NewLine+Convert.ToDateTime(objresult.CreatedOn).ToString("dd MMM yyyy");
+                    labelViolationImageLocation.Text = objresult.VehicleImageLottitude + "," + objresult.VehicleImageLongitude + Environment.NewLine + Convert.ToDateTime(objresult.CreatedOn).ToString("dd MMM yyyy");
                 }
 
             }

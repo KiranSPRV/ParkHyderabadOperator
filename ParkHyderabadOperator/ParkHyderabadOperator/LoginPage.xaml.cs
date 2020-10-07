@@ -31,7 +31,7 @@ namespace ParkHyderabadOperator
         {
             InitializeComponent();
             dal_Exceptionlog = new DALExceptionManagment();
-            App.Current.Properties["BaseURL"] = "http://35.202.198.25:81/InstaParkingOperatorAPIPROD/";
+            App.Current.Properties["BaseURL"] = "http://35.202.198.25:81/InstaParkingOperatorAPI/";
         }
         protected async override void OnAppearing()
         {
@@ -178,10 +178,7 @@ namespace ParkHyderabadOperator
         }
         private void BtnSignIn_Clicked(object sender, EventArgs e)
         {
-
             UserLoginVerification();
-
-
         }
         public async void UserLoginVerification()
         {
@@ -196,7 +193,6 @@ namespace ParkHyderabadOperator
                     {
                         await GetAPIToken();
                         await GetCurrentLocation();
-                        await DisplayAlert("Alert", "Your Latitude,Longitutes are" + Latitude + "," + Longitude, "Ok");
                         if (App.Current.Properties.ContainsKey("apitoken"))
                         {
                             DALUserLogin objdalLogin = new DALUserLogin();
@@ -216,19 +212,49 @@ namespace ParkHyderabadOperator
                                     App.Current.Properties["LoginUser"] = resultObj;
                                     resultObj.LoginDeviceID = LoginDeviceID;
                                     MasterHomePage masterPage = null;
-                                    await DisplayAlert("Alert", "Your location and lot details are:" + resultObj.LocationParkingLotID.LocationID.LocationName + "-" + resultObj.LocationParkingLotID.LocationParkingLotName + "-" + LoginDeviceID, "Ok");
-                                    await Task.Run(() =>
+                                    await DisplayAlert("Alert", "Your location and lot details are:" + resultObj.LocationParkingLotID.LocationID.LocationName + "-" + resultObj.LocationParkingLotID.LocationParkingLotName, "Ok");
+                                    DateTime toDay = DateTime.Now;
+                                    TimeSpan lotClosingTime = new TimeSpan(22, 30, 0);
+                                    toDay = toDay.Date + lotClosingTime;
+                                    if ((resultObj.UserTypeID.UserTypeName.ToUpper()) == ("Operator".ToUpper()) )
                                     {
-                                        if (string.IsNullOrEmpty(cookieUserName) && string.IsNullOrEmpty(cookiePassword))
+                                        if(DateTime.Now < toDay)
                                         {
-                                            SaveUserLogin(Convert.ToString(App.Current.Properties["apitoken"]), resultObj);
+                                            await Task.Run(() =>
+                                            {
+                                                if (string.IsNullOrEmpty(cookieUserName) && string.IsNullOrEmpty(cookiePassword))
+                                                {
+                                                    SaveUserLogin(Convert.ToString(App.Current.Properties["apitoken"]), resultObj);
+                                                }
+                                                SecureStorage.SetAsync("apitoken", Convert.ToString(App.Current.Properties["apitoken"]));
+                                                SecureStorage.SetAsync("UserName", entryUserID.Text.Trim());
+                                                SecureStorage.SetAsync("Password", entryPassword.Text.Trim());
+                                                masterPage = new MasterHomePage();
+                                            });
+                                            await Navigation.PushAsync(masterPage);
                                         }
-                                        SecureStorage.SetAsync("apitoken", Convert.ToString(App.Current.Properties["apitoken"]));
-                                        SecureStorage.SetAsync("UserName", entryUserID.Text.Trim());
-                                        SecureStorage.SetAsync("Password", entryPassword.Text.Trim());
-                                        masterPage = new MasterHomePage();
-                                    });
-                                    await Navigation.PushAsync(masterPage);
+                                        else
+                                        {
+                                            await DisplayAlert("Alert", "Please contact admin,lot time ("+ toDay + ") closed", "Cancel");
+                                            ShowLoading(false);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        await Task.Run(() =>
+                                        {
+                                            if (string.IsNullOrEmpty(cookieUserName) && string.IsNullOrEmpty(cookiePassword))
+                                            {
+                                                SaveUserLogin(Convert.ToString(App.Current.Properties["apitoken"]), resultObj);
+                                            }
+                                            SecureStorage.SetAsync("apitoken", Convert.ToString(App.Current.Properties["apitoken"]));
+                                            SecureStorage.SetAsync("UserName", entryUserID.Text.Trim());
+                                            SecureStorage.SetAsync("Password", entryPassword.Text.Trim());
+                                            masterPage = new MasterHomePage();
+                                        });
+                                        await Navigation.PushAsync(masterPage);
+                                    }
+                                    
                                 }
                                 else
                                 {

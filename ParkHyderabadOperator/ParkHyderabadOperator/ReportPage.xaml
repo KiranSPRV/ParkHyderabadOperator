@@ -46,7 +46,7 @@
                             <Frame  CornerRadius="10" Padding="0" BackgroundColor="#3192F9" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" >
                                 <Button x:Name="buttonGenerateReport" Style="{StaticResource ButtonRegularDodgerBlueStyle}" Text="GENERATE REPORT" Clicked="ButtonGenerateReport_Clicked" HeightRequest="40" />
                             </Frame>
-                            <Frame  CornerRadius="10" Padding="0" BackgroundColor="#3192F9" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
+                            <Frame  CornerRadius="10" Padding="0" BackgroundColor="#3192F9" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" x:Name="fmReportPrint">
                                 <Button x:Name="buttonReportPrint" Style="{StaticResource ButtonRegularDodgerBlueStyle}" Text="PRINT REPORT" Clicked="ButtonReportPrint_Clicked"  HeightRequest="40" />
                             </Frame>
                         </StackLayout>
@@ -107,7 +107,7 @@
                                             <Label  Style="{StaticResource LabelRegularStyle}"  HorizontalOptions="Center" >
                                                 <Label.FormattedText>
                                                     <FormattedString>
-                                                        <Span Text="Epay" />
+                                                        <Span Text="EPay" />
                                                         <Span Text=" (₹)"/>
                                                     </FormattedString>
                                                 </Label.FormattedText>

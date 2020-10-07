@@ -23,10 +23,12 @@ namespace ParkHyderabadOperator
         List<User> lstOperators = null;
         LocationLotParkingReport objlot = null;
         User objReportUser = null;
+       
         public ReportPage()
         {
             InitializeComponent();
             lstlots = new List<VMLocationLots>();
+            fmReportPrint.IsVisible = false;
             ObjblueToothDevicePrinting = new BlueToothDevicePrinting();
             datePickerToTime.Time = new TimeSpan(23, 55, 0);
             LoadLoginUserLocationLots();
@@ -137,7 +139,7 @@ namespace ParkHyderabadOperator
             }
             catch (Exception ex)
             {
-                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ReportPage.xaml.cs", "", "LoadLoginUserLocationLots");
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ReportPage.xaml.cs", "", "LoadLocationLotActiveOperators");
             }
         }
         private async void PickerLocationLot_SelectedIndexChanged(object sender, EventArgs e)
@@ -166,7 +168,7 @@ namespace ParkHyderabadOperator
             }
             catch (Exception ex)
             {
-                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ReportPage.xaml.cs", "", "LoadLoginUserLocationLots");
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ReportPage.xaml.cs", "", "PickerLocationLot_SelectedIndexChanged");
             }
         }
 
@@ -174,6 +176,7 @@ namespace ParkHyderabadOperator
         private void ButtonGenerateReport_Clicked(object sender, EventArgs e)
         {
             GenerateAppReport();
+            fmReportPrint.IsVisible = true;
         }
         public async void GenerateAppReport()
         {
@@ -196,10 +199,20 @@ namespace ParkHyderabadOperator
                         if (pickerOperator.SelectedItem != null)
                         {
                             var objselectedOperator = (User)pickerOperator.SelectedItem;
-                            objReportUser.UserID = objselectedOperator.UserID;
-                            objReportUser.UserCode = objselectedOperator.UserCode;
+                            if(objselectedOperator.UserCode.Contains("ALL"))
+                            {
+                                var userobj = (User)App.Current.Properties["LoginUser"];
+                                objReportUser.UserID =0;
+                                objReportUser.UserCode = userobj.UserCode;
+                            }
+                            else
+                            {
+                                objReportUser.UserID = objselectedOperator.UserID;
+                                objReportUser.UserCode = objselectedOperator.UserCode;
+                            }
+                           
                         }
-                        else
+                        else 
                         {
                             var userobj = (User)App.Current.Properties["LoginUser"];
                             objReportUser.UserID = userobj.UserID;
@@ -289,9 +302,10 @@ namespace ParkHyderabadOperator
                     if (printerName != string.Empty && printerName != "")
                     {
                         List<string> lstPritnText = new List<string>();
+                        string reportDate = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
                         lstPritnText.Add("\x1B\x21\x19" + "Parking: " + objReportUser.LocationParkingLotID.LocationParkingLotName + "\x1B\x21\x00" + "\n\n");
                         lstPritnText.Add("\x1B\x21\x09" + "User :" + objReportUser.UserCode + "\x1B\x21\x00" + "\n\n");
-                        lstPritnText.Add("\x1B\x21\x07" + "         " + DateTime.Now.Date + "\x1B\x21\x00\n\n");
+                        lstPritnText.Add("\x1B\x21\x07" + "   " + reportDate + "\x1B\x21\x00\n\n");
                         lstPritnText.Add("\x1B\x21\x07" + "From :" + objReportUser.LoginTime + "\x1B\x21\x00\n");
                         lstPritnText.Add("\x1B\x21\x01" + "  To :" + objReportUser.LogoutTime + "\x1B\x21\x00\n\n");
 
@@ -306,7 +320,7 @@ namespace ParkHyderabadOperator
                                     lstPritnText.Add("\x1B\x21\x07" + "Total CheckOut :" + item.TotalOut + "\x1B\x21\x00\n");
                                     lstPritnText.Add("\x1B\x21\x07" + "           FOC :" + item.TotalFOC + "\x1B\x15\x00\n");
                                     lstPritnText.Add("\x1B\x21\x07" + "          Cash :" + item.TotalCash + "\x1B\x21\x00\n");
-                                    lstPritnText.Add("\x1B\x21\x07" + "         EPay :" + item.TotalEpay + "\x1B\x21\x00\n");
+                                    lstPritnText.Add("\x1B\x21\x07" + "          EPay :" + item.TotalEpay + "\x1B\x21\x00\n");
                                     lstPritnText.Add("" + "\n");
                                     lstPritnText.Add("" + "\n");
                                 }
@@ -317,7 +331,7 @@ namespace ParkHyderabadOperator
                                     lstPritnText.Add("\x1B\x21\x07" + "Total CheckOut :" + item.TotalOut + "\x1B\x21\x00\n");
                                     lstPritnText.Add("\x1B\x21\x07" + "           FOC :" + item.TotalFOC + "\x1B\x15\x00\n");
                                     lstPritnText.Add("\x1B\x21\x07" + "          Cash :" + item.TotalCash + "\x1B\x21\x00\n");
-                                    lstPritnText.Add("\x1B\x21\x07" + "         EPay :" + item.TotalEpay + "\x1B\x21\x00\n");
+                                    lstPritnText.Add("\x1B\x21\x07" + "          EPay :" + item.TotalEpay + "\x1B\x21\x00\n");
                                     lstPritnText.Add("" + "\n");
                                     lstPritnText.Add("" + "\n");
                                 }
@@ -330,8 +344,8 @@ namespace ParkHyderabadOperator
                             lstPritnText.Add("\x1B\x21\x20" + "PASS " + "\x1B\x21\x00" + "\n");
                             lstPritnText.Add("\x1B\x21\x07" + "Total Sold :" + passesreport.TotalSold+ "\x1B\x21\x00\n");
                             lstPritnText.Add("\x1B\x21\x07" + " Total NFC :" + passesreport.TotalNFC + "\x1B\x21\x00\n");
-                            lstPritnText.Add("\x1B\x21\x07" + "      Cash :" + passesreport.TotalCash + "\x1B\x21\x00\n");
-                            lstPritnText.Add("\x1B\x21\x07" + "      EPay :" + passesreport.TotalEPay + "\x1B\x21\x00\n");
+                            lstPritnText.Add("\x1B\x21\x07" + "      Cash :" +Convert.ToDecimal(passesreport.TotalCash).ToString("N2") + "\x1B\x21\x00\n");
+                            lstPritnText.Add("\x1B\x21\x07" + "      EPay :" + passesreport.TotalEPay.ToString("N2") + "\x1B\x21\x00\n");
                             lstPritnText.Add("" + "\n");
                             lstPritnText.Add("" + "\n");
                         }
@@ -343,15 +357,15 @@ namespace ParkHyderabadOperator
                             lstPritnText.Add("\x1B\x21\x07" + "Warning Clamp :" + violationreport.TotalWarningClamps + "\x1B\x21\x00\n");
                             lstPritnText.Add("\x1B\x21\x07" + "       UnPaid :" + violationreport.TotalUnPaidClamps + "\x1B\x21\x00\n");
                             lstPritnText.Add("\x1B\x21\x07" + "         Paid :" + violationreport.TotalPaidClamps + "\x1B\x21\x00\n");
-                            lstPritnText.Add("\x1B\x21\x07" + "         Cash :" + violationreport.TotalCash + "\x1B\x21\x00\n");
-                            lstPritnText.Add("\x1B\x21\x07" + "         EPay :" + violationreport.TotalEPay + "\x1B\x21\x00\n");
+                            lstPritnText.Add("\x1B\x21\x07" + "         Cash :" + violationreport.TotalCash.ToString("N2") + "\x1B\x21\x00\n");
+                            lstPritnText.Add("\x1B\x21\x07" + "         EPay :" + violationreport.TotalEPay.ToString("N2") + "\x1B\x21\x00\n");
                             lstPritnText.Add("" + "\n");
                             lstPritnText.Add("" + "\n");
                         }
                         var objStationVehicles = objlot.GetLocationLotTotalRevenue();
-                        lstPritnText.Add("\x1B\x21\x07" + "      Total Cash :" + objStationVehicles.StationVehicleCash + "\x1B\x21\x00\n");
-                        lstPritnText.Add("\x1B\x21\x07" + "      Total EPay :" + objStationVehicles.StationVehicleEPay + "\x1B\x21\x00\n");
-                        lstPritnText.Add("\x1B\x21\x08" + "     Toal Amount :" + (objStationVehicles.StationVehicleCash + objStationVehicles.StationVehicleEPay).ToString("N2") + "\x1B\x21\x00\n\n");
+                        lstPritnText.Add("\x1B\x21\x07" + "      Total Cash :" + objStationVehicles.StationVehicleCash.ToString("N2") + "\x1B\x21\x00\n");
+                        lstPritnText.Add("\x1B\x21\x07" + "      Total EPay :" + objStationVehicles.StationVehicleEPay.ToString("N2") + "\x1B\x21\x00\n");
+                        lstPritnText.Add("\x1B\x21\x08" + "     Total Amount :" + (objStationVehicles.StationVehicleCash + objStationVehicles.StationVehicleEPay).ToString("N2") + "\x1B\x21\x00\n\n");
                         lstPritnText.Add("" + "\n\n");
                         lstPritnText.Add("" + "\n\n");
 

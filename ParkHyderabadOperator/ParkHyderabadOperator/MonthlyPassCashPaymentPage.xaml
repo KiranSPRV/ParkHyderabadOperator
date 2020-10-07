@@ -67,7 +67,7 @@
 
                     <StackLayout Margin="0,5,0,0" Spacing="2">
 
-                        <StackLayout Orientation="Horizontal"   x:Name="slNFCCard">
+                        <StackLayout Orientation="Horizontal"   x:Name="slNFCCard" >
                             <StackLayout Orientation="Vertical" Spacing="2" HorizontalOptions="FillAndExpand">
                                 <StackLayout BackgroundColor="#f4f4f4" HorizontalOptions="FillAndExpand"  Spacing="0">
                                     <Label Text="Tap NFC Card" Style="{StaticResource LabelPlaceHolderStyle}"></Label>

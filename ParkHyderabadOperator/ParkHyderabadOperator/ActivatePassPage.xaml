@@ -42,7 +42,7 @@
                             <StackLayout Orientation="Horizontal"  Spacing="0" x:Name="slNFC">
                                 <StackLayout Orientation="Vertical" Spacing="0"  BackgroundColor="#f4f4f4" HorizontalOptions="FillAndExpand">
                                     <Label Text="Tap NFC Card" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
-                                    <Entry x:Name="labelNFCCard" Style="{StaticResource EntryProximaBlackStyle}"></Entry>
+                                    <Entry x:Name="labelNFCCard" Style="{StaticResource EntryProximaBlackStyle}" IsReadOnly="True"></Entry>
                                     <Label x:Name="labelNFCSuccessMsg" Style="{StaticResource EntryProximaBlackStyle}" TextColor="#2ECC71"/>
                                 </StackLayout>
                                 <ImageButton Source="NFC_Card_New.png" HeightRequest="25"  x:Name="imgBtnNFCCard"   VerticalOptions="Center" BackgroundColor="Transparent"/>
@@ -50,7 +50,7 @@
                             <StackLayout Orientation="Horizontal">
                                 <StackLayout    x:Name="slBARCodeReader"  BackgroundColor="#f4f4f4" HorizontalOptions="FillAndExpand"  Spacing="0">
                                     <Label Text="BARCode" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
-                                    <Entry x:Name="labelBARCode" Style="{StaticResource EntryProximaBlackStyle}" HorizontalOptions="FillAndExpand"></Entry>
+                                    <Entry x:Name="labelBARCode" Style="{StaticResource EntryProximaBlackStyle}" HorizontalOptions="FillAndExpand" IsReadOnly="True"></Entry>
                                 </StackLayout>
                                 <ImageButton x:Name="imgbtnScanBarCode" Source="QR_White.png" HeightRequest="25"     VerticalOptions="Center" BackgroundColor="Transparent" Clicked="ImgbtnScanBarCode_Clicked"/>
                             </StackLayout>

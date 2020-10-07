@@ -42,14 +42,13 @@
                             <Button x:Name="btnNo" Style="{StaticResource ButtonRegularTreePoppyStyle}" TextColor="#FFFFFF"  BorderWidth="1" Text="NO" HorizontalOptions="FillAndExpand" Clicked="BtnNo_Clicked"/>
                         </StackLayout>
                     </StackLayout>
+                    <StackLayout x:Name="stLayoutPaymentConfirmCheckOut">
+                        <Button x:Name="btnCheckOut" Style="{StaticResource ButtonRegularShamrockStyle}" Text="CHECK Out" Clicked="BtnCheckOut_Clicked"></Button>
+                    </StackLayout>
                 </StackLayout>
-
-
-
             </StackLayout>
-            
-            <StackLayout  AbsoluteLayout.LayoutBounds="0,1,1,0.15"  AbsoluteLayout.LayoutFlags="All"  HorizontalOptions="FillAndExpand" >
-               
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,1,1,0.15" Padding="5"  AbsoluteLayout.LayoutFlags="All"  HorizontalOptions="FillAndExpand" >
+                
             </StackLayout>
             <ContentView x:Name="StklauoutactivityIndicator" BackgroundColor="Transparent"  IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
                 <StackLayout Orientation="Vertical" HeightRequest="150" WidthRequest="100" BackgroundColor="Transparent" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="0">

@@ -20,10 +20,10 @@ namespace ParkHyderabadOperator.DAL.DALCheckIn
             try
             {
                 lstParkingHours.Add("00");
-                lstParkingHours.Add(2.ToString("D2"));
-                lstParkingHours.Add(3.ToString("D2"));
-                lstParkingHours.Add(5.ToString("D2"));
                 lstParkingHours.Add(6.ToString("D2"));
+                lstParkingHours.Add(5.ToString("D2"));
+                lstParkingHours.Add(3.ToString("D2"));
+                lstParkingHours.Add(2.ToString("D2"));
             }
             catch (Exception ex)
             {

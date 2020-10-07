@@ -25,15 +25,19 @@ namespace ParkHyderabadOperator
         {
             btnPreviousMonth.Style = (Style)App.Current.Resources["ButtonSubmitStyle"];
             btnCurrentMonth.Style = (Style)App.Current.Resources["ButtonRegularWhiteStyle"];
-            GetUserTimeSheet(new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 1));
+            DateTime firstDayOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 1);
+            GetUserTimeSheet(firstDayOfMonth, firstDayOfMonth.AddMonths(1).AddDays(-1));
         }
         private void BtnCurrentMonth_Clicked(object sender, EventArgs e)
         {
             btnPreviousMonth.Style = (Style)App.Current.Resources["ButtonRegularWhiteStyle"];
             btnCurrentMonth.Style = (Style)App.Current.Resources["ButtonSubmitStyle"];
-            GetUserTimeSheet(new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1));
+            DateTime firstDayOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            DateTime presentDayOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+         
+            GetUserTimeSheet(firstDayOfMonth, presentDayOfMonth);
         }
-        private async void GetUserTimeSheet(DateTime selectedMonth)
+        private async void GetUserTimeSheet(DateTime selectedMonth,DateTime lastdate)
         {
             ShowLoading(true);
             VMUserDailyLogin objvmuserlogin = null;
@@ -47,7 +51,7 @@ namespace ParkHyderabadOperator
                     objdailylogin.UserID.UserID = objloginuser.UserID;
                     objdailylogin.LocationParkingLotID.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
                     objdailylogin.HistoryFromDate = firstDayOfMonth;
-                    objdailylogin.HistoryToDate = firstDayOfMonth.AddMonths(1).AddDays(-1);
+                    objdailylogin.HistoryToDate = lastdate;
                     await Task.Run(() =>
                     {
                         objvmuserlogin = dal_menubar.GetUserDailyLoginHistory(Convert.ToString(App.Current.Properties["apitoken"]), objdailylogin);

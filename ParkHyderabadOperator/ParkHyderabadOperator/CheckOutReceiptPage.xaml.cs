@@ -55,9 +55,9 @@ namespace ParkHyderabadOperator
                 }
                 labelVehicleDetails.Text = objCheckOutReceipt.CustomerVehicleID.RegistrationNumber;
                 imageParkingFeeImage.Source = "rupee_black.png";
-                labelParkingFeesDetails.Text = objCheckOutReceipt.PaidAmount.ToString("N2") + "/-";
+                labelParkingFeesDetails.Text = (objCheckOutReceipt.ExtendAmount+ objCheckOutReceipt.ViolationFees + objCheckOutReceipt.ClampFees).ToString("N2") + "/-"; //objCheckOutReceipt.PaidAmount.ToString("N2") + "/-";
                 labelParkingPaymentType.Text = "Paid for " + objCheckOutReceipt.Duration + "hr - " + "By " + objCheckOutReceipt.PaymentTypeID.PaymentTypeName;
-                labelCheckOutFeesDetails.Text = "(Parking" + " ₹" + objCheckOutReceipt.Amount + " + " + "Clamp" + " ₹" + objCheckOutReceipt.ClampFees + ")";
+                labelCheckOutFeesDetails.Text = "(Parking" + " ₹" + (objCheckOutReceipt.ExtendAmount + objCheckOutReceipt.ViolationFees).ToString("N2") + " + " + "Clamp" + " ₹" + objCheckOutReceipt.ClampFees + ")";
                 imageOperatorProfile.Source = "operator.png";
 
                 if(objCheckOutReceipt.CreatedByName!="")
@@ -83,7 +83,7 @@ namespace ParkHyderabadOperator
                         receiptlines[3] = "\x1B\x21\x08" + vehicleType + "     " + objCheckOutReceipt.CustomerVehicleID.RegistrationNumber + "\x1B\x21\x00" + "\n";
                         receiptlines[4] = "\x1B\x21\x08" + objCheckOutReceipt.ActualEndTime == null ? "" : Convert.ToDateTime(objCheckOutReceipt.ActualEndTime).ToString("dd MMM yyyy,hh:mm tt") + "\x1B\x21\x00\n";
                         receiptlines[5] = "" + "\n";
-                        receiptlines[6] = "\x1B\x21\x01" + "Paid Rs" + objCheckOutReceipt.PaidAmount.ToString("N2") + "\x1B\x21\x00\n";
+                        receiptlines[6] = "\x1B\x21\x01" + "Paid Rs" + (objCheckOutReceipt.ExtendAmount + objCheckOutReceipt.ViolationFees + objCheckOutReceipt.ClampFees).ToString("N2") + "\x1B\x21\x00\n";
                         receiptlines[7] = "\x1B\x21\x01" + "Parked at - Bays:" + objCheckOutReceipt.LocationParkingLotID.ParkingBayID.ParkingBayRange + "\x1B\x21\x00\n";
                         receiptlines[8] = "\x1B\x21\x01" + "OPERATOR ID -" + objCheckOutReceipt.UserCode + "\x1B\x21\x00\n";
                         receiptlines[9] = "\x1B\x21\x01" + "Security available " + objCheckOutReceipt.LocationParkingLotID.LotTimmings + "\x1B\x21\x00\n";

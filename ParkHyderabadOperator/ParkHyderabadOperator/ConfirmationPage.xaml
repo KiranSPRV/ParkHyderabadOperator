@@ -40,7 +40,7 @@
                     <StackLayout x:Name="stlayoutYESNO" Spacing="25">
                         <Label Text="HAVE YOU RECEIVED PAYMENT?" Style="{StaticResource LabelProximaRegMediumStyle}"  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
                         <StackLayout Orientation="Horizontal" Spacing="10" >
-                            <Button x:Name="btnYes" Style="{StaticResource ButtonRegularShamrockStyle}"   TextColor="#FFFFFF"  BorderWidth="1" Text="YES"  HorizontalOptions="FillAndExpand" Clicked="BtnYes_Clicked"/>
+                            <Button x:Name="btnYes" Style="{StaticResource ButtonRegularShamrockStyle}"   TextColor="#FFFFFF"  BorderWidth="1" Text="YES/Check In"  HorizontalOptions="FillAndExpand" Clicked="BtnYes_Clicked"/>
                             <Button x:Name="btnNo" Style="{StaticResource ButtonRegularTreePoppyStyle}"  TextColor="#FFFFFF"  BorderWidth="1" Text="NO" HorizontalOptions="FillAndExpand" Clicked="BtnNo_Clicked" />
                         </StackLayout>
                     </StackLayout>

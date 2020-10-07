@@ -357,7 +357,7 @@ namespace ParkHyderabadOperator
                                                     }
                                                     else
                                                     {
-                                                        await DisplayAlert("Alert", "Vehicle Alreday Violation at " + existingCheckIn, "Ok");
+                                                        await DisplayAlert("Alert", "Vehicle Already Violation at " + existingCheckIn, "Ok");
                                                     }
                                                 }
                                                 else
@@ -474,7 +474,7 @@ namespace ParkHyderabadOperator
                             }
                             else
                             {
-                                await DisplayAlert("Alert", "Vehicle Alreday Violation at " + existingCheckIn, "Ok");
+                                await DisplayAlert("Alert", "Vehicle Already Violation at " + existingCheckIn, "Ok");
                             }
                         }
                         else
@@ -543,7 +543,7 @@ namespace ParkHyderabadOperator
             }
 
         }
-        public string VerifyVehicleCheckInStatus() // Verify Vehicle alreday parked
+        public string VerifyVehicleCheckInStatus() // Verify Vehicle already parked
         {
             string alreadyCheckIn = string.Empty;
             try

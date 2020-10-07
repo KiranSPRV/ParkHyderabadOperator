@@ -22,11 +22,13 @@ namespace ParkHyderabadOperator
             InitializeComponent();
             dal_Exceptionlog = new DALExceptionManagment();
             ObjblueToothDevicePrinting = new BlueToothDevicePrinting();
-            
+            stLayoutPaymentConfirmCheckOut.IsVisible = false;
+
         }
         public CheckOutPaymentConfirmationPage(string redirectdFrom, CustomerParkingSlot objInput)
         {
             InitializeComponent();
+            stLayoutPaymentConfirmCheckOut.IsVisible = false;
             ObjblueToothDevicePrinting = new BlueToothDevicePrinting();
             PageCalledBy = redirectdFrom;
             objviolationVehicleChekOut = objInput;
@@ -64,6 +66,7 @@ namespace ParkHyderabadOperator
         {
             try
             {
+
                 ShowLoading(true);
                 if (PageCalledBy == "ViolationVehicleInformation")
                 { await Navigation.PushAsync(new ViolationVehicleInformation(objviolationVehicleChekOut.CustomerParkingSlotID)); }
@@ -79,88 +82,49 @@ namespace ParkHyderabadOperator
                 ShowLoading(false);
             }
         }
-        private async void BtnYes_Clicked(object sender, EventArgs e)
+        private  void BtnYes_Clicked(object sender, EventArgs e)
+        {
+            try
+            {
+                slYESNO.IsVisible = false;
+                stLayoutPaymentConfirmCheckOut.IsVisible = true;
+
+            }
+            catch (Exception ex)
+            {
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "CheckOutPaymentConfirmationPage.xaml.cs", "", "BtnYes_Clicked");
+            }
+        }
+       
+        private async void BtnCheckOut_Clicked(object sender, EventArgs e)
         {
             try
             {
                 ShowLoading(true);
-                btnYes.IsEnabled = false;
-                btnNo.IsVisible = false;
-                DALVehicleCheckOut dal_CheckOut = null;
-                MasterHomePage masterPage = null;
-                CustomerParkingSlot objCheckOutReceipt = null;
+                btnCheckOut.IsVisible = false;
                 if (DeviceInternet.InternetConnected())
                 {
+                    ShowLoading(true);
+                    slYESNO.IsVisible = false;
+                    DALVehicleCheckOut dal_CheckOut = new DALVehicleCheckOut();
                     if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                     {
-                        dal_CheckOut = new DALVehicleCheckOut();
-                        string printerName = string.Empty;
+                        CustomerParkingSlot VehicleCheckOut = null;
+                        User objCheckoutBy = (User)App.Current.Properties["LoginUser"];
+                        objviolationVehicleChekOut.CreatedBy = objCheckoutBy.UserID;
                         await Task.Run(() =>
                         {
-                            User objCheckoutBy = (User)App.Current.Properties["LoginUser"];
-                            objviolationVehicleChekOut.CreatedBy = objCheckoutBy.UserID;
-                            objCheckOutReceipt = dal_CheckOut.VehicleCheckOut(Convert.ToString(App.Current.Properties["apitoken"]), objviolationVehicleChekOut);
-                            printerName = ObjblueToothDevicePrinting.GetBlueToothDevices();
-                            if (printerName != string.Empty && printerName != "")
-                            {
-                                if (receiptlines != null && receiptlines.Length > 0)
-                                {
-                                    string vehicleType = objCheckOutReceipt.VehicleTypeID.VehicleTypeCode == "2W" ? "BIKE" : (objCheckOutReceipt.VehicleTypeID.VehicleTypeCode == "4W" ? "CAR" : objCheckOutReceipt.VehicleTypeID.VehicleTypeCode);
-                                    receiptlines[0] = "\x1B\x21\x12" + "          " + "HMRL PARKING" + "\x1B\x21\x00" + "\n";
-                                    receiptlines[1] = "\x1B\x21\x01" + "       " + objCheckOutReceipt.LocationParkingLotID.LocationID.LocationName + "-" + objCheckOutReceipt.LocationParkingLotID.LocationParkingLotName + "\n";
-                                    receiptlines[2] = " " + "\n";
-                                    receiptlines[3] = "\x1B\x21\x08" + vehicleType + "     " + objCheckOutReceipt.CustomerVehicleID.RegistrationNumber + "\x1B\x21\x00" + "\n";
-                                    receiptlines[4] = "\x1B\x21\x08" + objCheckOutReceipt.ActualEndTime == null ? "" : Convert.ToDateTime(objCheckOutReceipt.ActualEndTime).ToString("dd MMM yyyy,hh:mm tt") + "\x1B\x21\x00\n";
-                                    receiptlines[5] = "" + "\n";
-                                    receiptlines[6] = "\x1B\x21\x01" + "Paid Rs" + (objviolationVehicleChekOut.ExtendAmount + objviolationVehicleChekOut.ClampFees + objviolationVehicleChekOut.ViolationFees).ToString("N2") + "\x1B\x21\x00\n";
-                                    receiptlines[7] = "\x1B\x21\x01" + "Parked at - Bays:" + objCheckOutReceipt.LocationParkingLotID.ParkingBayID.ParkingBayRange + "\x1B\x21\x00\n";
-                                    receiptlines[8] = "\x1B\x21\x01" + "OPERATOR ID -" + objCheckOutReceipt.UserCode + "\x1B\x21\x00\n";
-                                    receiptlines[9] = "\x1B\x21\x01" + "Security available " + objCheckOutReceipt.LocationParkingLotID.LotTimmings + "\x1B\x21\x00\n";
-                                    receiptlines[10] = "\x1B\x21\x01" + "We are not responsible for your valuable items like laptop,      wallet,helmet etc." + "\x1B\x21\x00\n";
-                                    receiptlines[11] = "\x1B\x21\x01" + "GST Number 0012" + "\x1B\x21\x00\n";
-                                    receiptlines[12] = "\x1B\x21\x01" + "Amount includes 18% GST" + "\x1B\x21\x00\n";
-                                    receiptlines[13] = "" + "\n";
-                                    receiptlines[14] = "" + "\n";
-                                    receiptlines[15] = "" + "\n";
-                                }
-                                if (receiptlines.Length > 0)
-                                {
-                                    for (var l = 0; l < receiptlines.Length; l++)
-                                    {
-                                        string printtext = receiptlines[l];
-                                        if (printtext != "")
-                                        {
-                                            ObjblueToothDevicePrinting.PrintCommand(printerName, printtext);
-                                        }
-                                    }
-                                    masterPage = new MasterHomePage();
-                                }
-                            }
-                            else
-                            {
-                                masterPage = new MasterHomePage();
-                            }
-
+                            VehicleCheckOut = dal_CheckOut.VehicleCheckOut(Convert.ToString(App.Current.Properties["apitoken"]), objviolationVehicleChekOut);
                         });
-                        if (objCheckOutReceipt != null && objCheckOutReceipt.CustomerParkingSlotID != 0)
+                        if (VehicleCheckOut != null)
                         {
-                            if (printerName != string.Empty && printerName != "")
-                            {
-                                await Navigation.PushAsync(masterPage);
-                            }
-                            else
-                            {
-                                await DisplayAlert("Alert", "Unable to find bluetooth device", "Ok");
-                                await Navigation.PushAsync(masterPage);
-                            }
+                            await Navigation.PushAsync(new CheckOutReceiptPage(PageCalledBy, VehicleCheckOut));
                         }
                         else
                         {
-
-                            await DisplayAlert("Alert", "Check-In Fail,Please contact admin.", "Ok");
-                            await Navigation.PushAsync(masterPage);
+                            await DisplayAlert("Alert", "Fail,Please contact admin.", "Ok");
                         }
-                        
+
                     }
                 }
                 else
@@ -168,13 +132,13 @@ namespace ParkHyderabadOperator
                     await DisplayAlert("Alert", "Please check your internet.", "Ok");
                 }
                 ShowLoading(false);
-                btnYes.IsEnabled = true;
+                btnCheckOut.IsVisible = true;
             }
             catch (Exception ex)
             {
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "CheckOutPaymentConfirmationPage.xaml.cs", "", "BtnCheckOut_Clicked");
                 ShowLoading(false);
-                btnYes.IsEnabled = true;
+                btnCheckOut.IsVisible = true;
             }
         }
         public void ShowLoading(bool show)

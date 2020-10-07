@@ -74,8 +74,7 @@ namespace ParkHyderabadOperator
                     User objloginuser = (User)App.Current.Properties["LoginUser"];
                     DALPass dal_Pass = new DALPass();
                     objResultCustomerVehiclePass = dal_Pass.GetCustomerVehicleDetailsByVehicle(Convert.ToString(App.Current.Properties["apitoken"]), selectedVehicle);
-
-                    if (objResultCustomerVehiclePass != null)
+                    if (objResultCustomerVehiclePass != null && objResultCustomerVehiclePass.CustomerVehiclePassID!=0)
                     {
 
                         entryCustomerName.Text = objResultCustomerVehiclePass.CustomerVehicleID.CustomerID.Name;
@@ -104,7 +103,11 @@ namespace ParkHyderabadOperator
                         }
 
                     }
-
+                    else
+                    {
+                        await DisplayAlert("Alert", "No records found,Please contact admin.", "Ok");
+                    }
+                    
 
                 }
 

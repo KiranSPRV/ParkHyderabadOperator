@@ -33,7 +33,7 @@ namespace ParkHyderabadOperator
             dal_ViolationClamp = new DALViolationandClamp();
             lstReasons = new List<ViolationReason>();
         }
-        public OverstayVehicleInformation(int CustomerParkingSlotID)
+        public  OverstayVehicleInformation(int CustomerParkingSlotID)
         {
             InitializeComponent();
             slClampVehicle.IsVisible = false;
@@ -45,7 +45,12 @@ namespace ParkHyderabadOperator
             lstReasons = new List<ViolationReason>();
             LoadGetViolationReasons();
             LoadParkingVehicleDetails(CustomerParkingSlotID);
+
+
+            
+
         }
+        
         private void LoadParkingVehicleDetails(int customerParkingSlotID)
         {
             try
@@ -141,13 +146,26 @@ namespace ParkHyderabadOperator
 
 
                         #endregion
+                        if (objresult.StatusID.StatusCode.ToUpper() == "FOC".ToUpper() || objresult.StatusID.StatusCode.ToUpper() == "CHKOut".ToUpper())
+                        {
+                            slClampAndPayment.IsEnabled = false;
+                            ShowLoading(true);
+                            DisplayAlert("Alert", "Vehicle already checkout", "Ok");
+                            ShowLoading(false);
+                        }
+                       
+                    }
+                    else
+                    {
 
-                        
+                        DisplayAlert("Alert", "Selected vehicle details are unable to get,Please contact admin.", "Ok");
+
                     }
                 }
             }
             catch (Exception ex)
             {
+                ShowLoading(false);
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "OverstayVehicleInformation.xaml.cs", "", "LoadParkingVehicleDetails");
             }
 

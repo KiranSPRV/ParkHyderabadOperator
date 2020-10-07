@@ -48,7 +48,7 @@ namespace ParkHyderabadOperator
             LoadGetViolationReasons();
             LoadParkedVehicleDetails(CustomerParkingLotID);
         }
-        private async void LoadParkedVehicleDetails(int customerParkingLotID)
+        private void LoadParkedVehicleDetails(int customerParkingLotID)
         {
             try
             {
@@ -177,9 +177,6 @@ namespace ParkHyderabadOperator
                         frmClampbutton.IsVisible = false;
                         slPaymentAndExpand.IsVisible = true;
                         #endregion
-
-                        
-
                         try
                         {
                             if (receiptlines != null && receiptlines.Length > 0)
@@ -207,14 +204,18 @@ namespace ParkHyderabadOperator
                         {
 
                         }
-
                         objresult.CreatedBy = objloginuser.UserID;
-
+                        if (objresult.StatusID.StatusCode.ToUpper() == "FOC".ToUpper() && objresult.StatusID.StatusCode.ToUpper() == "CHKOut".ToUpper())
+                        {
+                            slClampAndPayment.IsEnabled = false;
+                            DisplayAlert("Alert", "Vehicle already checkout", "Ok");
+                        }
 
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Selected vehicle details are unable to get,Please contact admin.", "Ok");
+
+                        DisplayAlert("Alert", "Selected vehicle details are unable to get,Please contact admin.", "Ok");
 
                     }
                 }
