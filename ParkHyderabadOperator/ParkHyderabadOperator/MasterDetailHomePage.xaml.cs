@@ -40,7 +40,12 @@ namespace ParkHyderabadOperator
         {
             InitializeComponent();
             LoadLoginUserLocationLots();
-
+            Device.StartTimer(TimeSpan.FromMinutes(5), () =>
+            {
+                LoadParkedVehicle(null);
+                LstVWParkingVehicle.IsRefreshing = false;
+                return true;
+            });
         }
         protected override void OnAppearing()
         {

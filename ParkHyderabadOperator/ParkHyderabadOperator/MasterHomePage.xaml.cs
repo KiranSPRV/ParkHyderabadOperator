@@ -185,8 +185,13 @@ namespace ParkHyderabadOperator
             }
         }
 
-
-
-
+        private async void SlRecentCheckOuts_Tapped(object sender, EventArgs e)
+        {
+            try
+            {
+                await Navigation.PushAsync(new RecentCheckOuts());
+            }
+            catch (Exception ex) { }
+        }
     }
 }

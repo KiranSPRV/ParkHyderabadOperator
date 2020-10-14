@@ -142,7 +142,12 @@
                 <Setter Property="FontAttributes" Value="Bold"/>
             </Style>
 
-           
+            <Style x:Key="LabelRegularShamrockColorStyle" TargetType="Label">
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold" />
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="TextColor" Value="#2ECC71"/>
+            </Style>
 
             <Style x:Key="LabelMediumBlackStyle" TargetType="Label">
                 <Setter Property="TextColor" Value="#010101" />
@@ -431,6 +436,16 @@
                 <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
                 <Setter Property="HeightRequest" Value="40" />
             </Style>
+
+            <Style x:Key="ButtonRegularMercuryStyle" TargetType="Button">
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="BackgroundColor" Value="#FFFFFF"/>
+                <Setter Property="BorderColor" Value="#E4E4E4"/>
+                <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
+                <Setter Property="HeightRequest" Value="40" />
+            </Style>
+
 
             <Style x:Key="ButtonRegularTreePoppyStyle"  TargetType="Button">
                 <Setter Property="HorizontalOptions" Value="FillAndExpand" />

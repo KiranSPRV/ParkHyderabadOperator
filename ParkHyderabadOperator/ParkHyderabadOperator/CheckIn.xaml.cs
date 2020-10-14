@@ -43,7 +43,8 @@ namespace ParkHyderabadOperator
             LoadHoursPicker();
             LoadMinutesPicker();
             defaultHours = 1;
-
+            SlTwoWheeler_Tapped(this,new  EventArgs());
+           
         }
         public CheckIn(CustomerParkingSlot objextendChekIn)
         {

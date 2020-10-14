@@ -13,7 +13,6 @@ namespace ParkHyderabadOperator.Model.APIInputModel
         public decimal ParkingFee { get; set; }
         public decimal ClampFee { get; set; }
         public decimal TotalFee { get; set; }
-
         public int TotalHours { get; set; }
     }
 }

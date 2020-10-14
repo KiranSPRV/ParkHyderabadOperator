@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ParkHyderabadOperator.RecentCheckOuts"
+             NavigationPage.HasBackButton="True">
+    <NavigationPage.TitleView >
+        <Label Text="RECENT CHECKOUT"    VerticalOptions="Center"  Style="{StaticResource LabelPageHeadingStyle}" Margin="0,0,70,0"/>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <AbsoluteLayout VerticalOptions="FillAndExpand" >
+            <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,0.2"  AbsoluteLayout.LayoutFlags="All" BackgroundColor="#F4F4F4">
+                <StackLayout Orientation="Horizontal" Margin="15,5,15,0">
+                    <Frame CornerRadius="5"  BackgroundColor="#FFFFFF" Padding="0" VerticalOptions="EndAndExpand" HorizontalOptions="FillAndExpand">
+                        <Picker x:Name="pickerLocationLot"    HorizontalOptions="FillAndExpand"    VerticalOptions="CenterAndExpand"   Style="{StaticResource PickerProximaRegStyle}" FontSize="14"  ItemDisplayBinding="{Binding LocationParkingLotName}"  SelectedIndexChanged="PickerLocationLot_SelectedIndexChanged"/>
+                    </Frame>
+                    <Frame CornerRadius="5"   BackgroundColor="#FFFFFF"   Padding="0" VerticalOptions="EndAndExpand" HorizontalOptions="FillAndExpand">
+                        <Picker x:Name="pickerOperator"     HorizontalOptions="FillAndExpand"  VerticalOptions="CenterAndExpand"   Style="{StaticResource PickerProximaRegStyle}" FontSize="14"  />
+                    </Frame>
+                    <Frame  CornerRadius="5" Padding="0" BackgroundColor="#FFFFFF"  HorizontalOptions="FillAndExpand">
+                        <Picker x:Name="pickerDay"   Title="Select Day"  HorizontalOptions="FillAndExpand"  VerticalOptions="CenterAndExpand"   Style="{StaticResource PickerProximaRegStyle}" FontSize="14" ItemDisplayBinding="{Binding Day}" SelectedIndexChanged="PickerDay_SelectedIndexChanged"  />
+                    </Frame>
+                </StackLayout>
+                <StackLayout   BackgroundColor="#FFFFFF">
+                    <StackLayout Margin="15,3,15,3">
+                        <StackLayout Orientation="Horizontal" >
+                            <StackLayout x:Name="slVehicleTypes" Orientation="Horizontal" Spacing="5">
+                                <Button x:Name="btnTwoWheeler" Text="2W"  VerticalOptions="StartAndExpand"  Style="{StaticResource ButtonRegularMercuryStyle}" HeightRequest="33" WidthRequest="46" Clicked="BtnTwoWheeler_Clicked"/>
+                                <Button x:Name="btnFourWheeler" Text="4W"  VerticalOptions="StartAndExpand"  Style="{StaticResource ButtonRegularMercuryStyle}"  HeightRequest="33" WidthRequest="46" Clicked="BtnFourWheeler_Clicked"/>
+                            </StackLayout>
+                            <StackLayout x:Name="slInOut" Orientation="Horizontal" Spacing="5">
+                                <Button x:Name="btnIns" Text="INs" VerticalOptions="StartAndExpand" Style="{StaticResource ButtonRegularMercuryStyle}"  HeightRequest="33" WidthRequest="62" Clicked="BtnIns_Clicked"/>
+                                <Button x:Name="btnOuts" Text="OUTs" VerticalOptions="StartAndExpand" Style="{StaticResource ButtonRegularMercuryStyle}"  HeightRequest="33" WidthRequest="62" Clicked="BtnOuts_Clicked"/>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal"  VerticalOptions="StartAndExpand">
+                                <Label Text="V &amp;FOC" Style="{StaticResource LabelRegularRedStyle}" VerticalOptions="StartAndExpand"/>
+                                <Switch IsToggled="False" x:Name="switchViolation" />
+                            </StackLayout>
+                        </StackLayout>
+                    </StackLayout>
+                </StackLayout>
+            </StackLayout>
+            <StackLayout AbsoluteLayout.LayoutBounds="0,0.65,1,0.7"  AbsoluteLayout.LayoutFlags="All" BackgroundColor="#FFFFFF" HorizontalOptions="FillAndExpand">
+                <Frame CornerRadius="5" Padding="0"  BorderColor="#f4f4f4"  BackgroundColor="#FFFFFF" >
+                    <ListView x:Name="lvCheckInChkOutReport"    HasUnevenRows="True" SeparatorVisibility="None"  VerticalOptions="FillAndExpand"
+                                  SelectedItem="{Binding SelectedRowItem}"  Refreshing="lvCheckInChkOutReport_Refreshing">
+                        <ListView.Header >
+                            <StackLayout BackgroundColor="#F2F2F2F2"  VerticalOptions="FillAndExpand" >
+                                <Grid ColumnSpacing="2"   Margin="15,5,15,5" VerticalOptions="CenterAndExpand">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                                        <ColumnDefinition Width="1.5*"></ColumnDefinition>
+                                        <ColumnDefinition Width="1.5*"></ColumnDefinition>
+                                        <ColumnDefinition Width="1.5*"></ColumnDefinition>
+                                        <ColumnDefinition Width="1.5*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Text="Veh.No#" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="0" TextColor="#2ecc71" HorizontalOptions="StartAndExpand"/>
+                                    <Label Text="Chan" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="1" TextColor="#2ecc71" HorizontalOptions="CenterAndExpand"/>
+                                    <Label Text="In" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="2" TextColor="#2ecc71" HorizontalOptions="CenterAndExpand"/>
+                                    <Label Text="Out" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="3" TextColor="#2ecc71" HorizontalOptions="CenterAndExpand"/>
+                                    <Label Text="Operator" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="4" TextColor="#2ecc71" HorizontalOptions="CenterAndExpand"/>
+                                    <Label  Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="5" TextColor="#2ecc71" HorizontalOptions="EndAndExpand" FontSize="12">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Cash ("/>
+                                                <Span Text="{Binding Currency}" />
+                                                <Span Text=")"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label  Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="6" TextColor="#2ecc71" HorizontalOptions="EndAndExpand" FontSize="12">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="EPay ("/>
+                                                <Span Text="{Binding Currency}" />
+                                                <Span Text=")"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </Grid>
+                            </StackLayout>
+                        </ListView.Header>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Grid ColumnSpacing="1" Padding="0" VerticalOptions="Center" Margin="15,0,15,0" >
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*"></ColumnDefinition>
+                                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                                            <ColumnDefinition Width="1.5*"></ColumnDefinition>
+                                            <ColumnDefinition Width="1.5*"></ColumnDefinition>
+                                            <ColumnDefinition Width="1.5*"></ColumnDefinition>
+                                            <ColumnDefinition Width="1.5*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Label  Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="0" FontSize="12" Text="TS12OF0960"/>
+                                        <Label Text="O" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="1"   HorizontalOptions="CenterAndExpand" FontSize="12"/>
+                                        <Label Text="18:12" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="2"   HorizontalOptions="CenterAndExpand" FontSize="12"/>
+                                        <Label Text="18:12" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="3"   HorizontalOptions="CenterAndExpand" FontSize="12"/>
+                                        <Label Text="Rami Reddy" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="4"   HorizontalOptions="CenterAndExpand" FontSize="12"/>
+                                        <Label Text="1000.00" Style="{StaticResource LabelRegularBlackColorStyle}"   Grid.Column="5"  HorizontalOptions="EndAndExpand" FontSize="12"/>
+                                        <Label Text="1000.00" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="6"  HorizontalOptions="EndAndExpand" FontSize="12"/>
+
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Frame>
+            </StackLayout>
+            <StackLayout AbsoluteLayout.LayoutBounds="0,1,1,0.05"  AbsoluteLayout.LayoutFlags="All" >
+                    <StackLayout Orientation="Horizontal" Spacing="10" VerticalOptions="StartAndExpand" HorizontalOptions="EndAndExpand">
+                        <Label x:Name="lblTotalCash" Style="{StaticResource LabelRegularShamrockColorStyle}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="TOTAL CASH: "/>
+                                    <Span Text="₹"/>
+                                    <Span Text="1000.00" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label x:Name="lblTotalEPay" Style="{StaticResource LabelProximaRegBoldDodgerBlueStyle}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                <Span Text="TOTAL EPAY: "/>
+                                    <Span Text="₹"/>
+                                    <Span Text="1000.00" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </StackLayout>
+            </StackLayout>
+            <ContentView x:Name="StklauoutactivityIndicator" BackgroundColor="Transparent"  IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                <StackLayout Orientation="Vertical" HeightRequest="150" WidthRequest="100" BackgroundColor="Transparent" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="0">
+                    <ActivityIndicator  x:Name="activity" IsEnabled="True" IsVisible="False" IsRunning="False"   HeightRequest="80" Color="#010101"  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></ActivityIndicator>
+                    <Label x:Name="LabelLodaingMsg" Text="Loading..."  Style="{StaticResource LabelProximaBoldStyle}" FontSize="18" TextColor="#010101"   VerticalOptions="StartAndExpand" HorizontalOptions="CenterAndExpand"></Label>
+                </StackLayout>
+
+            </ContentView>
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>

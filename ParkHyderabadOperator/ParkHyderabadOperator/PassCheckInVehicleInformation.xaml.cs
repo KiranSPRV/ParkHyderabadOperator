@@ -205,11 +205,7 @@ namespace ParkHyderabadOperator
 
                         }
                         objresult.CreatedBy = objloginuser.UserID;
-                        if (objresult.StatusID.StatusCode.ToUpper() == "FOC".ToUpper() && objresult.StatusID.StatusCode.ToUpper() == "CHKOut".ToUpper())
-                        {
-                            slClampAndPayment.IsEnabled = false;
-                            DisplayAlert("Alert", "Vehicle already checkout", "Ok");
-                        }
+                       
 
                     }
                     else

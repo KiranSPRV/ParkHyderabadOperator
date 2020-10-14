@@ -98,11 +98,7 @@ namespace ParkHyderabadOperator
 
 
                     }
-                    if (objresult.StatusID.StatusCode.ToUpper() == "FOC".ToUpper() || objresult.StatusID.StatusCode.ToUpper() == "CHKOut".ToUpper())
-                    {
-                        slViolationPaymentbuttons.IsEnabled = false;
-                        DisplayAlert("Alert", "Vehicle already checkout", "Ok");
-                    }
+                    
                 }
 
                 else

@@ -3,6 +3,7 @@ using ParkHyderabadOperator.Model.APIInputModel;
 using ParkHyderabadOperator.Model.APIOutPutModel;
 using ParkHyderabadOperator.Model.APIResponse;
 using ParkHyderabadOperator.ViewModel.Reports;
+using ParkHyderabadOperator.Model.RecentCheckOuts;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -13,6 +14,7 @@ namespace ParkHyderabadOperator.DAL.DALMenuBar
 {
     public class DALMenubar
     {
+
         public List<CustomerVehicle> GetAllVehicleRegistrationNumbers(string accessToken)
         {
             List<CustomerVehicle> lstCustomerVehicle = new List<CustomerVehicle>();
@@ -173,6 +175,21 @@ namespace ParkHyderabadOperator.DAL.DALMenuBar
             {
             }
             return resultmsg;
+        }
+
+        public List<RecentCheckOutDays> GetRecentCheckOutDays()
+        {
+            List<RecentCheckOutDays> lstRecentCheckOutDays = new List<RecentCheckOutDays>();
+            try
+            {
+                lstRecentCheckOutDays.Add(new RecentCheckOutDays() { DayID = 1, Day = "Today" });
+                lstRecentCheckOutDays.Add(new RecentCheckOutDays() { DayID = 2, Day = "Yesterday" });
+                lstRecentCheckOutDays.Add(new RecentCheckOutDays() { DayID = 3, Day = "Daybefore Yesterday" });
+            }
+            catch (Exception ex)
+            {
+            }
+            return lstRecentCheckOutDays;
         }
     }
 }

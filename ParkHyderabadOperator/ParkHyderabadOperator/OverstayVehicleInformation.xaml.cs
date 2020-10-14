@@ -33,7 +33,7 @@ namespace ParkHyderabadOperator
             dal_ViolationClamp = new DALViolationandClamp();
             lstReasons = new List<ViolationReason>();
         }
-        public  OverstayVehicleInformation(int CustomerParkingSlotID)
+        public OverstayVehicleInformation(int CustomerParkingSlotID)
         {
             InitializeComponent();
             slClampVehicle.IsVisible = false;
@@ -47,10 +47,10 @@ namespace ParkHyderabadOperator
             LoadParkingVehicleDetails(CustomerParkingSlotID);
 
 
-            
+
 
         }
-        
+
         private void LoadParkingVehicleDetails(int customerParkingSlotID)
         {
             try
@@ -102,13 +102,22 @@ namespace ParkHyderabadOperator
                             objInputs.ParkingStartTime = Convert.ToDateTime(actualendime);
                             objInputs.ParkingEndTime = CurrentTime;
                             objInputs.VehicleTypeCode = objresult.VehicleTypeID.VehicleTypeCode;
-                            if (Convert.ToInt32(t.TotalMinutes) > voilationBasicMinutes)
+                            if (objresult.ClampFees > 0)
                             {
                                 slCheckOut.IsVisible = false;
                                 slCash.IsVisible = true;
                                 slEPay.IsVisible = true;
                                 objInputs = dal_ViolationClamp.GetViolationVehicleCharges(Convert.ToString(App.Current.Properties["apitoken"]), objInputs);
                             }
+                            else if ((Convert.ToInt32(t.TotalMinutes) > voilationBasicMinutes))
+                            {
+                                slCheckOut.IsVisible = false;
+                                slCash.IsVisible = true;
+                                slEPay.IsVisible = true;
+                                objInputs = dal_ViolationClamp.GetViolationVehicleCharges(Convert.ToString(App.Current.Properties["apitoken"]), objInputs);
+
+                            }
+
                             labelOverstayTimeDetails.Text = "OVERSTAY- " + (objresult.ActualEndTime == null ? "" : Convert.ToDateTime(objresult.ActualEndTime).ToString("hh:mm tt")) + " TO " + DateTime.Now.ToString("hh:mm tt");
                             labelOverstayTime.Text = string.Format(objInputs.TotalHours + " h : " + t.Minutes + " m");
                             objresult.ExtendAmount = objInputs.ParkingFee;
@@ -118,6 +127,7 @@ namespace ParkHyderabadOperator
                         #region Clamp and Warning data loading
 
                         slVehicleWarning.IsVisible = (objresult.ViolationWarningCount >= 3) ? false : true;
+
                         checkBoxClampVehicle.IsChecked = objresult.IsClamp;
                         checkBoxClampVehicle.IsChecked = objresult.IsClamp;
                         checkBoxClampVehicle.IsEnabled = !objresult.IsClamp;
@@ -146,14 +156,8 @@ namespace ParkHyderabadOperator
 
 
                         #endregion
-                        if (objresult.StatusID.StatusCode.ToUpper() == "FOC".ToUpper() || objresult.StatusID.StatusCode.ToUpper() == "CHKOut".ToUpper())
-                        {
-                            slClampAndPayment.IsEnabled = false;
-                            ShowLoading(true);
-                            DisplayAlert("Alert", "Vehicle already checkout", "Ok");
-                            ShowLoading(false);
-                        }
-                       
+
+
                     }
                     else
                     {

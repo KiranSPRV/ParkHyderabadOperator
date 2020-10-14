@@ -129,6 +129,7 @@
     <AndroidResource Include="Resources\drawable\bike_green.png" />
     <AndroidResource Include="Resources\drawable\car_green.png" />
     <AndroidResource Include="Resources\drawable\phone.png" />
+    <AndroidResource Include="Resources\drawable\RecentCheckOuts.png" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml">
