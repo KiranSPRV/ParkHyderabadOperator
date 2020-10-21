@@ -442,6 +442,7 @@
                 <Setter Property="FontSize" Value="14"/>
                 <Setter Property="BackgroundColor" Value="#FFFFFF"/>
                 <Setter Property="BorderColor" Value="#E4E4E4"/>
+                <Setter Property="BorderWidth" Value="1"/>
                 <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
                 <Setter Property="HeightRequest" Value="40" />
             </Style>

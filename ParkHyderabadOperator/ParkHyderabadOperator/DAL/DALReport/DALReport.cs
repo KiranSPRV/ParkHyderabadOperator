@@ -73,7 +73,7 @@ namespace ParkHyderabadOperator.DAL.DALReport
                     // Add the Authorization header with the AccessToken.
                     client.DefaultRequestHeaders.Add("Authorization", "bearer  " + accessToken);
                     // create the URL string.
-                    string url = "api/InstaOperator/postLocationLotReport";
+                    string url = "api/InstaOperator/postRecentCheckOutReport";
                     // make the request
                     var json = JsonConvert.SerializeObject(objfilter);
                     var content = new StringContent(json, Encoding.UTF8, "application/json");

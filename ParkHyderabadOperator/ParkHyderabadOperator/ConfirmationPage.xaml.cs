@@ -85,8 +85,8 @@ namespace ParkHyderabadOperator
             {
                 string printerName = string.Empty;
                 MasterHomePage masterPage = null;
-                btnYes.IsEnabled = false;
-               CustomerParkingSlot objResultCustomerParkingSlot = null;
+                btnYes.IsVisible = false;
+                CustomerParkingSlot objResultCustomerParkingSlot = null;
                 try
                 {
                     if (DeviceInternet.InternetConnected())
@@ -161,12 +161,12 @@ namespace ParkHyderabadOperator
                         await DisplayAlert("Alert", "Please check your internet.", "Ok");
                         ShowLoading(false);
                     }
-                    btnYes.IsEnabled = true;
+                    btnYes.IsVisible = true;
                 }
                 catch (Exception ex)
                 {
                     ShowLoading(false);
-                    btnYes.IsEnabled = true;
+                    btnYes.IsVisible = true;
                     dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ReceiptPage.xaml.cs", "", "BtnPrint_Clicked");
                 }
             }

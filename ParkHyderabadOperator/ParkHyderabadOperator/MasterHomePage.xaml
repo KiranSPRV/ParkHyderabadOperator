@@ -63,7 +63,7 @@
                                 <Label Text="Log Out" Style="{StaticResource LabelProximaRegBlackStyle}" VerticalOptions="CenterAndExpand"  FontSize="16" ></Label>
                             </StackLayout>
                         </StackLayout>
-                        <Label  Text="P V 1.2.2"  Style="{StaticResource LabelProximaBoldStyle}" FontSize="12" TextColor="#010101"   VerticalOptions="EndAndExpand" HorizontalOptions="CenterAndExpand" Margin="0,0,0,5"></Label>
+                        <Label  Text="P V 1.2.3"  Style="{StaticResource LabelProximaBoldStyle}" FontSize="12" TextColor="#010101"   VerticalOptions="EndAndExpand" HorizontalOptions="CenterAndExpand" Margin="0,0,0,5"></Label>
                     </StackLayout>
                    
                     <ContentView x:Name="StklauoutactivityIndicator" BackgroundColor="Transparent"  IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">

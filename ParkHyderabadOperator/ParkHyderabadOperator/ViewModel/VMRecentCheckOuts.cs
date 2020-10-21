@@ -10,6 +10,7 @@ namespace ParkHyderabadOperator.ViewModel
         {
             StatusID = new Status();
             Operator = new User();
+            ApplicationTypeID = new ApplicationType();
         }
         public int CustomerParkingSlotHistoryID { get; set; }
         public string RegistrationNumber { get; set; }
@@ -21,6 +22,7 @@ namespace ParkHyderabadOperator.ViewModel
         public decimal CashAmount { get; set; }
         public decimal EpayAmount { get; set; }
         public Status StatusID { get; set; }
+        public ApplicationType ApplicationTypeID { get; set; }
         public User Operator { get; set; }
         public string VehilceStatusColor { get; set; }
        

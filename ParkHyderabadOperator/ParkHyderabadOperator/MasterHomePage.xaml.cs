@@ -189,7 +189,16 @@ namespace ParkHyderabadOperator
         {
             try
             {
-                await Navigation.PushAsync(new RecentCheckOuts());
+                RecentCheckOuts pageRecentCheckOuts = null;
+                StklauoutactivityIndicator.IsVisible = true;
+                await Task.Run(() =>
+                {
+                    pageRecentCheckOuts = new RecentCheckOuts();
+                    
+                });
+
+                await Navigation.PushAsync(pageRecentCheckOuts);
+                StklauoutactivityIndicator.IsVisible = false;
             }
             catch (Exception ex) { }
         }

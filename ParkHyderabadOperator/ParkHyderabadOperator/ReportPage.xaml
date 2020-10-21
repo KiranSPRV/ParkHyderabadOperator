@@ -132,13 +132,8 @@
                                                 <ColumnDefinition Width="2*"></ColumnDefinition>
                                                 <ColumnDefinition Width="2*"></ColumnDefinition>
                                             </Grid.ColumnDefinitions>
-                                            <Frame CornerRadius="0" BorderColor="#f4f4f4" BackgroundColor="#f4f4f4" Padding="5"   Grid.Column="0">
-                                                <StackLayout>
-                                                    <Image   Source="plus.png" HeightRequest="15" VerticalOptions="CenterAndExpand" HorizontalOptions="Center"/>
-                                                </StackLayout>
-                                            </Frame>
-                                            <Frame CornerRadius="0" BorderColor="#f4f4f4" BackgroundColor="#f4f4f4" Padding="5"   Grid.Column="1">
-                                                <Label Text="{Binding VehicleType}" TextColor="#3293fa"  FontSize="12" Style="{StaticResource LabelRegularBlackColorStyle}" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand"/>
+                                            <Frame CornerRadius="0" BorderColor="#f4f4f4" BackgroundColor="#f4f4f4" Padding="5"   Grid.Column="0" Grid.ColumnSpan="2">
+                                                <Label Text="{Binding VehicleType}" TextColor="#3293fa"  FontSize="12" Style="{StaticResource LabelRegularBlackColorStyle}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
                                             </Frame>
                                             <Frame CornerRadius="0" BorderColor="#f4f4f4" Padding="5" BackgroundColor="#FFFFFF" Grid.Column="2">
                                                 <Label Text="{Binding TotalIn}" Style="{StaticResource LabelRegularBlackColorStyle}" FontSize="12" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
@@ -157,7 +152,7 @@
                                             </Frame>
 
                                         </Grid>
-                                        <StackLayout IsVisible="{Binding IsVisible}" >
+                                        <StackLayout IsVisible="False" >
                                             <ScrollView>
                                                 <ListView x:Name="lstLocationLotOperations" ItemsSource="{Binding LocationLotOperations}"  VerticalOptions="FillAndExpand" HasUnevenRows="True" HeightRequest="100">
                                                     <ListView.Header>
