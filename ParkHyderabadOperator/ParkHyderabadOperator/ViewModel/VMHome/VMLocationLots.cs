@@ -12,5 +12,7 @@ namespace ParkHyderabadOperator.ViewModel.VMHome
         public string LocationName { get; set; }
         public int  LocationID { get; set; }
         public bool IsActive { get; set; }
+        public string LotOpenTime { get; set; }
+        public string LotCloseTime { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using ParkHyderabadOperator.Model;
 using ParkHyderabadOperator.Model.APIOutPutModel;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -34,7 +35,7 @@ namespace ParkHyderabadOperator
             dal_Exceptionlog = new DALExceptionManagment();
             LoadCustomerPassPaymentDetails(objReceiptDetails);
         }
-        public  void LoadCustomerPassPaymentDetails(CustomerVehiclePass objReceipt)
+        public void LoadCustomerPassPaymentDetails(CustomerVehiclePass objReceipt)
         {
             try
             {
@@ -69,13 +70,13 @@ namespace ParkHyderabadOperator
                     }
                     else if (objReceipt.PassPriceID.StationAccess == "Multi Station" || objReceipt.PassPriceID.StationAccess == "Multi Stations")
                     {
-                       
+
                         if (App.Current.Properties.ContainsKey("MultiSelectionLocations"))
                         {
                             var lstLocation = (List<Model.APIOutPutModel.Location>)App.Current.Properties["MultiSelectionLocations"];
                             if (lstLocation.Count > 0)
                             {
-                              
+
                                 string stations = string.Empty;
                                 for (var s = 0; s < lstLocation.Count; s++)
                                 {
@@ -83,7 +84,7 @@ namespace ParkHyderabadOperator
                                 }
                                 labelParkingLot.Text = "Multi Stations:" + stations + ".";
                             }
-                           
+
                         }
                     }
                     else if (objReceipt.PassPriceID.StationAccess == "All Station" || objReceipt.PassPriceID.StationAccess == "All Stations")
@@ -92,7 +93,7 @@ namespace ParkHyderabadOperator
                     }
                     labelValidFrom.Text = Convert.ToDateTime(objReceipt.StartDate).ToString("dd MMM yyyy");
                     labelValidTo.Text = Convert.ToDateTime(objReceipt.ExpiryDate).ToString("dd MMM yyyy");
-                    
+
                 }
                 if (objReceipt.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "2W")
                 {
@@ -118,7 +119,7 @@ namespace ParkHyderabadOperator
                     labelParkingFeesDetails.Text = objReceipt.Amount.ToString("N2") + "/-";
                     labelParkingPaymentType.Text = "Paid - By " + objReceipt.PaymentTypeID.PaymentTypeName;
                 }
-                
+
                 if (objReceipt.CreatedBy.UserName != "")
                 {
                     labelOperatorName.Text = objReceipt.CreatedBy.UserName;
@@ -145,7 +146,7 @@ namespace ParkHyderabadOperator
                         receiptlines[4] = "\x1B\x21\x08" + Convert.ToDateTime(objReceipt.StartDate).ToString("dd MMM yyyy hh:mm tt") + " to " + Convert.ToDateTime(objReceipt.ExpiryDate).ToString("dd MMM yyyy hh:mm tt") + "\x1B\x21\x00\n";
                         receiptlines[5] = "" + "\n";
                         receiptlines[6] = "\x1B\x21\x01" + "Paid Rs" + (objReceipt.IssuedCard ? objReceipt.TotalAmount.ToString("N2") : objReceipt.Amount.ToString("N2")) + "\x1B\x21\x00\n";
-                        receiptlines[7] = "\x1B\x21\x01" + "OPERATOR ID -" + objReceipt.CreatedBy.UserName+"-"+ Convert.ToString(objReceipt.CreatedBy.UserCode) + "\x1B\x21\x00\n";
+                        receiptlines[7] = "\x1B\x21\x01" + "OPERATOR ID -" + objReceipt.CreatedBy.UserName + "-" + Convert.ToString(objReceipt.CreatedBy.UserCode) + "\x1B\x21\x00\n";
                         receiptlines[8] = "\x1B\x21\x01" + "We are not responsible for your valuable items like laptop,      wallet,helmet etc." + "\x1B\x21\x00\n";
                         receiptlines[9] = "\x1B\x21\x01" + "GST Number 0012" + "\x1B\x21\x00\n";
                         receiptlines[10] = "\x1B\x21\x01" + "Amount includes 18% GST" + "\x1B\x21\x00\n";
@@ -168,11 +169,21 @@ namespace ParkHyderabadOperator
         {
             try
             {
-                var masterPage = new MasterHomePage();
+                BtnDone.IsVisible = false;
+                ShowLoading(true);
+                MasterHomePage masterPage = null;
+                await Task.Run(() =>
+                {
+                    masterPage = new MasterHomePage();
+                });
                 await Navigation.PushAsync(masterPage);
+                ShowLoading(false);
+                BtnDone.IsVisible = true;
             }
             catch (Exception ex)
             {
+                ShowLoading(false);
+                BtnDone.IsVisible = true;
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "PassPaymentReceiptPage.xaml.cs", "", "BtnDone_Clicked");
             }
         }

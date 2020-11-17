@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using ParkHyderabadOperator.Model;
 using ParkHyderabadOperator.Model.APIInputModel;
 using ParkHyderabadOperator.Model.APIOutPutModel;
 using ParkHyderabadOperator.Model.APIResponse;
@@ -82,7 +83,8 @@ namespace ParkHyderabadOperator.DAL.DALViolation
                             APIResponse apiResult = JsonConvert.DeserializeObject<APIResponse>(jsonString);
 
                             apirespone = apiResult.Message;
-
+                            FirebaseHelper objfirebasehelper = new FirebaseHelper();
+                            objfirebasehelper.AddVehicleViolation(objviolationandclamp);
                         }
 
                     }

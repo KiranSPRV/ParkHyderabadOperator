@@ -25,8 +25,8 @@ namespace ParkHyderabadOperator.Model.APIOutPutModel
         public DateTime CreatedOn { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime UpdatedOn { get; set; }
-        public string LostOpenTime { get; set; }
-        public string LostCloseTime { get; set; }
+        public string LotOpenTime { get; set; }
+        public string LotCloseTime { get; set; }
         public string LotTimmings { get; set; } //For Receipt
     }
 }

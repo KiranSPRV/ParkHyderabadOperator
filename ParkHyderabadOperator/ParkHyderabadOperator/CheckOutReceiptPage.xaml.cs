@@ -3,7 +3,7 @@ using ParkHyderabadOperator.Model;
 using ParkHyderabadOperator.Model.APIOutPutModel;
 using ParkHyderabadOperator.ViewModel;
 using System;
-
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -55,12 +55,12 @@ namespace ParkHyderabadOperator
                 }
                 labelVehicleDetails.Text = objCheckOutReceipt.CustomerVehicleID.RegistrationNumber;
                 imageParkingFeeImage.Source = "rupee_black.png";
-                labelParkingFeesDetails.Text = (objCheckOutReceipt.ExtendAmount+ objCheckOutReceipt.ViolationFees + objCheckOutReceipt.ClampFees).ToString("N2") + "/-"; //objCheckOutReceipt.PaidAmount.ToString("N2") + "/-";
+                labelParkingFeesDetails.Text = (objCheckOutReceipt.ExtendAmount + objCheckOutReceipt.ViolationFees + objCheckOutReceipt.ClampFees).ToString("N2") + "/-"; //objCheckOutReceipt.PaidAmount.ToString("N2") + "/-";
                 labelParkingPaymentType.Text = "Paid for " + objCheckOutReceipt.Duration + "hr - " + "By " + objCheckOutReceipt.PaymentTypeID.PaymentTypeName;
                 labelCheckOutFeesDetails.Text = "(Parking" + " ₹" + (objCheckOutReceipt.ExtendAmount + objCheckOutReceipt.ViolationFees).ToString("N2") + " + " + "Clamp" + " ₹" + objCheckOutReceipt.ClampFees + ")";
                 imageOperatorProfile.Source = "operator.png";
 
-                if(objCheckOutReceipt.CreatedByName!="")
+                if (objCheckOutReceipt.CreatedByName != "")
                 {
                     labelOperatorName.Text = objCheckOutReceipt.CreatedByName;
                     labelOperatorID.Text = "- #" + objCheckOutReceipt.UserCode;
@@ -71,7 +71,7 @@ namespace ParkHyderabadOperator
                     imageOperatorProfile.IsVisible = false;
                 }
 
-               
+
                 try
                 {
                     if (receiptlines != null && receiptlines.Length > 0)
@@ -104,7 +104,6 @@ namespace ParkHyderabadOperator
             {
             }
         }
-        
         private async void BtnPrint_Clicked(object sender, EventArgs e)
         {
             try
@@ -139,23 +138,25 @@ namespace ParkHyderabadOperator
         }
         private async void BtnDone_Clicked(object sender, EventArgs e)
         {
+
             try
             {
                 ShowLoading(true);
-                try
-                {
-                    var masterPage = new MasterHomePage();
-                    await Navigation.PushAsync(masterPage);
-                    
-                }
-                catch (Exception ex)
-                {
-                    
-                }
-
+                BtnDone.IsVisible = false;
+                MasterHomePage masterPage = null;
+                await Task.Run(() =>
+                    {
+                        masterPage = new MasterHomePage();
+                    });
+                await Navigation.PushAsync(masterPage);
                 ShowLoading(false);
+                BtnDone.IsVisible = true;
             }
-            catch (Exception ex) { }
+            catch (Exception ex)
+            {
+                ShowLoading(false);
+                BtnDone.IsVisible = true;
+            }
         }
         public void ShowLoading(bool show)
         {
@@ -172,9 +173,6 @@ namespace ParkHyderabadOperator
             }
 
         }
-
-
-
         private void LoadParkingVehicleDetails(string Vehicle, string CheckInID, string VehicleInformation)
         {
             try
@@ -215,6 +213,7 @@ namespace ParkHyderabadOperator
 
             }
         }
+
 
     }
 }

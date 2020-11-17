@@ -23,7 +23,7 @@ namespace ParkHyderabadOperator
         List<User> lstOperators = null;
         LocationLotParkingReport objlot = null;
         User objReportUser = null;
-       
+
         public ReportPage()
         {
             InitializeComponent();
@@ -43,7 +43,7 @@ namespace ParkHyderabadOperator
                 {
                     DALHome dal_Home = new DALHome();
                     User objLoginUser = (User)App.Current.Properties["LoginUser"];
-
+                    objLoginUser.LocationParkingLotID.LocationParkingLotID = 0; // For getting all lots of login user
                     lstlots = dal_Home.GetUserAllocatedLocationAndLots(Convert.ToString(App.Current.Properties["apitoken"]), objLoginUser);
                     // Include ALL 
                     VMLocationLots objlotAll = new VMLocationLots();
@@ -82,11 +82,6 @@ namespace ParkHyderabadOperator
 
                         }
                     }
-                    if ((objLoginUser.UserTypeID.UserTypeName).ToUpper() == "OPERATOR".ToUpper())
-                    {
-                        pickerOperator.Title = objLoginUser.UserName + "-" + Convert.ToString(objLoginUser.UserCode);
-                    }
-
                 }
 
             }
@@ -117,23 +112,26 @@ namespace ParkHyderabadOperator
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ReportPage.xaml.cs", "", "LoadLoginUserLocationLots");
             }
         }
-        private void LoadLocationLotActiveOperators(VMLocationLots objVMLocationLot)
+        private void LoadLocationLotActiveOperators(VMLocationLots objVMLocationLot, int UserID)
         {
             try
             {
                 if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                 {
                     DALHome dal_Home = new DALHome();
-                    LocationParkingLot objselectedlocationlot = new LocationParkingLot();
-                    objselectedlocationlot.LocationID.LocationID = objVMLocationLot.LocationID;
-                    objselectedlocationlot.LocationParkingLotID = objVMLocationLot.LocationParkingLotID;
-                    lstOperators = dal_Home.GetLocationLotActiveOperators(Convert.ToString(App.Current.Properties["apitoken"]), objselectedlocationlot);
+                    User objselectedlocationlot = new User();
 
+                    objselectedlocationlot.UserID = UserID;
+                    objselectedlocationlot.LocationParkingLotID.LocationID.LocationID = objVMLocationLot.LocationID;
+                    objselectedlocationlot.LocationParkingLotID.LocationParkingLotID = objVMLocationLot.LocationParkingLotID;
+                    lstOperators = dal_Home.GetLocationLotActiveOperators(Convert.ToString(App.Current.Properties["apitoken"]), objselectedlocationlot);
                     if (lstOperators.Count > 0)
                     {
                         pickerOperator.ItemsSource = lstOperators;
                         pickerOperator.SelectedIndex = 1;
                     }
+
+
                 }
 
             }
@@ -153,10 +151,9 @@ namespace ParkHyderabadOperator
                         User objLoginUser = (User)App.Current.Properties["LoginUser"];
                         VMLocationLots objVMLocations = (VMLocationLots)pickerLocationLot.SelectedItem;
                         objLoginUser.LocationParkingLotID.LocationParkingLotID = objVMLocations.LocationParkingLotID;
-                        if (objLoginUser.UserTypeID.UserTypeName.ToUpper() == "Supervisor".ToUpper())
-                        {
-                            LoadLocationLotActiveOperators(objVMLocations);
-                        }
+
+                        LoadLocationLotActiveOperators(objVMLocations, objLoginUser.UserID);
+
 
                     }
                 }
@@ -199,10 +196,10 @@ namespace ParkHyderabadOperator
                         if (pickerOperator.SelectedItem != null)
                         {
                             var objselectedOperator = (User)pickerOperator.SelectedItem;
-                            if(objselectedOperator.UserCode.Contains("ALL"))
+                            if (objselectedOperator.UserCode.Contains("ALL"))
                             {
                                 var userobj = (User)App.Current.Properties["LoginUser"];
-                                objReportUser.UserID =0;
+                                objReportUser.UserID = 0;
                                 objReportUser.UserCode = userobj.UserCode;
                             }
                             else
@@ -210,9 +207,9 @@ namespace ParkHyderabadOperator
                                 objReportUser.UserID = objselectedOperator.UserID;
                                 objReportUser.UserCode = objselectedOperator.UserCode;
                             }
-                           
+
                         }
-                        else 
+                        else
                         {
                             var userobj = (User)App.Current.Properties["LoginUser"];
                             objReportUser.UserID = userobj.UserID;
@@ -342,9 +339,9 @@ namespace ParkHyderabadOperator
                         {
                             var passesreport = objPrintReport.GetLocationLotPassesReport();
                             lstPritnText.Add("\x1B\x21\x20" + "PASS " + "\x1B\x21\x00" + "\n");
-                            lstPritnText.Add("\x1B\x21\x07" + "Total Sold :" + passesreport.TotalSold+ "\x1B\x21\x00\n");
+                            lstPritnText.Add("\x1B\x21\x07" + "Total Sold :" + passesreport.TotalSold + "\x1B\x21\x00\n");
                             lstPritnText.Add("\x1B\x21\x07" + " Total NFC :" + passesreport.TotalNFC + "\x1B\x21\x00\n");
-                            lstPritnText.Add("\x1B\x21\x07" + "      Cash :" +Convert.ToDecimal(passesreport.TotalCash).ToString("N2") + "\x1B\x21\x00\n");
+                            lstPritnText.Add("\x1B\x21\x07" + "      Cash :" + Convert.ToDecimal(passesreport.TotalCash).ToString("N2") + "\x1B\x21\x00\n");
                             lstPritnText.Add("\x1B\x21\x07" + "      EPay :" + passesreport.TotalEPay.ToString("N2") + "\x1B\x21\x00\n");
                             lstPritnText.Add("" + "\n");
                             lstPritnText.Add("" + "\n");

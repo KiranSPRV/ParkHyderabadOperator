@@ -191,5 +191,42 @@ namespace ParkHyderabadOperator.DAL.DALMenuBar
             }
             return lstRecentCheckOutDays;
         }
+        public List<CustomerParkingSlot> GetVehicleRecentCheckOutDetails(string accessToken, int CustomerParkingSlotID)
+        {
+            List<CustomerParkingSlot> lstCustomerParkingSlot = new List<CustomerParkingSlot>();
+            try
+            {
+                string baseUrl = Convert.ToString(App.Current.Properties["BaseURL"]);
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(baseUrl);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    // Add the Authorization header with the AccessToken.
+                    client.DefaultRequestHeaders.Add("Authorization", "bearer  " + accessToken);
+                    // create the URL string.
+                    string url = "api/InstaOperator/getRecentCheckOutVehicleDetails?CustomerParkingSlotID=" + Convert.ToString(CustomerParkingSlotID);
+                    // make the request
+                    HttpResponseMessage response = client.GetAsync(url).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string jsonString = response.Content.ReadAsStringAsync().Result;
+                        if (jsonString != null)
+                        {
+                            APIResponse apiResult = JsonConvert.DeserializeObject<APIResponse>(jsonString);
+                            if (apiResult.Result)
+                            {
+                                lstCustomerParkingSlot = JsonConvert.DeserializeObject<List<CustomerParkingSlot>>(Convert.ToString(apiResult.Object));
+
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return lstCustomerParkingSlot;
+        }
     }
 }

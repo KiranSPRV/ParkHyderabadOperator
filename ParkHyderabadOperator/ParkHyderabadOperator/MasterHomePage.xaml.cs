@@ -19,7 +19,6 @@ namespace ParkHyderabadOperator
         private float Latitude;
         private float Longitude;
 
-
         public MasterHomePage()
         {
             InitializeComponent();
@@ -33,8 +32,17 @@ namespace ParkHyderabadOperator
                     User loginUser = (User)App.Current.Properties["LoginUser"];
                     labelUserName.Text = loginUser.UserName;
                     labelUserID.Text = "ID: " + Convert.ToString(loginUser.UserCode);
-                    MasterDetailHomePage homePage = new MasterDetailHomePage();
-                    Detail = new NavigationPage(homePage);
+                    if (loginUser.UserTypeID.UserTypeName.ToUpper() == "Administrator".ToUpper())
+                    {
+                        AdminHomePage adminhomePage = new AdminHomePage();
+                        Detail = new NavigationPage(adminhomePage);
+                    }
+                    else
+                    {
+                        MasterDetailHomePage homePage = new MasterDetailHomePage();
+                        Detail = new NavigationPage(homePage);
+                    }
+
                     IsPresented = false;
                 }
             }
@@ -48,9 +56,22 @@ namespace ParkHyderabadOperator
         {
             InitializeComponent();
             dal_Menubar = new DALMenubar();
-            MasterDetailHomePage homefilterPage = new MasterDetailHomePage(selectedFilters);
-            Detail = new NavigationPage(homefilterPage);
-            IsPresented = false;
+            try
+            {
+                if (App.Current.Properties.ContainsKey("LoginUser"))
+                {
+                    User loginUser = (User)App.Current.Properties["LoginUser"];
+                    labelUserName.Text = loginUser.UserName;
+                    labelUserID.Text = "ID: " + Convert.ToString(loginUser.UserCode);
+                    MasterDetailHomePage homefilterPage = new MasterDetailHomePage(selectedFilters);
+                    Detail = new NavigationPage(homefilterPage);
+                    IsPresented = false;
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
         private async void SlHistory_Tapped(object sender, EventArgs e)
         {
@@ -130,7 +151,7 @@ namespace ParkHyderabadOperator
                 else
                 {
                     await DisplayAlert("Alert", "Please check your internet.", "Ok");
-                   
+
                 }
 
             }
@@ -146,6 +167,41 @@ namespace ParkHyderabadOperator
                 await Navigation.PushAsync(new TimeSheet());
             }
             catch (Exception ex) { }
+        }
+        private async void SlRecentCheckOuts_Tapped(object sender, EventArgs e)
+        {
+            try
+            {
+                RecentCheckOuts pageRecentCheckOuts = null;
+                StklauoutactivityIndicator.IsVisible = true;
+                await Task.Run(() =>
+                {
+                    pageRecentCheckOuts = new RecentCheckOuts();
+
+                });
+
+                await Navigation.PushAsync(pageRecentCheckOuts);
+                StklauoutactivityIndicator.IsVisible = false;
+            }
+            catch (Exception ex) { }
+        }
+        private async void SlLotOccupancy_Tapped(object sender, EventArgs e)
+        {
+            try
+            {
+                LotOccupancyPage lotOccupancyPage = null;
+                StklauoutactivityIndicator.IsVisible = true;
+                await Task.Run(() =>
+                {
+                    lotOccupancyPage = new LotOccupancyPage();
+
+                });
+                await Navigation.PushAsync(lotOccupancyPage);
+                StklauoutactivityIndicator.IsVisible = false;
+            }
+            catch (Exception ex)
+            {
+            }
         }
         public async Task GetCurrentLocation()
         {
@@ -185,22 +241,5 @@ namespace ParkHyderabadOperator
             }
         }
 
-        private async void SlRecentCheckOuts_Tapped(object sender, EventArgs e)
-        {
-            try
-            {
-                RecentCheckOuts pageRecentCheckOuts = null;
-                StklauoutactivityIndicator.IsVisible = true;
-                await Task.Run(() =>
-                {
-                    pageRecentCheckOuts = new RecentCheckOuts();
-                    
-                });
-
-                await Navigation.PushAsync(pageRecentCheckOuts);
-                StklauoutactivityIndicator.IsVisible = false;
-            }
-            catch (Exception ex) { }
-        }
     }
 }

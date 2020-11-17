@@ -16,7 +16,7 @@
                             <RowDefinition Height="9*"/>
                         </Grid.RowDefinitions>
                         <Frame  Grid.Row="0" CornerRadius="25" Padding="5" BorderColor="#f9f9f9" BackgroundColor="#f9f9f9"  HeightRequest="32">
-                            <SearchBar  BackgroundColor="Transparent" Margin="-20,0,0,0" FontSize="14" FontFamily="FontsFree-Net-proxima_nova_reg-webfont.ttf#FontsFree-Net-proxima_nova_reg-webfont"   Placeholder="Search..."   PlaceholderColor="#676767" x:Name="searchBar"   TextChanged="SearchBar_OnTextChanged"  VerticalOptions="EndAndExpand" HorizontalOptions="FillAndExpand"/>
+                            <SearchBar   BackgroundColor="Transparent" Margin="-20,0,0,0" FontSize="14" FontFamily="FontsFree-Net-proxima_nova_reg-webfont.ttf#FontsFree-Net-proxima_nova_reg-webfont"   Placeholder="Search..."   PlaceholderColor="#676767" x:Name="searchBar"   TextChanged="SearchBar_OnTextChanged"  VerticalOptions="EndAndExpand" HorizontalOptions="FillAndExpand"/>
                         </Frame>
                         <StackLayout Grid.Row="1"   Orientation="Vertical" Spacing="5" Margin="0,35,0,0">
                             <StackLayout Orientation="Vertical"  Spacing="0">

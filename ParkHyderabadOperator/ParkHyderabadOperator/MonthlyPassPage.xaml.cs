@@ -97,7 +97,8 @@ namespace ParkHyderabadOperator
 
                     slAllStationMessage.IsVisible = false;
                     labelMontlyPassStationTypes.Text = objResultVMPass.StationAccess.ToUpper();
-                    if(objCustomerPass.IssuedCard)
+                    
+                    if (objCustomerPass.IssuedCard)
                     {
                         labelInclude.Text = "(Including Tag)";
                         labelPassAmount.Text = (objResultVMPass.Price + objResultVMPass.NFCCardPrice).ToString("N2");
@@ -213,6 +214,8 @@ namespace ParkHyderabadOperator
                                             objCustomerPass.ExpiryDate = Convert.ToDateTime(objResultVMPass.EndDate);
                                         }
                                         objCustomerPass.CreatedBy.UserID = objloginuser.UserID;
+                                        objCustomerPass.PassPurchaseLocationID.LocationID.LocationID = objloginuser.LocationParkingLotID.LocationID.LocationID;
+                                        objCustomerPass.PassPurchaseLocationID.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
                                         await Navigation.PushAsync(new MonthlyPassCashPaymentPage(objCustomerPass));
                                     }
                                 }
@@ -307,6 +310,8 @@ namespace ParkHyderabadOperator
                                         objCustomerPass.StartDate = Convert.ToDateTime(objResultVMPass.StartDate);
                                         objCustomerPass.ExpiryDate = Convert.ToDateTime(objResultVMPass.EndDate);
                                         objCustomerPass.CreatedBy.UserID = objloginuser.UserID;
+                                        objCustomerPass.PassPurchaseLocationID.LocationID.LocationID = objloginuser.LocationParkingLotID.LocationID.LocationID;
+                                        objCustomerPass.PassPurchaseLocationID.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
                                         await Navigation.PushAsync(new PassGenerationEPayPaymentConfirmationPage(objCustomerPass));
                                     }
                                 }

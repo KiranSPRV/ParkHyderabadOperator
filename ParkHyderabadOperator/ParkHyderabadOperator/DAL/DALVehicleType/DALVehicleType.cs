@@ -1,32 +1,25 @@
-﻿using Newtonsoft.Json;
-using ParkHyderabadOperator.Model;
+﻿using ParkHyderabadOperator.Model.APIOutPutModel;
+using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using ParkHyderabadOperator.Model.APIInputModel;
+using ParkHyderabadOperator.Model.APIOutPutModel;
 using ParkHyderabadOperator.Model.APIResponse;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 
-
-namespace ParkHyderabadOperator.DAL.DALExceptionLog
+namespace ParkHyderabadOperator.DAL.DALVehicleType
 {
-    public class DALExceptionManagment
+    class DALVehicleType
     {
-
-        public DALExceptionManagment()
-        { }
-        public void InsertException(string accessToken, string ApplicationType, string ExceptionMessage, string Module, string Procedure, string Method)
+        public List<VehicleType> GetLocationLotActiveVehicleTypes(string accessToken, User objloginuserlot)
         {
+            List<VehicleType> lstVehicleType = new List<VehicleType>();
             try
             {
-
-
-                ExceptionLog objexlog = new ExceptionLog();
-                objexlog.ApplicationType = ApplicationType;
-                objexlog.ExceptionMessage = ExceptionMessage;
-                objexlog.Module = Module;
-                objexlog.Procedure = Procedure;
-                objexlog.Method = Method;
-
                 string baseUrl = Convert.ToString(App.Current.Properties["BaseURL"]);
                 using (var client = new HttpClient())
                 {
@@ -36,10 +29,9 @@ namespace ParkHyderabadOperator.DAL.DALExceptionLog
                     // Add the Authorization header with the AccessToken.
                     client.DefaultRequestHeaders.Add("Authorization", "bearer  " + accessToken);
                     // create the URL string.
-                    string url = "api/InstaOperator/postOPAPPExceptionLog";
+                    string url = "api/InstaOperator/postOPAPPLocationLotActiveVehicleTypes";
                     // make the request
-
-                    var json = JsonConvert.SerializeObject(objexlog);
+                    var json = JsonConvert.SerializeObject(objloginuserlot);
                     var content = new StringContent(json, Encoding.UTF8, "application/json");
                     HttpResponseMessage response = client.PostAsync(url, content).Result;
                     if (response.IsSuccessStatusCode)
@@ -49,9 +41,12 @@ namespace ParkHyderabadOperator.DAL.DALExceptionLog
                         {
                             APIResponse apiResult = JsonConvert.DeserializeObject<APIResponse>(jsonString);
 
+                            if (apiResult.Result)
+                            {
+                                lstVehicleType = JsonConvert.DeserializeObject<List<VehicleType>>(Convert.ToString(apiResult.Object));
+                            }
 
                         }
-
                     }
 
 
@@ -60,9 +55,7 @@ namespace ParkHyderabadOperator.DAL.DALExceptionLog
             catch (Exception ex)
             {
             }
-
+            return lstVehicleType;
         }
     }
 }
-
-

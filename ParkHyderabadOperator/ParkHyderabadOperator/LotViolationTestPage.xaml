@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ParkHyderabadOperator.LotViolationTestPage"
+             xmlns:local="clr-namespace:ParkHyderabadOperator.Behaviors"
+             NavigationPage.HasBackButton="True" >
+    <NavigationPage.TitleView>
+        <Label Text="LOT VIOLATION"  Style="{StaticResource LabelRegularPageTitlesStyle}" Padding="0,0,70,0"/>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <AbsoluteLayout VerticalOptions="FillAndExpand"  x:Name="absLayoutViolationpage">
+            <StackLayout   AbsoluteLayout.LayoutBounds="0,0,1,0.9"  AbsoluteLayout.LayoutFlags="All" Orientation="Vertical"  >
+                <StackLayout Margin="15,0,15,0">
+                  
+                        <CollectionView  x:Name="lstLotActiveVehicleType"   ItemsLayout="HorizontalList"  VerticalOptions="Center" HorizontalOptions="Center" BackgroundColor="Yellow">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate >
+                                    <StackLayout Margin="5,0,5,0" Orientation="Vertical" Spacing="6"  VerticalOptions="FillAndExpand" HorizontalOptions="Center" >
+                                        <Image x:Name="imgBtnTwoWheeler"  HeightRequest="40"  BackgroundColor="Transparent" Aspect="AspectFit"  Source="{Binding VehicleTypeIcon}" />
+                                        <Label Text="{Binding VehicleTypeName}" HorizontalOptions="Center" Style="{StaticResource LabelPlaceHolderStyle}" VerticalOptions="StartAndExpand" FontSize="10" ></Label>
+                                    </StackLayout>
+
+
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                   
+                    
+                    
+                    <StackLayout Margin="0,15,0,15"   Orientation="Vertical">
+                        <StackLayout Spacing="15">
+                            <StackLayout Orientation="Vertical"  Spacing="0">
+                                <Label Text="Registration Number" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
+                                <Entry x:Name="entryRegistrationNumber" Style="{StaticResource EntryProximaBlackStyle}" TextChanged="EntryRegistrationNumber_TextChanged">
+                                    <Entry.Behaviors>
+                                        <local:AlphaNumericValidatorBehavior MaxLength="10" MinLength="6"/>
+                                    </Entry.Behaviors>
+                                </Entry>
+                            </StackLayout>
+                            <StackLayout Orientation="Vertical"  Spacing="0">
+                                <Label Text="Bay Number" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
+                                <Picker x:Name="pickerBayNumers" Title="-Select-" ItemDisplayBinding="{Binding ParkingBayRange}"  SelectedIndexChanged="PickerBayNumers_SelectedIndexChanged"  HorizontalOptions="FillAndExpand"  Style="{StaticResource PickerProximaRegStyle }"></Picker>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" Spacing="10">
+                                <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="Start">
+                                    <CheckBox x:Name="checkBoxClampVehicle"  IsChecked="False" 
+                                          Style="{StaticResource ChekBoxRegularBlueStyle}" CheckedChanged="CheckBoxClampVehicle_CheckedChanged" />
+                                    <Label Style="{StaticResource LabelRegularStartCenterStyle}" Text="CLAMP VEHICLE"   ></Label>
+                                </StackLayout>
+                                <StackLayout x:Name="slVehicleWarning" Orientation="Horizontal" Spacing="0" HorizontalOptions="StartAndExpand" >
+                                    <CheckBox x:Name="chkWarning" IsChecked="False"  Style="{StaticResource ChekBoxRegularRedStyle}" />
+                                    <Label Style="{StaticResource LabelProximaRegRedStyle}" Text="WARNING" VerticalOptions="CenterAndExpand" ></Label>
+                                </StackLayout>
+                            </StackLayout>
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout  Orientation="Vertical"  x:Name="stackLayoutClampVehicle" Spacing="5">
+                        <Label Text="Reason" Style="{StaticResource LabelProximaRegStyle}" ></Label>
+                        <Picker x:Name="pickerVehicleReason" ItemDisplayBinding="{Binding Reason}" Title="-Select-" Style="{StaticResource PickerProximaRegStyle}"  ></Picker>
+                        <Frame CornerRadius="5" Padding="18" BorderColor="#efefef" BackgroundColor="#f9f9f9" VerticalOptions="StartAndExpand">
+                            <ImageButton x:Name="btnCamera" Source="Camera.png"  BackgroundColor="Transparent" HorizontalOptions="CenterAndExpand" Aspect="AspectFit" VerticalOptions="Center" Clicked="BtnCamera_Clicked" HeightRequest="80"></ImageButton>
+                        </Frame>
+                    </StackLayout>
+                </StackLayout>
+            </StackLayout>
+            <Frame CornerRadius="5" Padding="8"   BorderColor="#efefef"   AbsoluteLayout.LayoutBounds="0,1,1,0.1"  AbsoluteLayout.LayoutFlags="All"  BackgroundColor="#FFFFFF">
+                <StackLayout  Orientation="Vertical"  VerticalOptions="CenterAndExpand" Spacing="5">
+                    <Button Text="VIOLATION" x:Name="BtnViolation" Style="{StaticResource ButtonRegularRedStyle}" Clicked="BtnViolation_Clicked"></Button>
+                    <Button x:Name="btnCheckIn" Style="{StaticResource ButtonRegularShamrockStyle}" Text="CHECK IN" TextColor="#FFFFFF" Clicked="BtnCheckIn_Clicked"/>
+                </StackLayout>
+            </Frame>
+            <ContentView x:Name="StklauoutactivityIndicator" BackgroundColor="Transparent"  IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                <StackLayout Orientation="Vertical" HeightRequest="150" WidthRequest="100" BackgroundColor="Transparent" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="0">
+                    <ActivityIndicator  x:Name="activity" IsEnabled="True" IsVisible="False" IsRunning="False"   HeightRequest="80" Color="#010101"  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></ActivityIndicator>
+                    <Label x:Name="LabelLodaingMsg" Text="Loading..."  Style="{StaticResource LabelProximaBoldStyle}" FontSize="18" TextColor="#010101"   VerticalOptions="StartAndExpand" HorizontalOptions="CenterAndExpand"></Label>
+                
+                <StackLayout IsVisible="False" Orientation="Horizontal"  Spacing="20" VerticalOptions="Center" HorizontalOptions="Center">
+                    <StackLayout Orientation="Vertical" Spacing="10">
+                        <StackLayout.GestureRecognizers >
+                            <TapGestureRecognizer x:Name="slTwoWheeler" Tapped="SlTwoWheeler_Tapped"/>
+                        </StackLayout.GestureRecognizers>
+                        <Image x:Name="imgBtnTwoWheeler" HeightRequest="50"  BackgroundColor="Transparent" Aspect="AspectFit"  Source="Twowheeler_circle.png" >
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer   Tapped="SlTwoWheeler_Tapped"  />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        <Label Text="Two Wheeler" HorizontalOptions="Center" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
+                    </StackLayout>
+                    <StackLayout Orientation="Vertical" Spacing="10">
+                        <StackLayout.GestureRecognizers>
+                            <TapGestureRecognizer x:Name="slFourWheeler" Tapped="SlFourWheeler_Tapped"/>
+                        </StackLayout.GestureRecognizers>
+                        <Image x:Name="imgBtnFourWheeler" BackgroundColor="Transparent" HeightRequest="50"   Source="Fourwheeler_circle.png" >
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer   Tapped="SlFourWheeler_Tapped"  />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        <Label Text="Four Wheeler" HorizontalOptions="Center" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
+                    </StackLayout>
+                </StackLayout>
+                </StackLayout>
+            </ContentView>
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>

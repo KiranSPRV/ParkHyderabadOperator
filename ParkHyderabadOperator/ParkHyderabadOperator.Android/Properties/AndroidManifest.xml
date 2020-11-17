@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.2.3" package="com.companyname.ParkHyderabadOperator" android:installLocation="preferExternal">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.2.4" package="com.companyname.InstaParkingOP" android:installLocation="preferExternal">
 	<uses-sdk android:minSdkVersion="20" android:targetSdkVersion="28" />
 	<application android:usesCleartextTraffic="true" android:icon="@drawable/launcher" android:label="InstaOperator">
 		<provider android:name="android.support.v4.content.FileProvider" android:authorities="${applicationId}.fileprovider" android:exported="false" android:grantUriPermissions="true">

@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Collections.Generic;
-
+using ParkHyderabadOperator.Model;
 
 namespace ParkHyderabadOperator.DAL.DALCheckIn
 {
@@ -19,7 +19,7 @@ namespace ParkHyderabadOperator.DAL.DALCheckIn
 
             try
             {
-                lstParkingHours.Add("00");
+                //lstParkingHours.Add("00");
                 lstParkingHours.Add(6.ToString("D2"));
                 lstParkingHours.Add(5.ToString("D2"));
                 lstParkingHours.Add(3.ToString("D2"));
@@ -410,6 +410,23 @@ namespace ParkHyderabadOperator.DAL.DALCheckIn
                             if (apiResult.Result)
                             {
                                 objResultCustomerParkingSlot = JsonConvert.DeserializeObject<CustomerParkingSlot>(Convert.ToString(apiResult.Object));
+
+                                FirebaseHelper objfirebasehelper = new FirebaseHelper();
+                                CustomerParkingSlot objNewCheckIn = new CustomerParkingSlot();
+                                objNewCheckIn.LocationParkingLotID.LocationParkingLotID = objcheckin.LocationParkingLotID;
+                                objNewCheckIn.LocationParkingLotID.LocationID.LocationID = objcheckin.LocationID;
+                                objNewCheckIn.ParkingBayID.ParkingBayID =objcheckin.BayNumberID;
+                                objNewCheckIn.Amount = objcheckin.ParkingFees;
+                                objNewCheckIn.PaymentTypeID.PaymentTypeCode = objcheckin.PaymentType;
+                                objNewCheckIn.VehicleTypeID.VehicleTypeCode = objcheckin.VehicleTypeCode;
+                                objNewCheckIn.PhoneNumber= objcheckin.PhoneNumber;
+                                objNewCheckIn.Duration = Convert.ToString( objcheckin.ParkingHours);
+                                objNewCheckIn.ActualStartTime =Convert.ToDateTime( objcheckin.ParkingStartTime);
+                                objNewCheckIn.ActualEndTime = Convert.ToDateTime(objcheckin.ParkingEndTime);
+                                objNewCheckIn.ExpectedStartTime = Convert.ToDateTime(objcheckin.ParkingStartTime);
+                                objNewCheckIn.ExpectedEndTime = Convert.ToDateTime(objcheckin.ParkingEndTime);
+                                objNewCheckIn.CreatedBy =objcheckin.UserID;
+                                objfirebasehelper.AddCustomerparkingSlot(objNewCheckIn);
                             }
                         }
                     }

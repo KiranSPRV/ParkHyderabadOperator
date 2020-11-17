@@ -17,9 +17,7 @@ namespace ParkHyderabadOperator.DAL.DALHome
         public List<VMLocationLots> GetUserAllocatedLocationAndLots(string accessToken, User objUser)
         {
             List<LocationParkingLot> lstParkingLots = new List<LocationParkingLot>();
-
             List<VMLocationLots> lstVMLocationLots = new List<VMLocationLots>();
-
             try
             {
                 string baseUrl = Convert.ToString(App.Current.Properties["BaseURL"]);
@@ -58,6 +56,8 @@ namespace ParkHyderabadOperator.DAL.DALHome
                                         objlot.LocationID =lstParkingLots[i].LocationID.LocationID;
                                         objlot.LocationName = lstParkingLots[i].LocationID.LocationName;
                                         objlot.IsActive= lstParkingLots[i].IsActive;
+                                        objlot.LotOpenTime = lstParkingLots[i].LotOpenTime;
+                                        objlot.LotCloseTime = lstParkingLots[i].LotCloseTime;
                                         lstVMLocationLots.Add(objlot);
                                     }
 
@@ -116,7 +116,8 @@ namespace ParkHyderabadOperator.DAL.DALHome
             }
             return lstOperators;
         }
-        public List<User> GetLocationLotActiveOperators(string accessToken, LocationParkingLot objLocationParkingLot)
+       
+        public List<User> GetLocationLotActiveOperators(string accessToken, User objLoginUserSelectLocationLot)
         {
             List<User> lstOperators = new List<User>();
 
@@ -134,7 +135,7 @@ namespace ParkHyderabadOperator.DAL.DALHome
                     string url = "api/InstaOperator/postOPAPPLocationLotActiveOperartor";
                     // make the request
 
-                    var json = JsonConvert.SerializeObject(objLocationParkingLot);
+                    var json = JsonConvert.SerializeObject(objLoginUserSelectLocationLot);
                     var content = new StringContent(json, Encoding.UTF8, "application/json");
                     HttpResponseMessage response = client.PostAsync(url, content).Result;
                     if (response.IsSuccessStatusCode)
@@ -157,7 +158,6 @@ namespace ParkHyderabadOperator.DAL.DALHome
             }
             return lstOperators;
         }
-
         public VMLocationLotParkedVehicles GetAllParkedVehicles(string accessToken, ParkedVehiclesFilter objparkedVehicles)
         {
             VMLocationLotParkedVehicles objVMLocationLotParkedVehicles = new VMLocationLotParkedVehicles();

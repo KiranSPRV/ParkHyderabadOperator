@@ -71,7 +71,12 @@ namespace ParkHyderabadOperator
                         labelParkingFeesDetails.Text = parkingAmount.ToString("N2") + "/-";
 
                         TimeSpan parkingduration = Convert.ToDateTime(objresult.ActualEndTime) - Convert.ToDateTime(objresult.ExpectedStartTime);
-                        labelParkingPaymentType.Text = "Paid for " + string.Format(Math.Abs(parkingduration.Hours) + "hr") + " - By " + objresult.PaymentTypeID.PaymentTypeName;
+                        if (objresult.Duration != "" && objresult.Duration != string.Empty)
+                        {
+                            var parkhours = ((Math.Abs(parkingduration.Hours) == 0 || Math.Abs(parkingduration.Hours) == 1)) ? Convert.ToInt32(objresult.Duration) : Math.Abs(parkingduration.Hours);
+                            labelParkingPaymentType.Text = "Paid for " + string.Format(parkhours + "hr") + " - By " + objresult.PaymentTypeID.PaymentTypeName;
+                        }
+                        
                         labelVehicleDetails.Text = objresult.CustomerVehicleID.RegistrationNumber;
                         imageVehicleImage.Source = (Convert.ToString(objresult.VehicleTypeID.VehicleTypeCode) == "2W" ? "bike_black.png" : (Convert.ToString(objresult.VehicleTypeID.VehicleTypeCode) == "4W") ? "car_black.png" : "bike_black.png");
                         vehicleType = (Convert.ToString(objresult.VehicleTypeID.VehicleTypeCode) == "2W" ? "BIKE" : (Convert.ToString(objresult.VehicleTypeID.VehicleTypeCode) == "4W") ? "CAR" : "BIKE");
@@ -83,7 +88,7 @@ namespace ParkHyderabadOperator
                         lblWarningCount.Text = (objresult.ViolationWarningCount > 3) ? "" : Convert.ToString(objresult.ViolationWarningCount) + " Warning(s) Completed";
                         lblWarningCount.IsVisible = true;
                         imgbtnPrint.IsVisible = true;
-                        if (objloginuser.UserTypeID.UserTypeName.ToUpper() == "Supervisor".ToUpper())
+                        if (objloginuser.UserTypeID.UserTypeName.ToUpper() != "Operator".ToUpper())
                         {
                             slFOC.IsVisible = true;
                         }
@@ -96,8 +101,6 @@ namespace ParkHyderabadOperator
                         }
                         if (objresult.StatusID.StatusCode.ToUpper() == "G")
                         {
-
-
                             imgbtnPrint.IsVisible = false;
                             slSpotExpireTimeDisplay.IsVisible = false;
                             slFeesDetails.IsVisible = false;
@@ -115,8 +118,6 @@ namespace ParkHyderabadOperator
                             {
                                 imageGovernmentVehicle.Source = ImageSource.FromStream(() => new MemoryStream(ByteArrayCompressionUtility.Decompress(objresult.GovernmentVehicleImage)));
                                 imageGovernmentVehicle.HeightRequest = 150;
-                                //GeocodingDetails objgeodetails = new GeocodingDetails();
-                                //var geoloc= await objgeodetails.GetGeoCodingPlaceMark( Convert.ToDouble(objresult.VehicleImageLottitude), Convert.ToDouble(objresult.VehicleImageLongitude));
                                 labelGovImageLocation.Text = objresult.VehicleImageLottitude + "," + objresult.VehicleImageLongitude + Environment.NewLine + Convert.ToDateTime(objresult.CreatedOn).ToString("dd MMM yyyy");
                             }
 
@@ -149,7 +150,7 @@ namespace ParkHyderabadOperator
                         if (objresult.StatusID.StatusCode.ToUpper() == "G")
                         {
                             slCheckOut.IsVisible = false;
-                            if (objloginuser.UserTypeID.UserTypeName.ToUpper() == "Supervisor".ToUpper())
+                            if (objloginuser.UserTypeID.UserTypeName.ToUpper() != "Operator".ToUpper())
                             {
                                 slCheckOut.IsVisible = true;
                                 imgbtnPrint.IsVisible = true;
@@ -205,7 +206,7 @@ namespace ParkHyderabadOperator
 
                         }
                         objresult.CreatedBy = objloginuser.UserID;
-                       
+
 
                     }
                     else

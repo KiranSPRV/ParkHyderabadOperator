@@ -25,6 +25,8 @@ namespace ParkHyderabadOperator
         List<LocationLotParkedVehicles> lstdayvehicles = null;
         List<VMLocationLots> lstlots = null;
         bool IsTodayHoliday = false;
+        public string todayLotOpenTime = string.Empty;
+        public string todayLotCloseTime = string.Empty;
 
         #region NFC Card Properties
         public const string ALERT_TITLE = "NFC";
@@ -119,7 +121,10 @@ namespace ParkHyderabadOperator
                                 if (lstlots[x].LocationID == objLoginUser.LocationParkingLotID.LocationID.LocationID)
                                 {
                                     IsTodayHoliday = lstlots[x].IsActive;
+                                    todayLotOpenTime = lstlots[x].LotOpenTime;
+                                    todayLotCloseTime = lstlots[x].LotCloseTime;
                                     pickerLocationLot.SelectedIndex = x;
+
                                 }
                             }
                             else
@@ -127,8 +132,10 @@ namespace ParkHyderabadOperator
                                 if (lstlots[x].LocationParkingLotID == objLoginUser.LocationParkingLotID.LocationParkingLotID)
                                 {
                                     IsTodayHoliday = lstlots[x].IsActive;
+                                    todayLotOpenTime = lstlots[x].LotOpenTime;
+                                    todayLotCloseTime = lstlots[x].LotCloseTime;
                                     pickerLocationLot.SelectedIndex = x;
-
+                                   
                                 }
                             }
 
@@ -167,6 +174,8 @@ namespace ParkHyderabadOperator
                             objLoginUser.LocationParkingLotID.LocationID.LocationID = objVMLocations.LocationID;
                             objLoginUser.LocationParkingLotID.LocationID.LocationName = objVMLocations.LocationName;
                             IsTodayHoliday = objVMLocations.IsActive;
+                            todayLotOpenTime = objVMLocations.LotOpenTime;
+                            todayLotCloseTime = objVMLocations.LotCloseTime;
                             LoadParkedVehicle(objloclot);
                         }
                     }
@@ -470,18 +479,26 @@ namespace ParkHyderabadOperator
                 BtnViolation.IsVisible = false;
                 if (!IsTodayHoliday)
                 {
-                    bool doesPageExists = Navigation.NavigationStack.Any(p => p is ViolationPage);
-
-                    if (!doesPageExists)
+                    var opentime=Convert.ToDateTime(todayLotOpenTime);
+                    if (DateTime.Now> Convert.ToDateTime(todayLotOpenTime) && DateTime.Now<Convert.ToDateTime( todayLotCloseTime))
                     {
-                        ViolationPage violationPage = null;
-                        await Task.Run(() =>
+                        bool doesPageExists = Navigation.NavigationStack.Any(p => p is ViolationPage);
+                        if (!doesPageExists)
                         {
-                            StopNFCListening();
-                            violationPage = new ViolationPage();
-                        });
-                        await Navigation.PushAsync(violationPage);
+                            ViolationPage violationPage = null;
+                            await Task.Run(() =>
+                            {
+                                StopNFCListening();
+                                violationPage = new ViolationPage();
+                            });
+                            await Navigation.PushAsync(violationPage);
 
+                        }
+
+                    }
+                   else
+                    {
+                        await DisplayAlert("Alert", "Please check parking timings from " + todayLotOpenTime + " to " + todayLotCloseTime, "Ok");
                     }
                 }
                 else

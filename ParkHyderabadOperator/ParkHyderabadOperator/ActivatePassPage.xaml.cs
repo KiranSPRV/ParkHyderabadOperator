@@ -56,7 +56,6 @@ namespace ParkHyderabadOperator
                     User objloginuser = (User)App.Current.Properties["LoginUser"];
                     DALReNewPass dal_ReNewPass = new DALReNewPass();
                     lstCustomerVehicle = dal_ReNewPass.GetAllPassedVehicles(Convert.ToString(App.Current.Properties["apitoken"]));
-                    listViewVehicleRegistrationNumbers.ItemsSource = lstCustomerVehicle;
                 }
 
             }
@@ -74,40 +73,48 @@ namespace ParkHyderabadOperator
                     User objloginuser = (User)App.Current.Properties["LoginUser"];
                     DALPass dal_Pass = new DALPass();
                     objResultCustomerVehiclePass = dal_Pass.GetCustomerVehicleDetailsByVehicle(Convert.ToString(App.Current.Properties["apitoken"]), selectedVehicle);
-                    if (objResultCustomerVehiclePass != null && objResultCustomerVehiclePass.CustomerVehiclePassID!=0)
+                    if (objResultCustomerVehiclePass != null && objResultCustomerVehiclePass.CustomerVehiclePassID != 0)
                     {
 
-                        entryCustomerName.Text = objResultCustomerVehiclePass.CustomerVehicleID.CustomerID.Name;
-                        entryPhoneNumber.Text = objResultCustomerVehiclePass.CustomerVehicleID.CustomerID.PhoneNumber;
-                        entryRegistrationNumber.Text = objResultCustomerVehiclePass.CustomerVehicleID.RegistrationNumber;
-                        // Verify Customer Vehicle Type
-                        if (objResultCustomerVehiclePass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "2W")
+                        if (objResultCustomerVehiclePass.IssuedCard)
                         {
-                            imgCustomerVehcileType.Source = ImageSource.FromFile("bike_black.png");
-                        }
-                        else if (objResultCustomerVehiclePass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "4W")
-                        {
-                            imgCustomerVehcileType.Source = ImageSource.FromFile("car_black.png");
-                        }
 
-                        if (objResultCustomerVehiclePass.PassPriceID.PassTypeID.PassTypeCode.ToUpper() == "WP")
-                        {
-                            slNFC.IsVisible = false;
-                            slContinue.IsVisible = false;
-                            await DisplayAlert("Alert","Please check your pass type.", "Ok");
-                        }
-                        else 
-                        {
-                            slNFC.IsVisible = true;
-                            slContinue.IsVisible = true;
-                        }
 
+                            entryCustomerName.Text = objResultCustomerVehiclePass.CustomerVehicleID.CustomerID.Name;
+                            entryPhoneNumber.Text = objResultCustomerVehiclePass.CustomerVehicleID.CustomerID.PhoneNumber;
+                            entryRegistrationNumber.Text = objResultCustomerVehiclePass.CustomerVehicleID.RegistrationNumber;
+                            // Verify Customer Vehicle Type
+                            if (objResultCustomerVehiclePass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "2W")
+                            {
+                                imgCustomerVehcileType.Source = ImageSource.FromFile("bike_black.png");
+                            }
+                            else if (objResultCustomerVehiclePass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "4W")
+                            {
+                                imgCustomerVehcileType.Source = ImageSource.FromFile("car_black.png");
+                            }
+
+                            if (objResultCustomerVehiclePass.PassPriceID.PassTypeID.PassTypeCode.ToUpper() == "WP")
+                            {
+                                slNFC.IsVisible = false;
+                                slContinue.IsVisible = false;
+                                await DisplayAlert("Alert", "Please check your pass type.", "Ok");
+                            }
+                            else
+                            {
+                                slNFC.IsVisible = true;
+                                slContinue.IsVisible = true;
+                            }
+                        }
+                        else
+                        {
+                            await DisplayAlert("Alert", "NFC not available for this Vehicle", "Ok");
+                        }
                     }
                     else
                     {
                         await DisplayAlert("Alert", "No records found,Please contact admin.", "Ok");
                     }
-                    
+
 
                 }
 
@@ -259,7 +266,7 @@ namespace ParkHyderabadOperator
                         labelNFCCard.Text = serialNumber;
                         BtnContinue.IsEnabled = true;
                     }
-                    
+
                 }
                 else
                 {

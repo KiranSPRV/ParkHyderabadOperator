@@ -134,6 +134,8 @@ namespace ParkHyderabadOperator
                                     }
 
                                     objCustomerPass.CreatedBy.UserID = objloginuser.UserID;
+                                    objCustomerPass.PassPurchaseLocationID.LocationID.LocationID = objloginuser.LocationParkingLotID.LocationID.LocationID;
+                                    objCustomerPass.PassPurchaseLocationID.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
                                     await Navigation.PushAsync(new WeeklyPassCashPaymentPage(IsNewORReNew, objCustomerPass));
                                 }
                             }
@@ -210,6 +212,8 @@ namespace ParkHyderabadOperator
                                         objCustomerPass.ExpiryDate = Convert.ToDateTime(objResultVMPass.EndDate);
                                     }
                                     objCustomerPass.CreatedBy.UserID = objloginuser.UserID;
+                                    objCustomerPass.PassPurchaseLocationID.LocationID.LocationID = objloginuser.LocationParkingLotID.LocationID.LocationID;
+                                    objCustomerPass.PassPurchaseLocationID.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
                                     var weeklyPassPaymentConfirmationPage = new WeeklyPassPaymentConfirmationPage(IsNewORReNew, objCustomerPass);
                                     await Navigation.PushAsync(weeklyPassPaymentConfirmationPage);
                                 }

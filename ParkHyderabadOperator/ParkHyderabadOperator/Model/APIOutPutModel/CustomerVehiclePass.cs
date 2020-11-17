@@ -19,6 +19,7 @@ namespace ParkHyderabadOperator.Model.APIOutPutModel
             PassPriceID = new PassPrice();
             PassTypeID = new PassType();
             LocationID = new Location();
+            PassPurchaseLocationID = new LocationParkingLot();
         }
         public int CustomerVehiclePassID { get; set; }
         public CustomerVehicle CustomerVehicleID { get; set; }
@@ -26,6 +27,7 @@ namespace ParkHyderabadOperator.Model.APIOutPutModel
         public PassCardTypeMapper PassCardTypeMapperID { get; set; }
         public PassPrice PassPriceID { get; set; }
         public Location LocationID { get; set; }
+        public LocationParkingLot PassPurchaseLocationID { get; set; }
         public bool IsMultiLot { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? ExpiryDate { get; set; }
@@ -45,8 +47,6 @@ namespace ParkHyderabadOperator.Model.APIOutPutModel
         public DateTime CreatedOn { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime UpdatedOn { get; set; }
-
-
        
     }
 }

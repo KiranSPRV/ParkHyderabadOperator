@@ -45,7 +45,7 @@ namespace ParkHyderabadOperator
 
 
                     User objloginuser = (User)App.Current.Properties["LoginUser"];
-                    if (objloginuser.UserTypeID.UserTypeName.ToUpper() == "Supervisor".ToUpper())
+                    if (objloginuser.UserTypeID.UserTypeName.ToUpper() != "Operator".ToUpper())
                     {
                         slFOC.IsVisible = true;
                     }

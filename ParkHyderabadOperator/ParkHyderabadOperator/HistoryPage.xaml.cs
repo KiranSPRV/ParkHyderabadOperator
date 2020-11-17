@@ -129,7 +129,7 @@ namespace ParkHyderabadOperator
                 {
                     if (lstVehicleHistory.Count >= 1)
                     {
-                        var lstviolations = lstVehicleHistory.Where(i => (i.ApplicationTypeID.ApplicationTypeCode.ToUpper().Contains("V")) || (i.StatusID.StatusCode.ToUpper().Contains("FOC") )|| (i.IsWarning));
+                        var lstviolations = lstVehicleHistory.Where(i => (i.ApplicationTypeID.ApplicationTypeCode.ToUpper().Contains("V")) || (i.StatusID.StatusCode.ToUpper().Contains("FOC") )|| (i.IsWarning) || (i.IsClamp));
                         if (lstviolations.Count() > 0)
                         {
                             LstVWParkingVehicle.ItemsSource = lstviolations;

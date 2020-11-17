@@ -29,6 +29,12 @@ namespace ParkHyderabadOperator
         int defaultHours = 0;
         DateTime Lotclosetime;
         bool IsParkingFullDay = false;
+        List<string> lsthoursPicker = null;
+        DateTime checkInTime;
+        int minimumcheckinMinutes = 120;// 2hrs
+        bool IsminChckinTime = false;
+
+
         public CheckIn() // New Check-In
         {
             InitializeComponent();
@@ -40,11 +46,12 @@ namespace ParkHyderabadOperator
             dal_Exceptionlog = new DALExceptionManagment();
             lstparkingbay = new List<ParkingBay>();
             LoadLocationBayNumbers();
+            SlTwoWheeler_Tapped(this, new EventArgs());
             LoadHoursPicker();
             LoadMinutesPicker();
-            defaultHours = 1;
-            SlTwoWheeler_Tapped(this,new  EventArgs());
-           
+            defaultHours = 0;
+
+
         }
         public CheckIn(CustomerParkingSlot objextendChekIn)
         {
@@ -62,7 +69,7 @@ namespace ParkHyderabadOperator
             LoadExtendedHoursPicker();
             LoadMinutesPicker();
             LoadVehicleExtension(objextendCustomerParkingSlot);
-            defaultHours = 1;
+            defaultHours = 0;
             pickerHours.SelectedIndex = defaultHours;
             GetParkingFeeDeatils();
         } //  Extende Vehicle Check-In
@@ -94,7 +101,7 @@ namespace ParkHyderabadOperator
         {
             try
             {
-                List<string> lsthoursPicker = dal_DALCheckIn.GetParkingHours();
+                lsthoursPicker = dal_DALCheckIn.GetParkingHours();
                 if (lsthoursPicker.Count > 0)
                 {
                     pickerHours.ItemsSource = lsthoursPicker;
@@ -177,27 +184,19 @@ namespace ParkHyderabadOperator
             }
 
         }
-        private async void PickerHours_SelectedIndexChanged(object sender, EventArgs e)
+        private void PickerHours_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (pickerHours.SelectedIndex != 0)
+            if (SelectedVehicle != string.Empty)
             {
-                if (SelectedVehicle != string.Empty)
-                {
 
-                    GetParkingFeeDeatils();
-                }
-                else
-                {
-                    pickerHours.SelectedIndex = 0;
-                    pickerMinutes.SelectedIndex = 0;
-                    await DisplayAlert("Alert", "Please select vehicle type", "Ok");
-                }
+                GetParkingFeeDeatils();
             }
             else
             {
-                labelParkingFee.Text = "0.00";
-                labelSpotExpiresMessage.Text = string.Empty;
+                pickerHours.SelectedIndex = 0;
+                pickerMinutes.SelectedIndex = 0;
             }
+
 
         }
 
@@ -207,19 +206,24 @@ namespace ParkHyderabadOperator
         {
             try
             {
-
+                ShowLoading(true);
                 SelectedVehicle = "2W";
                 imgBtnTwoWheeler.Source = "Twowheeler_circle_ticked.png";
                 imgBtnFourWheeler.Source = "Fourwheeler_circle.png";
                 imgBtnTwoWheeler.HeightRequest = 50;
-
+                List<ParkingBay> twowheelerbayNumbers = null;
                 if (lstparkingbay.Count > 0)
                 {
-                    var twowheelerbayNumbers = lstparkingbay.Where(i => i.VehicleTypeID.VehicleTypeCode.ToUpper() == (SelectedVehicle)).ToList(); 
+                    await Task.Run(() =>
+                    {
+                        twowheelerbayNumbers = lstparkingbay.Where(i => i.VehicleTypeID.VehicleTypeCode.ToUpper() == (SelectedVehicle)).ToList();
+                    });
                     if (twowheelerbayNumbers != null)
                     {
                         pickerBayNumers.ItemsSource = twowheelerbayNumbers;
                         pickerHours.SelectedIndex = defaultHours;
+
+
                         if (chkGovernment.IsChecked)
                         {
                             stLayoutCheckIn.IsVisible = true;
@@ -237,17 +241,17 @@ namespace ParkHyderabadOperator
                             lblPhoneNumber.Text = "Phone Number (Optional)";
                             GetParkingFeeDeatils();
                         }
-                       
                     }
                     else
                     {
                         await DisplayAlert("Alert", "Please check bay numbers are not avilable", "Ok");
                     }
                 }
-                
+                ShowLoading(false);
             }
             catch (Exception ex)
             {
+                ShowLoading(false);
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "CheckInPage.xaml.cs", "", "SlTwoWheeler_Tapped");
             }
         }
@@ -255,16 +259,22 @@ namespace ParkHyderabadOperator
         {
             try
             {
+                ShowLoading(true);
                 SelectedVehicle = "4W";
                 imgBtnTwoWheeler.Source = "Twowheeler_circle.png";
                 imgBtnFourWheeler.Source = "Fourwheeler_circle_ticked.png";
                 imgBtnTwoWheeler.HeightRequest = 50;
+                List<ParkingBay> fourwheelerbayNumbers = null;
+
                 if (lstparkingbay.Count > 0)
                 {
-                    var twowheelerbayNumbers = lstparkingbay.Where(i => i.VehicleTypeID.VehicleTypeCode.ToUpper() == (SelectedVehicle)).ToList();
-                    if (twowheelerbayNumbers != null)
+                    await Task.Run(() =>
                     {
-                        pickerBayNumers.ItemsSource = twowheelerbayNumbers;
+                        fourwheelerbayNumbers = lstparkingbay.Where(i => i.VehicleTypeID.VehicleTypeCode.ToUpper() == (SelectedVehicle)).ToList();
+                    });
+                    if (fourwheelerbayNumbers != null)
+                    {
+                        pickerBayNumers.ItemsSource = fourwheelerbayNumbers;
                         pickerHours.SelectedIndex = defaultHours;// for 2hr default;
                         if (chkGovernment.IsChecked)
                         {
@@ -288,13 +298,12 @@ namespace ParkHyderabadOperator
                     {
                         await DisplayAlert("Alert", "Please check bay numbers are not avilable", "Ok");
                     }
-
-                   
-
                 }
+                ShowLoading(false);
             }
             catch (Exception ex)
             {
+                ShowLoading(false);
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "CheckInPage.xaml.cs", "", "SlFourWheeler_Tapped");
             }
         }
@@ -321,48 +330,89 @@ namespace ParkHyderabadOperator
                         paidParkingFees = Convert.ToDecimal(objextendCustomerParkingSlot.Amount);
 
                     }
-                    lstLocationParkingLotVehiclePrice = dal_DALCheckIn.GetLocationParkingLotVehicleParkingFees(Convert.ToString(App.Current.Properties["apitoken"]), SelectedVehicle, Convert.ToInt32(pickerHours.SelectedItem.ToString()), objloginuser.LocationParkingLotID.LocationParkingLotID, paidParkingFees);
-                    if (lstLocationParkingLotVehiclePrice.Count > 0)
+                    if (pickerHours.SelectedItem != null)
                     {
-                        labelSpotExpiresMessage.Text = string.Empty;
-                        labelParkingFee.Text = string.Empty;
-                        for (var f = 0; f < lstLocationParkingLotVehiclePrice.Count; f++)
-                        {
-                            if (lstLocationParkingLotVehiclePrice[f].DayOfWeek.ToUpper() == DateTime.Now.DayOfWeek.ToString().ToUpper())
-                            {
-                                DateTime checkInTime = checkInStarttime.AddHours(Convert.ToInt32(lstLocationParkingLotVehiclePrice[f].Duration));
-                                DateTime openTime = DateTime.Parse(lstLocationParkingLotVehiclePrice[f].LotOpenTime);
-                                DateTime closetime = DateTime.Parse(lstLocationParkingLotVehiclePrice[f].LotCloseTime);
-                                Lotclosetime = DateTime.Parse(lstLocationParkingLotVehiclePrice[f].LotCloseTime);
-                                IsParkingFullDay = Convert.ToBoolean(lstLocationParkingLotVehiclePrice[f].IsFullDay);
-                                if (checkInTime > openTime && checkInTime < closetime)
-                                {
-                                    labelSpotExpiresMessage.Text = string.Empty;
-                                    labelParkingFee.Text = lstLocationParkingLotVehiclePrice[f].Fees.ToString("N");
-                                    labelSpotExpiresMessage.Text = checkInStarttime.AddHours(Convert.ToInt32(lstLocationParkingLotVehiclePrice[f].Duration)).ToString("hh:mm tt");
-                                    stlayoutCheckInPayment.IsVisible = true;
-                                }
-                                else
-                                {
-                                    stlayoutCheckInPayment.IsVisible = false;
-                                    await DisplayAlert("Alert", "Please check parking timings from " + lstLocationParkingLotVehiclePrice[f].LotOpenTime + " to " + lstLocationParkingLotVehiclePrice[f].LotCloseTime, "Ok");
-                                    return;
-                                }
 
+                        lstLocationParkingLotVehiclePrice = dal_DALCheckIn.GetLocationParkingLotVehicleParkingFees(Convert.ToString(App.Current.Properties["apitoken"]), SelectedVehicle, Convert.ToInt32(pickerHours.SelectedItem.ToString()), objloginuser.LocationParkingLotID.LocationParkingLotID, paidParkingFees);
+                        if (lstLocationParkingLotVehiclePrice.Count > 0)
+                        {
+                            labelSpotExpiresMessage.Text = string.Empty;
+                            labelParkingFee.Text = string.Empty;
+                            for (var f = 0; f < lstLocationParkingLotVehiclePrice.Count; f++)
+                            {
+                                if (lstLocationParkingLotVehiclePrice[f].DayOfWeek.ToUpper() == DateTime.Now.DayOfWeek.ToString().ToUpper())
+                                {
+                                    DateTime openTime = DateTime.Parse(lstLocationParkingLotVehiclePrice[f].LotOpenTime);
+                                    DateTime closetime = DateTime.Parse(lstLocationParkingLotVehiclePrice[f].LotCloseTime);
+                                    Lotclosetime = DateTime.Parse(lstLocationParkingLotVehiclePrice[f].LotCloseTime);
+                                    IsParkingFullDay = Convert.ToBoolean(lstLocationParkingLotVehiclePrice[f].IsFullDay);
+                                    if (checkInStarttime < closetime)
+                                    {
+                                        double checkintimeduration = Math.Round((closetime - checkInStarttime).TotalMinutes);
+                                        if (checkInStarttime < openTime)
+                                        {
+                                            checkInStarttime = openTime;
+                                        }
+                                        checkInTime = checkInStarttime;
+                                        if (checkInStarttime.AddHours(Convert.ToInt32(lstLocationParkingLotVehiclePrice[f].Duration)) < closetime)
+                                        {
+                                            labelSpotExpiresMessage.Text = string.Empty;
+                                            labelParkingFee.Text = lstLocationParkingLotVehiclePrice[f].Fees.ToString("N");
+                                            labelSpotExpiresMessage.Text = checkInStarttime.AddHours(Convert.ToInt32(lstLocationParkingLotVehiclePrice[f].Duration)).ToString("hh:mm tt");
+                                            stlayoutCheckInPayment.IsVisible = true;
+                                        }
+                                        else
+                                        {
+                                            if (checkintimeduration < minimumcheckinMinutes)
+                                            {
+                                                if (lsthoursPicker.Count > 0)
+                                                {
+                                                    string minHours = lsthoursPicker.Min();
+                                                    lstLocationParkingLotVehiclePrice = dal_DALCheckIn.GetLocationParkingLotVehicleParkingFees(Convert.ToString(App.Current.Properties["apitoken"]), SelectedVehicle, Convert.ToInt32(minHours), objloginuser.LocationParkingLotID.LocationParkingLotID, 0);
+                                                    if (lstLocationParkingLotVehiclePrice.Count > 0)
+                                                    {
+                                                        pickerHours.SelectedItem = lsthoursPicker.Min();
+                                                        labelSpotExpiresMessage.Text = string.Empty;
+                                                        labelParkingFee.Text = lstLocationParkingLotVehiclePrice[0].Fees.ToString("N");
+                                                        labelSpotExpiresMessage.Text = lstLocationParkingLotVehiclePrice[0].LotCloseTime;
+                                                        Lotclosetime = DateTime.Parse(lstLocationParkingLotVehiclePrice[f].LotCloseTime);
+                                                        IsminChckinTime = true;
+                                                        stlayoutCheckInPayment.IsVisible = true;
+                                                    }
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                stlayoutCheckInPayment.IsVisible = false;
+                                                await DisplayAlert("Alert", "Please check parking timings from " + lstLocationParkingLotVehiclePrice[f].LotOpenTime + " to " + lstLocationParkingLotVehiclePrice[f].LotCloseTime, "Ok");
+                                                return;
+                                            }
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        stlayoutCheckInPayment.IsVisible = false;
+                                        pickerBayNumers.IsEnabled = false;
+                                        await DisplayAlert("Alert", "Please check parking timings from " + lstLocationParkingLotVehiclePrice[f].LotOpenTime + " to " + lstLocationParkingLotVehiclePrice[f].LotCloseTime, "Ok");
+                                        return;
+                                    }
+                                }
+                            }
+                            if (labelParkingFee.Text == string.Empty || labelParkingFee.Text == null)
+                            {
+                                stlayoutCheckInPayment.IsVisible = false;
+                                await DisplayAlert("Alert", "Please contact admin parking fees details are not available for this hours.", "Ok");
+
+                                return;
                             }
                         }
-                        if (labelParkingFee.Text == string.Empty || labelParkingFee.Text == null)
+                        else
                         {
                             stlayoutCheckInPayment.IsVisible = false;
-                            await DisplayAlert("Alert", "Please contact admin parking fees details are not available for this hours.", "Ok");
-
-                            return;
+                            await DisplayAlert("Alert", "Parking details are not found", "Ok");
                         }
-                    }
-                    else
-                    {
-                        stlayoutCheckInPayment.IsVisible = false;
-                        await DisplayAlert("Alert", "Parking details are not found", "Ok");
                     }
                 }
 
@@ -399,93 +449,104 @@ namespace ParkHyderabadOperator
                 ShowLoading(true);
                 if (SelectedVehicle != string.Empty)
                 {
-                    if (entryRegistrationNumber.Text != null && (entryRegistrationNumber.Text.Length >= 6 && entryRegistrationNumber.Text.Length <=10))
+                    if (entryRegistrationNumber.Text != null && (entryRegistrationNumber.Text.Length >= 6 && entryRegistrationNumber.Text.Length <= 10))
                     {
                         string regNumber = entryRegistrationNumber.Text;
                         string regFormat = regNumber.Substring(regNumber.Length - 4);
                         if (int.TryParse(regFormat, out number))
                         {
-
                             if (pickerBayNumers.SelectedItem != null)
                             {
                                 ParkingBay objselectedbay = (ParkingBay)pickerBayNumers.SelectedItem;
-                                if (pickerHours.SelectedItem != null && pickerHours.SelectedIndex != 0)
+                                if (pickerHours.SelectedItem != null)
                                 {
                                     int selectedhours = Convert.ToInt32(pickerHours.SelectedItem.ToString());
-                                    if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
+                                    if (labelParkingFee.Text != "" && labelParkingFee.Text != string.Empty)
                                     {
-                                        // Vehicle Check-In
-                                        User objloginuser = (User)App.Current.Properties["LoginUser"];
-                                        VehicleCheckIn objPassVehicle = new VehicleCheckIn();
-                                        objPassVehicle.UserID = objloginuser.UserID;
-                                        objPassVehicle.LocationID = objloginuser.LocationParkingLotID.LocationID.LocationID;
-                                        objPassVehicle.LocationName = objloginuser.LocationParkingLotID.LocationID.LocationName;
-                                        objPassVehicle.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
-                                        objPassVehicle.LocationParkingLotName = objloginuser.LocationParkingLotID.LocationParkingLotName;
-                                        objPassVehicle.VehicleTypeCode = SelectedVehicle;
-                                        objPassVehicle.BayNumberID = objselectedbay.ParkingBayID;
-                                        objPassVehicle.BayNumber = objselectedbay.ParkingBayName;
-                                        objPassVehicle.BayRange = objselectedbay.ParkingBayRange;
-                                        objPassVehicle.RegistrationNumber = entryRegistrationNumber.Text;
-                                        objPassVehicle.PhoneNumber = entryPhoneNumber.Text;
-                                        objPassVehicle.ParkingHours = selectedhours;
-                                        objPassVehicle.ParkingFees = Convert.ToDecimal(labelParkingFee.Text);
-                                        objPassVehicle.PaymentType = "Cash";
-                                        if (objextendCustomerParkingSlot == null)
+                                        if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                                         {
-                                            existingCheckIn = VerifyVehicleCheckInStatus();
-                                            if (existingCheckIn == string.Empty)
+                                            // Vehicle Check-In
+                                            User objloginuser = (User)App.Current.Properties["LoginUser"];
+                                            VehicleCheckIn objPassVehicle = new VehicleCheckIn();
+                                            objPassVehicle.UserID = objloginuser.UserID;
+                                            objPassVehicle.LocationID = objloginuser.LocationParkingLotID.LocationID.LocationID;
+                                            objPassVehicle.LocationName = objloginuser.LocationParkingLotID.LocationID.LocationName;
+                                            objPassVehicle.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
+                                            objPassVehicle.LocationParkingLotName = objloginuser.LocationParkingLotID.LocationParkingLotName;
+                                            objPassVehicle.VehicleTypeCode = SelectedVehicle;
+                                            objPassVehicle.BayNumberID = objselectedbay.ParkingBayID;
+                                            objPassVehicle.BayNumber = objselectedbay.ParkingBayName;
+                                            objPassVehicle.BayRange = objselectedbay.ParkingBayRange;
+                                            objPassVehicle.RegistrationNumber = entryRegistrationNumber.Text;
+                                            objPassVehicle.PhoneNumber = entryPhoneNumber.Text;
+                                            objPassVehicle.ParkingHours = selectedhours;
+                                            objPassVehicle.ParkingFees = Convert.ToDecimal(labelParkingFee.Text);
+                                            objPassVehicle.PaymentType = "Cash";
+                                            if (objextendCustomerParkingSlot == null)
                                             {
-
-                                                objPassVehicle.ParkingStartTime = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
-                                                if (IsParkingFullDay)
+                                                existingCheckIn = VerifyVehicleCheckInStatus();
+                                                if (existingCheckIn == string.Empty)
                                                 {
-                                                    TimeSpan fulldaysapn = Lotclosetime - DateTime.Now;
-                                                    int lotHours = Convert.ToInt32(fulldaysapn.TotalHours);
-                                                    objPassVehicle.ParkingEndTime = Lotclosetime.ToString("MM/dd/yyyy hh:mm tt");
-                                                   
+                                                    objPassVehicle.ParkingStartTime = checkInTime.ToString("MM/dd/yyyy hh:mm tt");
+                                                    if (IsParkingFullDay)
+                                                    {
+
+                                                        objPassVehicle.ParkingEndTime = Lotclosetime.ToString("MM/dd/yyyy hh:mm tt");
+                                                    }
+                                                    else
+                                                    {
+                                                        if (!IsminChckinTime)
+                                                        {
+                                                            objPassVehicle.ParkingEndTime = checkInTime.AddHours(selectedhours).ToString("MM/dd/yyyy hh:mm tt");
+                                                        }
+                                                        else
+                                                        {
+                                                            objPassVehicle.ParkingEndTime = Lotclosetime.ToString("MM/dd/yyyy hh:mm tt");
+                                                        }
+                                                    }
+
+                                                    var confirmationPage = new ConfirmationPage(objPassVehicle);
+                                                    await Navigation.PushAsync(confirmationPage);
                                                 }
                                                 else
                                                 {
-                                                    objPassVehicle.ParkingEndTime = DateTime.Now.AddHours(selectedhours).ToString("MM/dd/yyyy hh:mm tt");
+                                                    await DisplayAlert("Alert", "Vehicle Checked In at " + existingCheckIn, "Ok");
                                                 }
-
-                                                var confirmationPage = new ConfirmationPage(objPassVehicle);
-                                                await Navigation.PushAsync(confirmationPage);
                                             }
                                             else
                                             {
-                                                await DisplayAlert("Alert", "Vehicle Checked In at " + existingCheckIn, "Ok");
+                                                objPassVehicle.CustomerParkingSlotID = objextendCustomerParkingSlot.CustomerParkingSlotID;
+                                                objPassVehicle.ParkingStartTime = Convert.ToDateTime(objextendCustomerParkingSlot.ActualEndTime).ToString("MM/dd/yyyy hh:mm tt");
+                                                objPassVehicle.ClampFees = Convert.ToDecimal(objextendCustomerParkingSlot.ClampFees);
+                                                if (IsParkingFullDay)
+                                                {
+                                                    TimeSpan extfullday = (Lotclosetime - Convert.ToDateTime(objextendCustomerParkingSlot.ActualEndTime));
+                                                    int lotHours = Convert.ToInt32(extfullday.TotalHours);
+                                                    objPassVehicle.ParkingEndTime = Lotclosetime.ToString("MM/dd/yyyy hh:mm tt");
+
+                                                }
+                                                else
+                                                {
+                                                    if (!IsminChckinTime)
+                                                    {
+                                                        objPassVehicle.ParkingEndTime = Convert.ToDateTime(objextendCustomerParkingSlot.ActualEndTime).AddHours(selectedhours).ToString("MM/dd/yyyy hh:mm tt");
+                                                    }
+                                                    else
+                                                    {
+                                                        objPassVehicle.ParkingEndTime = Lotclosetime.ToString("MM/dd/yyyy hh:mm tt");
+                                                    }
+
+                                                }
+                                                var confPage = new ConfirmationPage(objPassVehicle);
+                                                await Navigation.PushAsync(confPage);
                                             }
+
                                         }
                                         else
                                         {
-                                            objPassVehicle.CustomerParkingSlotID = objextendCustomerParkingSlot.CustomerParkingSlotID;
-                                            objPassVehicle.ParkingStartTime = Convert.ToDateTime(objextendCustomerParkingSlot.ActualEndTime).ToString("MM/dd/yyyy hh:mm tt");
-                                            objPassVehicle.ClampFees = Convert.ToDecimal(objextendCustomerParkingSlot.ClampFees);
-                                            if (IsParkingFullDay)
-                                            {
-                                                TimeSpan extfullday = (Lotclosetime - Convert.ToDateTime(objextendCustomerParkingSlot.ActualEndTime));
-                                                int lotHours = Convert.ToInt32(extfullday.TotalHours);
-                                                objPassVehicle.ParkingEndTime = Lotclosetime.ToString("MM/dd/yyyy hh:mm tt");
-                                               
-                                            }
-                                            else
-                                            {
-                                                objPassVehicle.ParkingEndTime = Convert.ToDateTime(objextendCustomerParkingSlot.ActualEndTime).AddHours(selectedhours).ToString("MM/dd/yyyy hh:mm tt");
-                                            }
 
-
-                                            var confPage = new ConfirmationPage(objPassVehicle);
-                                            await Navigation.PushAsync(confPage);
-
+                                            await DisplayAlert("Alert", "Unable to proceed,login user and token details are not avialable", "Ok");
                                         }
-
-                                    }
-                                    else
-                                    {
-
-                                        await DisplayAlert("Alert", "Unable to proceed,login user and token details are not avialable", "Ok");
                                     }
                                 }
                                 else
@@ -541,81 +602,99 @@ namespace ParkHyderabadOperator
 
                             if (pickerBayNumers.SelectedItem != null)
                             {
-                                if (pickerHours.SelectedItem != null && pickerHours.SelectedIndex != 0)
+                                if (pickerHours.SelectedItem != null)
                                 {
                                     ParkingBay objselectedbay = (ParkingBay)pickerBayNumers.SelectedItem;
                                     int selectedhours = Convert.ToInt32(pickerHours.SelectedItem.ToString());
-                                    if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
+                                    if (labelParkingFee.Text != "" && labelParkingFee.Text != string.Empty)
                                     {
-                                        // Vehicle Check-In
-                                        VehicleCheckIn objPassVehicle = new VehicleCheckIn();
-                                        User objloginuser = (User)App.Current.Properties["LoginUser"];
-                                        objPassVehicle.UserID = objloginuser.UserID;
-                                        objPassVehicle.LocationID = objloginuser.LocationParkingLotID.LocationID.LocationID;
-                                        objPassVehicle.LocationName = objloginuser.LocationParkingLotID.LocationID.LocationName;
-                                        objPassVehicle.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
-                                        objPassVehicle.LocationParkingLotName = objloginuser.LocationParkingLotID.LocationParkingLotName;
-                                        objPassVehicle.VehicleTypeCode = SelectedVehicle;
-                                        objPassVehicle.BayNumberID = objselectedbay.ParkingBayID;
-                                        objPassVehicle.BayNumber = objselectedbay.ParkingBayName;
-                                        objPassVehicle.BayRange = objselectedbay.ParkingBayRange;
-                                        objPassVehicle.RegistrationNumber = entryRegistrationNumber.Text;
-                                        objPassVehicle.PhoneNumber = entryPhoneNumber.Text;
-                                        objPassVehicle.ParkingHours = selectedhours;
-                                        objPassVehicle.ParkingFees = Convert.ToDecimal(labelParkingFee.Text);
-                                        objPassVehicle.PaymentType = "EPay";
-
-                                        if (objextendCustomerParkingSlot == null)
+                                        if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                                         {
-                                            existingCheckIn = VerifyVehicleCheckInStatus();
-                                            if (existingCheckIn == string.Empty)
+                                            // Vehicle Check-In
+                                            VehicleCheckIn objPassVehicle = new VehicleCheckIn();
+                                            User objloginuser = (User)App.Current.Properties["LoginUser"];
+                                            objPassVehicle.UserID = objloginuser.UserID;
+                                            objPassVehicle.LocationID = objloginuser.LocationParkingLotID.LocationID.LocationID;
+                                            objPassVehicle.LocationName = objloginuser.LocationParkingLotID.LocationID.LocationName;
+                                            objPassVehicle.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
+                                            objPassVehicle.LocationParkingLotName = objloginuser.LocationParkingLotID.LocationParkingLotName;
+                                            objPassVehicle.VehicleTypeCode = SelectedVehicle;
+                                            objPassVehicle.BayNumberID = objselectedbay.ParkingBayID;
+                                            objPassVehicle.BayNumber = objselectedbay.ParkingBayName;
+                                            objPassVehicle.BayRange = objselectedbay.ParkingBayRange;
+                                            objPassVehicle.RegistrationNumber = entryRegistrationNumber.Text;
+                                            objPassVehicle.PhoneNumber = entryPhoneNumber.Text;
+                                            objPassVehicle.ParkingHours = selectedhours;
+                                            objPassVehicle.ParkingFees = Convert.ToDecimal(labelParkingFee.Text);
+                                            objPassVehicle.PaymentType = "EPay";
+
+                                            if (objextendCustomerParkingSlot == null)
                                             {
-                                                objPassVehicle.ParkingStartTime = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
-                                                if (IsParkingFullDay)
+                                                existingCheckIn = VerifyVehicleCheckInStatus();
+                                                if (existingCheckIn == string.Empty)
                                                 {
-                                                    TimeSpan fulldaysapn = Lotclosetime - DateTime.Now;
-                                                    int lotHours = Convert.ToInt32(fulldaysapn.TotalHours);
-                                                    objPassVehicle.ParkingEndTime = Lotclosetime.ToString("MM/dd/yyyy hh:mm tt");
-                                                    
+                                                    objPassVehicle.ParkingStartTime = checkInTime.ToString("MM/dd/yyyy hh:mm tt");
+                                                    if (IsParkingFullDay)
+                                                    {
+
+                                                        objPassVehicle.ParkingEndTime = Lotclosetime.ToString("MM/dd/yyyy hh:mm tt");
+
+                                                    }
+                                                    else
+                                                    {
+                                                        if (!IsminChckinTime)
+                                                        {
+                                                            objPassVehicle.ParkingEndTime = checkInTime.AddHours(selectedhours).ToString("MM/dd/yyyy hh:mm tt");
+                                                        }
+                                                        else
+                                                        {
+                                                            objPassVehicle.ParkingEndTime = Lotclosetime.ToString("MM/dd/yyyy hh:mm tt");
+                                                        }
+
+                                                    }
+
+                                                    var conPage = new ConfirmationPage(objPassVehicle);
+                                                    await Navigation.PushAsync(conPage);
                                                 }
                                                 else
                                                 {
-                                                    objPassVehicle.ParkingEndTime = DateTime.Now.AddHours(selectedhours).ToString("MM/dd/yyyy hh:mm tt");
+                                                    await DisplayAlert("Alert", "Vehicle Checked In at  " + existingCheckIn, "Ok");
                                                 }
-
-                                                var conPage = new ConfirmationPage(objPassVehicle);
-                                                await Navigation.PushAsync(conPage);
                                             }
                                             else
                                             {
-                                                await DisplayAlert("Alert", "Vehicle Checked In at  " + existingCheckIn, "Ok");
+                                                objPassVehicle.CustomerParkingSlotID = objextendCustomerParkingSlot.CustomerParkingSlotID;
+                                                objPassVehicle.ParkingStartTime = Convert.ToDateTime(objextendCustomerParkingSlot.ActualEndTime).ToString("MM/dd/yyyy hh:mm tt");
+
+                                                if (IsParkingFullDay)
+                                                {
+
+                                                    objPassVehicle.ParkingEndTime = Lotclosetime.ToString("MM/dd/yyyy hh:mm tt");
+
+                                                }
+                                                else
+                                                {
+                                                    if (!IsminChckinTime)
+                                                    {
+                                                        objPassVehicle.ParkingEndTime = Convert.ToDateTime(objextendCustomerParkingSlot.ActualEndTime).AddHours(selectedhours).ToString("MM/dd/yyyy hh:mm tt");
+                                                    }
+                                                    else
+                                                    {
+                                                        objPassVehicle.ParkingEndTime = Lotclosetime.ToString("MM/dd/yyyy hh:mm tt");
+                                                    }
+
+                                                }
+
+                                                var newCheckInConPage = new ConfirmationPage(objPassVehicle);
+                                                await Navigation.PushAsync(newCheckInConPage);
                                             }
                                         }
                                         else
                                         {
-                                            objPassVehicle.CustomerParkingSlotID = objextendCustomerParkingSlot.CustomerParkingSlotID;
-                                            objPassVehicle.ParkingStartTime = Convert.ToDateTime(objextendCustomerParkingSlot.ActualEndTime).ToString("MM/dd/yyyy hh:mm tt");
-
-                                            if (IsParkingFullDay)
-                                            {
-                                                TimeSpan fulldaysapn = Lotclosetime - DateTime.Now;
-                                                int lotHours = Convert.ToInt32(fulldaysapn.TotalHours);
-                                                objPassVehicle.ParkingEndTime = Lotclosetime.ToString("MM/dd/yyyy hh:mm tt");
-
-                                            }
-                                            else
-                                            {
-                                                objPassVehicle.ParkingEndTime = Convert.ToDateTime(objextendCustomerParkingSlot.ActualEndTime).AddHours(selectedhours).ToString("MM/dd/yyyy hh:mm tt");
-                                            }
-                                            
-                                            var newCheckInConPage = new ConfirmationPage(objPassVehicle);
-                                            await Navigation.PushAsync(newCheckInConPage);
+                                            await DisplayAlert("Alert", "Unable to proceed,login user and token details are not avialable", "Ok");
                                         }
                                     }
-                                    else
-                                    {
-                                        await DisplayAlert("Alert", "Unable to proceed,login user and token details are not avialable", "Ok");
-                                    }
+
                                 }
                                 else
                                 {
@@ -650,12 +729,12 @@ namespace ParkHyderabadOperator
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "CheckInPage.xaml.cs", "", "BtnCheckIn_Clicked");
             }
         }
-
         #endregion
+
         public void ShowLoading(bool show)
         {
             StklauoutactivityIndicator.IsVisible = show;
-            
+
             if (show)
             {
                 absLayoutCheckInpage.Opacity = 0.5;
@@ -708,129 +787,138 @@ namespace ParkHyderabadOperator
                 ShowLoading(true);
                 if (SelectedVehicle != string.Empty)
                 {
-                    if (entryRegistrationNumber.Text != null && (entryRegistrationNumber.Text.Length >= 6 && entryRegistrationNumber.Text.Length <= 10))
+                    checkInTime = DateTime.Now;
+                    if (checkInTime < Lotclosetime)
                     {
-                        string regNumber = entryRegistrationNumber.Text;
-                        string regFormat = regNumber.Substring(regNumber.Length - 4);
-                        if (int.TryParse(regFormat, out number))
+                        if (entryRegistrationNumber.Text != null && (entryRegistrationNumber.Text.Length >= 6 && entryRegistrationNumber.Text.Length <= 10))
                         {
-
-                            if (pickerBayNumers.SelectedItem != null)
+                            string regNumber = entryRegistrationNumber.Text;
+                            string regFormat = regNumber.Substring(regNumber.Length - 4);
+                            if (int.TryParse(regFormat, out number))
                             {
-                                ParkingBay objselectedbay = (ParkingBay)pickerBayNumers.SelectedItem;
-                                if (objselectedbay != null)
+                                if (pickerBayNumers.SelectedItem != null)
                                 {
-                                    existingCheckIn = VerifyVehicleCheckInStatus();
-                                    if (existingCheckIn == string.Empty)
+                                    ParkingBay objselectedbay = (ParkingBay)pickerBayNumers.SelectedItem;
+                                    if (objselectedbay != null)
                                     {
-                                        if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
+                                        existingCheckIn = VerifyVehicleCheckInStatus();
+                                        if (existingCheckIn == string.Empty)
                                         {
-                                            VehicleCheckIn objPassVehicle = new VehicleCheckIn();
-                                            User objloginuser = (User)App.Current.Properties["LoginUser"];
-                                            objPassVehicle.UserID = objloginuser.UserID;
-                                            objPassVehicle.LocationID = objloginuser.LocationParkingLotID.LocationID.LocationID;
-                                            objPassVehicle.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
-                                            objPassVehicle.VehicleTypeCode = SelectedVehicle;
-                                            objPassVehicle.BayNumberID = objselectedbay.ParkingBayID;
-                                            objPassVehicle.RegistrationNumber = entryRegistrationNumber.Text;
-                                            objPassVehicle.PhoneNumber = entryPhoneNumber.Text;
-
-                                            GeocodingDetails objGeocodingDetails = new GeocodingDetails();
-                                            Xamarin.Essentials.Location resultloc = await objGeocodingDetails.GetCurrentLocation();
-
-                                            if (chkGovernment.IsChecked)
+                                            if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                                             {
-                                                // Government vehicle Check In
-                                                if (entryPhoneNumber.Text != null && entryPhoneNumber.Text != "")
-                                                {
-                                                    if (imgCameraByteData != null && imgCameraByteData.Length > 0)
-                                                    {
-                                                        objPassVehicle.StatusName = "Government";
-                                                        objPassVehicle.GovernmentVehicleImage = ByteArrayCompressionUtility.Compress(imgCameraByteData);
-                                                        if (resultloc != null)
-                                                        {
-                                                            objPassVehicle.VehicleImageLottitude = Convert.ToDecimal(resultloc.Latitude);
-                                                            objPassVehicle.VehicleImageLongitude = Convert.ToDecimal(resultloc.Longitude);
-                                                        }
+                                                VehicleCheckIn objPassVehicle = new VehicleCheckIn();
+                                                User objloginuser = (User)App.Current.Properties["LoginUser"];
+                                                objPassVehicle.UserID = objloginuser.UserID;
+                                                objPassVehicle.LocationID = objloginuser.LocationParkingLotID.LocationID.LocationID;
+                                                objPassVehicle.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
+                                                objPassVehicle.VehicleTypeCode = SelectedVehicle;
+                                                objPassVehicle.BayNumberID = objselectedbay.ParkingBayID;
+                                                objPassVehicle.RegistrationNumber = entryRegistrationNumber.Text;
+                                                objPassVehicle.PhoneNumber = entryPhoneNumber.Text;
 
-                                                        await Task.Run(() =>
-                                                          {
-                                                              msg = dal_DALCheckIn.SaveGovernmentVehicleCheckIn(Convert.ToString(App.Current.Properties["apitoken"]), objPassVehicle);
-                                                              if (msg == "Success")
-                                                              {
-                                                                  masterpage = new MasterHomePage();
-                                                              }
-                                                          });
-                                                        if (msg == "Success")
+                                                GeocodingDetails objGeocodingDetails = new GeocodingDetails();
+                                                Xamarin.Essentials.Location resultloc = await objGeocodingDetails.GetCurrentLocation();
+
+                                                if (chkGovernment.IsChecked)
+                                                {
+                                                    // Government vehicle Check In
+                                                    if (entryPhoneNumber.Text != null && entryPhoneNumber.Text != "")
+                                                    {
+                                                        if (imgCameraByteData != null && imgCameraByteData.Length > 0)
                                                         {
-                                                            await Navigation.PushAsync(masterpage);
+                                                            objPassVehicle.StatusName = "Government";
+                                                            objPassVehicle.GovernmentVehicleImage = ByteArrayCompressionUtility.Compress(imgCameraByteData);
+                                                            if (resultloc != null)
+                                                            {
+                                                                objPassVehicle.VehicleImageLottitude = Convert.ToDecimal(resultloc.Latitude);
+                                                                objPassVehicle.VehicleImageLongitude = Convert.ToDecimal(resultloc.Longitude);
+                                                            }
+
+                                                            await Task.Run(() =>
+                                                              {
+                                                                  msg = dal_DALCheckIn.SaveGovernmentVehicleCheckIn(Convert.ToString(App.Current.Properties["apitoken"]), objPassVehicle);
+                                                                  if (msg == "Success")
+                                                                  {
+                                                                      masterpage = new MasterHomePage();
+                                                                  }
+                                                              });
+                                                            if (msg == "Success")
+                                                            {
+                                                                await Navigation.PushAsync(masterpage);
+                                                            }
+                                                            else
+                                                            {
+                                                                await DisplayAlert("Alert", "Check-In Fail,Please contact admin.", "Ok");
+                                                            }
                                                         }
                                                         else
                                                         {
-                                                            await DisplayAlert("Alert", "Check-In Fail,Please contact admin.", "Ok");
+                                                            await DisplayAlert("Alert", "Please select vehicle image.", "Ok");
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        await DisplayAlert("Alert", "Please select vehicle image.", "Ok");
+                                                        await DisplayAlert("Alert", "Please enter phone number.", "Ok");
                                                     }
                                                 }
-                                                else
+                                                else if (objCustomerPass != null)
                                                 {
-                                                    await DisplayAlert("Alert", "Please enter phone number.", "Ok");
-                                                }
-                                            }
-                                            else if (objCustomerPass != null)
-                                            {
-                                                // Pass holder vehicle Check In
-                                                objPassVehicle.StatusName = "Pass";
-                                                objPassVehicle.CustomerID = objCustomerPass.CustomerVehicleID.CustomerID.CustomerID;
-                                                await Task.Run(() =>
-                                                {
-                                                    msg = dal_DALCheckIn.SavePassVehicleCheckIn(Convert.ToString(App.Current.Properties["apitoken"]), objPassVehicle);
+                                                    // Pass holder vehicle Check In
+                                                    objPassVehicle.StatusName = "Pass";
+                                                    objPassVehicle.CustomerID = objCustomerPass.CustomerVehicleID.CustomerID.CustomerID;
+                                                    await Task.Run(() =>
+                                                    {
+                                                        msg = dal_DALCheckIn.SavePassVehicleCheckIn(Convert.ToString(App.Current.Properties["apitoken"]), objPassVehicle);
+                                                        if (msg == "Success")
+                                                        {
+                                                            masterpage = new MasterHomePage();
+
+                                                        }
+                                                    });
                                                     if (msg == "Success")
                                                     {
-                                                        masterpage = new MasterHomePage();
-
+                                                        await Navigation.PushAsync(masterpage);
                                                     }
-                                                });
-                                                if (msg == "Success")
-                                                {
-                                                    await Navigation.PushAsync(masterpage);
-                                                }
-                                                else
-                                                {
-                                                    await DisplayAlert("Alert", "Check-In Fail,Please contact admin.", "Ok");
+                                                    else
+                                                    {
+                                                        await DisplayAlert("Alert", "Check-In Fail,Please contact admin.", "Ok");
+                                                    }
                                                 }
                                             }
+                                        }
+                                        else
+                                        {
+                                            await DisplayAlert("Alert", "Vehicle Checked In at " + existingCheckIn, "Ok");
                                         }
                                     }
                                     else
                                     {
-                                        await DisplayAlert("Alert", "Vehicle Checked In at " + existingCheckIn, "Ok");
+                                        await DisplayAlert("Alert", "Please select bay number", "Ok");
                                     }
+
                                 }
                                 else
                                 {
+
                                     await DisplayAlert("Alert", "Please select bay number", "Ok");
                                 }
-
                             }
                             else
                             {
-
-                                await DisplayAlert("Alert", "Please select bay number", "Ok");
+                                await DisplayAlert("Alert", "Enter valid registration number", "Ok");
                             }
-
                         }
                         else
                         {
-                            await DisplayAlert("Alert", "Enter valid registration number", "Ok");
+                            await DisplayAlert("Alert", "Please enter registrtion number minimum 6 digits", "Ok");
                         }
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Please enter registrtion number minimum 6 digits", "Ok");
+                        ShowLoading(false);
+                        btnCheckIn.IsVisible = false;
+                        await DisplayAlert("Alert", "Please check parking close time " + Lotclosetime.ToString("HH:mm tt"), "Ok");
+                        return;
                     }
                 }
                 else
@@ -940,91 +1028,96 @@ namespace ParkHyderabadOperator
         {
             try
             {
-
+                ShowLoading(true);
                 if (!chkGovernment.IsChecked && objextendCustomerParkingSlot == null)
                 {
-                    if (entryRegistrationNumber.Text.Length >= 6)
+                    if (entryRegistrationNumber != null)
                     {
-                        if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
+                        if (entryRegistrationNumber.Text.Length >= 6)
                         {
-                            User objloginuser = (User)App.Current.Properties["LoginUser"];
-                            Model.APIOutPutModel.Location objLoginUserLocation = objloginuser.LocationParkingLotID.LocationID;
-                            await Task.Run(() =>
+                            if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                             {
-                                objCustomerPass = dal_DALCheckIn.GetVerifyVehicleHasPass(Convert.ToString(App.Current.Properties["apitoken"]), entryRegistrationNumber.Text, objloginuser.LocationParkingLotID.LocationID.LocationID, objloginuser.LocationParkingLotID.LocationParkingLotID, objloginuser.UserID,"");
-                            });
-                            if (objCustomerPass.CustomerVehiclePassID != 0 && Convert.ToDateTime(objCustomerPass.ExpiryDate).Date >= DateTime.Now.Date)
-                            {
-                                if ((objCustomerPass.PassPriceID.StationAccess == "All Stations" || objCustomerPass.PassPriceID.StationAccess == "All Station"))
+                                User objloginuser = (User)App.Current.Properties["LoginUser"];
+                                Model.APIOutPutModel.Location objLoginUserLocation = objloginuser.LocationParkingLotID.LocationID;
+                                await Task.Run(() =>
                                 {
-                                    stLayoutCheckIn.IsVisible = true;
-                                    stlayoutCheckInPayment.IsVisible = false;
-                                    slParkinghours.IsVisible = false;
-                                    SelectedVehicle = objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode.ToUpper();
-                                    if (SelectedVehicle == "2W")
-                                    {
-
-                                        imgBtnTwoWheeler.Source = ImageSource.FromFile("Twowheeler_circle_ticked.png");
-                                        imgBtnFourWheeler.Source = ImageSource.FromFile("Fourwheeler_circle.png");
-                                    }
-                                    else if (SelectedVehicle == "4W")
-                                    {
-                                        imgBtnTwoWheeler.Source = ImageSource.FromFile("Twowheeler_circle.png");
-                                        imgBtnFourWheeler.Source = ImageSource.FromFile("Fourwheeler_circle_ticked.png");
-                                    }
-                                    await DisplayAlert("Alert", "" + entryRegistrationNumber.Text + " this vehicle has pass", "Ok");
-                                }
-                                else if (objCustomerPass.LocationID.LocationID == objloginuser.LocationParkingLotID.LocationID.LocationID)
+                                    objCustomerPass = dal_DALCheckIn.GetVerifyVehicleHasPass(Convert.ToString(App.Current.Properties["apitoken"]), entryRegistrationNumber.Text, objloginuser.LocationParkingLotID.LocationID.LocationID, objloginuser.LocationParkingLotID.LocationParkingLotID, objloginuser.UserID, "");
+                                });
+                                if (objCustomerPass.CustomerVehiclePassID != 0 && Convert.ToDateTime(objCustomerPass.ExpiryDate).Date >= DateTime.Now.Date)
                                 {
-                                    stLayoutCheckIn.IsVisible = true;
-                                    stlayoutCheckInPayment.IsVisible = false;
-                                    slParkinghours.IsVisible = false;
-                                    SelectedVehicle = objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode.ToUpper();
-                                    if (SelectedVehicle == "2W")
+                                    if ((objCustomerPass.PassPriceID.StationAccess == "All Stations" || objCustomerPass.PassPriceID.StationAccess == "All Station"))
                                     {
+                                        stLayoutCheckIn.IsVisible = true;
+                                        stlayoutCheckInPayment.IsVisible = false;
+                                        slParkinghours.IsVisible = false;
+                                        SelectedVehicle = objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode.ToUpper();
+                                        if (SelectedVehicle == "2W")
+                                        {
 
-                                        imgBtnTwoWheeler.Source = ImageSource.FromFile("Twowheeler_circle_ticked.png");
-                                        imgBtnFourWheeler.Source = ImageSource.FromFile("Fourwheeler_circle.png");
+                                            imgBtnTwoWheeler.Source = ImageSource.FromFile("Twowheeler_circle_ticked.png");
+                                            imgBtnFourWheeler.Source = ImageSource.FromFile("Fourwheeler_circle.png");
+                                        }
+                                        else if (SelectedVehicle == "4W")
+                                        {
+                                            imgBtnTwoWheeler.Source = ImageSource.FromFile("Twowheeler_circle.png");
+                                            imgBtnFourWheeler.Source = ImageSource.FromFile("Fourwheeler_circle_ticked.png");
+                                        }
+                                        await DisplayAlert("Alert", "" + entryRegistrationNumber.Text + " this vehicle has pass", "Ok");
                                     }
-                                    else if (SelectedVehicle == "4W")
+                                    else if (objCustomerPass.LocationID.LocationID == objloginuser.LocationParkingLotID.LocationID.LocationID)
                                     {
-                                        imgBtnTwoWheeler.Source = ImageSource.FromFile("Twowheeler_circle.png");
-                                        imgBtnFourWheeler.Source = ImageSource.FromFile("Fourwheeler_circle_ticked.png");
+                                        stLayoutCheckIn.IsVisible = true;
+                                        stlayoutCheckInPayment.IsVisible = false;
+                                        slParkinghours.IsVisible = false;
+                                        SelectedVehicle = objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode.ToUpper();
+                                        if (SelectedVehicle == "2W")
+                                        {
+
+                                            imgBtnTwoWheeler.Source = ImageSource.FromFile("Twowheeler_circle_ticked.png");
+                                            imgBtnFourWheeler.Source = ImageSource.FromFile("Fourwheeler_circle.png");
+                                        }
+                                        else if (SelectedVehicle == "4W")
+                                        {
+                                            imgBtnTwoWheeler.Source = ImageSource.FromFile("Twowheeler_circle.png");
+                                            imgBtnFourWheeler.Source = ImageSource.FromFile("Fourwheeler_circle_ticked.png");
+                                        }
+                                        await DisplayAlert("Alert", "" + entryRegistrationNumber.Text + " this vehicle has pass", "Ok");
                                     }
-                                    await DisplayAlert("Alert", "" + entryRegistrationNumber.Text + " this vehicle has pass", "Ok");
+                                    else
+                                    {
+                                        stLayoutCheckIn.IsVisible = false;
+                                        stlayoutCheckInPayment.IsVisible = true;
+                                        slParkinghours.IsVisible = true;
+                                        if (SelectedVehicle == string.Empty || SelectedVehicle == "")
+                                        {
+                                            imgBtnTwoWheeler.Source = ImageSource.FromFile("Twowheeler_circle.png");
+                                            imgBtnFourWheeler.Source = ImageSource.FromFile("Fourwheeler_circle.png");
+                                        }
+                                    }
+                                    slGovernment.IsVisible = false;
+
                                 }
                                 else
                                 {
                                     stLayoutCheckIn.IsVisible = false;
                                     stlayoutCheckInPayment.IsVisible = true;
                                     slParkinghours.IsVisible = true;
+                                    slGovernment.IsVisible = true;
                                     if (SelectedVehicle == string.Empty || SelectedVehicle == "")
                                     {
                                         imgBtnTwoWheeler.Source = ImageSource.FromFile("Twowheeler_circle.png");
                                         imgBtnFourWheeler.Source = ImageSource.FromFile("Fourwheeler_circle.png");
                                     }
                                 }
-                                slGovernment.IsVisible = false;
-
-                            }
-                            else
-                            {
-                                stLayoutCheckIn.IsVisible = false;
-                                stlayoutCheckInPayment.IsVisible = true;
-                                slParkinghours.IsVisible = true;
-                                slGovernment.IsVisible = true;
-                                if (SelectedVehicle == string.Empty || SelectedVehicle == "")
-                                {
-                                    imgBtnTwoWheeler.Source = ImageSource.FromFile("Twowheeler_circle.png");
-                                    imgBtnFourWheeler.Source = ImageSource.FromFile("Fourwheeler_circle.png");
-                                }
                             }
                         }
                     }
                 }
+                ShowLoading(false);
             }
             catch (Exception ex)
             {
+                ShowLoading(false);
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "CheckInPage.xaml.cs", "", "EntryRegistrationNumber_TextChanged");
             }
         }
@@ -1049,7 +1142,7 @@ namespace ParkHyderabadOperator
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "CheckInPage.xaml.cs", "", "PickerBayNumers_SelectedIndexChanged");
             }
         }
-        
+
         #region Navigation BackButton
 
         private async void BtnBack_Clicked(object sender, EventArgs e)

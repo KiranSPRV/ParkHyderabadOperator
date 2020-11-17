@@ -123,7 +123,7 @@ namespace ParkHyderabadOperator
         {
             try
             {
-                if (lstSelectedLocations.Count > 0)
+                if (lstSelectedLocations.Count > 0 && lstSelectedLocations.Count==3)
                 {
                     App.Current.Properties["MultiSelectionLocations"] = lstSelectedLocations;
                     await Navigation.PushAsync(new MonthlyPassPage(PassType, objResultVMPass));
