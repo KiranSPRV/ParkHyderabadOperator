@@ -81,10 +81,8 @@ namespace ParkHyderabadOperator.DAL.DALViolation
                         if (jsonString != null)
                         {
                             APIResponse apiResult = JsonConvert.DeserializeObject<APIResponse>(jsonString);
-
                             apirespone = apiResult.Message;
-                            FirebaseHelper objfirebasehelper = new FirebaseHelper();
-                            objfirebasehelper.AddVehicleViolation(objviolationandclamp);
+                            
                         }
 
                     }

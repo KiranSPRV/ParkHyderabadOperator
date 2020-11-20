@@ -8,17 +8,17 @@
     </NavigationPage.TitleView>
     <ContentPage.Content>
         <AbsoluteLayout VerticalOptions="FillAndExpand" >
-            <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,0.85"  AbsoluteLayout.LayoutFlags="All"  HorizontalOptions="FillAndExpand" >
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,0.92"  AbsoluteLayout.LayoutFlags="All"  HorizontalOptions="FillAndExpand" >
                 <StackLayout Margin="15,0,15,0" >
-                    <Grid ColumnSpacing="10">
+                    <Grid ColumnSpacing="5">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1*"/>
                             <RowDefinition Height="9*"/>
                         </Grid.RowDefinitions>
-                        <Frame  Grid.Row="0" CornerRadius="25" Padding="5" BorderColor="#f9f9f9" BackgroundColor="#f9f9f9"  HeightRequest="32">
-                            <SearchBar   BackgroundColor="Transparent" Margin="-20,0,0,0" FontSize="14" FontFamily="FontsFree-Net-proxima_nova_reg-webfont.ttf#FontsFree-Net-proxima_nova_reg-webfont"   Placeholder="Search..."   PlaceholderColor="#676767" x:Name="searchBar"   TextChanged="SearchBar_OnTextChanged"  VerticalOptions="EndAndExpand" HorizontalOptions="FillAndExpand"/>
+                        <Frame  Grid.Row="0" CornerRadius="25" Padding="0" BorderColor="#f9f9f9" BackgroundColor="#f9f9f9"  HeightRequest="32">
+                            <SearchBar   BackgroundColor="Transparent" Margin="-20,0,0,0" FontSize="14" FontFamily="FontsFree-Net-proxima_nova_reg-webfont.ttf#FontsFree-Net-proxima_nova_reg-webfont"   Placeholder="Search..."   PlaceholderColor="#676767" x:Name="searchBar"   TextChanged="SearchBar_OnTextChanged"   HorizontalOptions="FillAndExpand"/>
                         </Frame>
-                        <StackLayout Grid.Row="1"   Orientation="Vertical" Spacing="5" Margin="0,35,0,0">
+                        <StackLayout Grid.Row="1"   Orientation="Vertical" Spacing="2" Margin="0,5,0,0">
                             <StackLayout Orientation="Vertical"  Spacing="0">
                                 <Label Text="Name" Style="{StaticResource LabelPlaceHolderStyle}" ></Label>
                                 <Entry x:Name="entryCustomerName" Style="{StaticResource EntryProximaBlackStyle}"></Entry>
@@ -54,8 +54,6 @@
                                 </StackLayout>
                                 <ImageButton x:Name="imgbtnScanBarCode" Source="QR_White.png" HeightRequest="25"     VerticalOptions="Center" BackgroundColor="Transparent" Clicked="ImgbtnScanBarCode_Clicked"/>
                             </StackLayout>
-
-
                         </StackLayout>
                         <ListView  Grid.Row="1" x:Name="listViewVehicleRegistrationNumbers" IsVisible="False"   CachingStrategy="RecycleElement" BackgroundColor="White" ItemTapped="listViewVehicleRegistrationNumbers_OnItemTapped" >
                             <ListView.ItemTemplate>
@@ -72,14 +70,47 @@
                         </ListView>
                     </Grid>
                 </StackLayout>
+                <StackLayout  x:Name="slNFCNewCardPayment" Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="15,0,15,0">
+                        <StackLayout Spacing="0" VerticalOptions="StartAndExpand">
+                            <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="Start" >
+                                <CheckBox x:Name="chkNewCard"  IsChecked="False" CheckedChanged="ChkNewCard_CheckedChanged"  Style="{StaticResource ChekBoxRegularBlueStyle}" />
+                                <Label Style="{StaticResource LabelRegularStartCenterStyle}" Text="NEW CARD" ></Label>
+                            </StackLayout>
+                        <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="Start" >
+                            <CheckBox x:Name="chkhasCard"  IsChecked="False" CheckedChanged="ChkNewCard_CheckedChanged"  Style="{StaticResource ChekBoxRegularBlueStyle}" />
+                            <Label Style="{StaticResource LabelRegularStartCenterStyle}" Text="HAS CARD" ></Label>
+                        </StackLayout>
+                    </StackLayout>
+                        
+                </StackLayout>
             </StackLayout>
-            <StackLayout  AbsoluteLayout.LayoutBounds="0,1,1,0.15"  AbsoluteLayout.LayoutFlags="All"  HorizontalOptions="FillAndExpand" >
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,1,1,0.1"  AbsoluteLayout.LayoutFlags="All"  HorizontalOptions="FillAndExpand" >
                 <StackLayout VerticalOptions="StartAndExpand" Margin="15,5,15,5" x:Name="slContinue">
                     <Frame CornerRadius="5" Padding="0"   BorderColor="#efefef"    BackgroundColor="#FFFFFF">
                         <StackLayout  Orientation="Vertical"  VerticalOptions="CenterAndExpand" Spacing="5">
                             <Button Text="CONTINUE" x:Name="BtnContinue" Style="{StaticResource ButtonRegularDodgerBlueStyle}" Clicked="BtnContinue_Clicked"></Button>
                         </StackLayout>
                     </Frame>
+                </StackLayout>
+                <StackLayout Orientation="Horizontal"   x:Name="stlayoutCheckInPayment">
+                    <StackLayout   HorizontalOptions="FillAndExpand" BackgroundColor="#2ECC71" Padding="10" >
+                        <StackLayout.GestureRecognizers >
+                            <TapGestureRecognizer x:Name="slCashPayment" Tapped="SlCashPayment_Tapped"/>
+                        </StackLayout.GestureRecognizers>
+                        <StackLayout Orientation="Horizontal" Spacing="5" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                            <ImageButton Source="rupee_icon_white.png" HeightRequest="30"  BackgroundColor="Transparent"  HorizontalOptions="Center" />
+                            <Label  Text="CASH" Style="{StaticResource LabelRegularWhiteStyle}" VerticalOptions="Center"  HorizontalOptions="Center" />
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout  HorizontalOptions="FillAndExpand"  BackgroundColor="#3293fa" Padding="10">
+                        <StackLayout.GestureRecognizers>
+                            <TapGestureRecognizer x:Name="slEpayment" Tapped="SlEpayment_Tapped"/>
+                        </StackLayout.GestureRecognizers>
+                        <StackLayout Orientation="Horizontal" Spacing="5" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                            <ImageButton Source="QR_White_BackGround.png" HeightRequest="30"  BackgroundColor="Transparent"  HorizontalOptions="Center" />
+                            <Label  Text="EPAY" Style="{StaticResource LabelRegularWhiteStyle}" VerticalOptions="Center"  HorizontalOptions="Center" />
+                        </StackLayout>
+                    </StackLayout>
                 </StackLayout>
             </StackLayout>
         </AbsoluteLayout>

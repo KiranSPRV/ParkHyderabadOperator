@@ -331,6 +331,48 @@ namespace ParkHyderabadOperator.DAL.DALPass
             }
             return objActivatedCustomerVehiclePass;
         }
+        public CustomerVehiclePass SaveCustomerVehiclePassNewNFCCard(string accessToken, CustomerVehiclePass objvehicle)
+        {
+            dal_DALExceptionManagment = new DALExceptionManagment();
+            CustomerVehiclePass objActivatedCustomerVehiclePass = null;
+            try
+            {
+                string baseUrl = Convert.ToString(App.Current.Properties["BaseURL"]);
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(baseUrl);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    // Add the Authorization header with the AccessToken.
+                    client.DefaultRequestHeaders.Add("Authorization", "bearer  " + accessToken);
+                    // create the URL string.
+                    string url = "api/InstaOperator/postSaveCustomerVehiclePassNewNFCCard";
+                    // make the request
+
+                    var json = JsonConvert.SerializeObject(objvehicle);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+                    HttpResponseMessage response = client.PostAsync(url, content).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string jsonString = response.Content.ReadAsStringAsync().Result;
+                        if (jsonString != null)
+                        {
+                            APIResponse apiResult = JsonConvert.DeserializeObject<APIResponse>(jsonString);
+
+                            if (apiResult.Result)
+                            {
+                                objActivatedCustomerVehiclePass = JsonConvert.DeserializeObject<CustomerVehiclePass>(Convert.ToString(apiResult.Object));
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                dal_DALExceptionManagment.InsertException(accessToken, "OperatarAPP", ex.Message, "DALPass", "", "GetCustomerVehicleDetailsByVehicle");
+            }
+            return objActivatedCustomerVehiclePass;
+        }
         public List<CustomerVehiclePass> GetCustomerValidateVehiclePassesDetailsByVehicle(string accessToken, CustomerVehicle objvehicle)
         {
             dal_DALExceptionManagment = new DALExceptionManagment();

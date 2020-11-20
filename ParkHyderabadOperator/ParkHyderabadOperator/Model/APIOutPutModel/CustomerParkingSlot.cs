@@ -19,6 +19,7 @@ namespace ParkHyderabadOperator.Model.APIOutPutModel
             FOCReasonID = new ViolationReason();
             StatusID = new Status();
             ParkingBayID = new ParkingBay();
+            SuperVisorID = new User();
         }
         public int CustomerParkingSlotID { get; set; }
         public Customer CustomerID { get; set; }
@@ -49,6 +50,9 @@ namespace ParkHyderabadOperator.Model.APIOutPutModel
         public DateTime CreatedOn { get; set; }
         public string UpdatedBy { get; set; }
         public string UserCode { get; set; }
+
+
+        public User SuperVisorID { get; set; }
 
         public DateTime UpdatedOn { get; set; }
 

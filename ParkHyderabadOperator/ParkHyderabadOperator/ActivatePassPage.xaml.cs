@@ -28,7 +28,6 @@ namespace ParkHyderabadOperator
         public bool NfcIsEnabled { get; set; }
         public bool NfcIsDisabled => !NfcIsEnabled;
         #endregion
-
         public ActivatePassPage()
         {
             InitializeComponent();
@@ -46,6 +45,7 @@ namespace ParkHyderabadOperator
                 DisplayAlert("Alert", "Unable to proceed,Please contact admin" + ex.Message, "Ok");
             }
         }
+
         #region Searh Box Related Code
         public async void GetAllPassedVehicles()
         {
@@ -76,10 +76,6 @@ namespace ParkHyderabadOperator
                     if (objResultCustomerVehiclePass != null && objResultCustomerVehiclePass.CustomerVehiclePassID != 0)
                     {
 
-                        if (objResultCustomerVehiclePass.IssuedCard)
-                        {
-
-
                             entryCustomerName.Text = objResultCustomerVehiclePass.CustomerVehicleID.CustomerID.Name;
                             entryPhoneNumber.Text = objResultCustomerVehiclePass.CustomerVehicleID.CustomerID.PhoneNumber;
                             entryRegistrationNumber.Text = objResultCustomerVehiclePass.CustomerVehicleID.RegistrationNumber;
@@ -92,7 +88,6 @@ namespace ParkHyderabadOperator
                             {
                                 imgCustomerVehcileType.Source = ImageSource.FromFile("car_black.png");
                             }
-
                             if (objResultCustomerVehiclePass.PassPriceID.PassTypeID.PassTypeCode.ToUpper() == "WP")
                             {
                                 slNFC.IsVisible = false;
@@ -104,11 +99,7 @@ namespace ParkHyderabadOperator
                                 slNFC.IsVisible = true;
                                 slContinue.IsVisible = true;
                             }
-                        }
-                        else
-                        {
-                            await DisplayAlert("Alert", "NFC not available for this Vehicle", "Ok");
-                        }
+                       
                     }
                     else
                     {
@@ -396,5 +387,23 @@ namespace ParkHyderabadOperator
                 await DisplayAlert("Alert", ex.Message, "Ok");
             }
         }
+
+        #region New NFC Card Payment 
+        private void ChkNewCard_CheckedChanged(object sender, CheckedChangedEventArgs e)
+        {
+
+        }
+
+        private void SlCashPayment_Tapped(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SlEpayment_Tapped(object sender, EventArgs e)
+        {
+
+        }
+
+        #endregion
     }
 }

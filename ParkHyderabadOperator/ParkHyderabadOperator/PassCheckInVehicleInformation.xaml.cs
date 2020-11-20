@@ -22,7 +22,7 @@ namespace ParkHyderabadOperator
         DALExceptionManagment dal_Exceptionlog;
         List<ViolationReason> lstReasons = null;
         BlueToothDevicePrinting ObjblueToothDevicePrinting;
-        string[] receiptlines = new string[16]; // Receipt Lines
+        string[] receiptlines = new string[17]; // Receipt Lines
 
         public PassCheckInVehicleInformation()
         {
@@ -183,22 +183,23 @@ namespace ParkHyderabadOperator
                             if (receiptlines != null && receiptlines.Length > 0)
                             {
 
-                                receiptlines[0] = "\x1B\x21\x12" + "          " + "HMRL PARKING" + "\x1B\x21\x00" + "\n";
-                                receiptlines[1] = "\x1B\x21\x01" + "       " + objresult.LocationParkingLotID.LocationID.LocationName + "-" + objresult.LocationParkingLotID.LocationParkingLotName + "\n";
-                                receiptlines[2] = " " + "\n";
-                                receiptlines[3] = "\x1B\x21\x08" + vehicleType + "     " + objresult.CustomerVehicleID.RegistrationNumber + "\x1B\x21\x00" + "\n";
-                                receiptlines[4] = "\x1B\x21\x08" + objresult.ExpectedStartTime == null ? "" : Convert.ToDateTime(objresult.ExpectedStartTime).ToString("dd MMM yyyy,hh:mm tt") + "\x1B\x21\x00\n";
-                                receiptlines[5] = "" + "\n";
-                                receiptlines[6] = "\x1B\x21\x01" + "Paid Rs" + parkingAmount.ToString("N2") + "\x1B\x21\x00\n";
-                                receiptlines[7] = "\x1B\x21\x01" + "Parked at - Bays:" + objresult.LocationParkingLotID.ParkingBayID.ParkingBayRange + "\x1B\x21\x00\n";
-                                receiptlines[8] = "\x1B\x21\x01" + "OPERATOR ID -" + objresult.UserCode + "\x1B\x21\x00\n";
-                                receiptlines[9] = "\x1B\x21\x01" + "Security available " + objresult.LocationParkingLotID.LotTimmings + "\x1B\x21\x00\n";
-                                receiptlines[10] = "\x1B\x21\x01" + "We are not responsible for your valuable items like laptop,      wallet,helmet etc." + "\x1B\x21\x00\n";
-                                receiptlines[11] = "\x1B\x21\x01" + "GST Number 0012" + "\x1B\x21\x00\n";
-                                receiptlines[12] = "\x1B\x21\x01" + "Amount includes 18% GST" + "\x1B\x21\x00\n";
-                                receiptlines[13] = "" + "\n";
+                                receiptlines[0] = "\x1B\x21\x08" + "          " + "HMRL PARKING" + "\x1B\x21\x00" + "\n";
+                                receiptlines[1] = "\x1B\x21\x01" + "          " + objresult.LocationParkingLotID.LocationID.LocationName + objresult.LocationParkingLotID.LocationParkingLotName + "\x1B\x21\x00\n";
+                                receiptlines[2] = "" + "\n";
+                                receiptlines[3] = "\x1B\x21\x08" + vehicleType + ":" + objresult.CustomerVehicleID.RegistrationNumber + "\x1B\x21\x00\n";
+                                receiptlines[4] = "\x1B\x21\x01" + (objresult.ActualStartTime == null ? "" : "In:" + Convert.ToDateTime(objresult.ActualStartTime).ToString("dd MMM yyyy,hh:mm tt")) + "\x1B\x21\x00" + "\n";
+                                receiptlines[5] = "\x1B\x21\x01" + "Paid: Rs" + objresult.Amount.ToString("N2") + "(Up to " + objresult.Duration + " hours)" + "\x1B\x21\x00\n";
+                                receiptlines[6] = "\x1B\x21\x01" + "Valid Till:" + (objresult.ActualEndTime == null ? "" : Convert.ToDateTime(objresult.ActualEndTime).ToString("dd MMM yyyy,hh:mm tt")) + "\x1B\x21\x00\n";
+                                receiptlines[7] = "\x1B\x21\x01" + "Parked at: (Bays)" + objresult.LocationParkingLotID.ParkingBayID.ParkingBayRange + "\x1B\x21\x00\n";
+                                receiptlines[8] = "\x1B\x21\x06" + "Operator Id :" + objresult.UserCode + "\x1B\x21\x00\n";
+                                receiptlines[9] = "\x1B\x21\x01" + "(Supervisor Mobile:" + objresult.SuperVisorID.PhoneNumber + ")" + "\x1B\x21\x00\n";
+                                receiptlines[10] = "\x1B\x21\x06" + "Security available " + objresult.LocationParkingLotID.LotOpenTime + "-" + objresult.LocationParkingLotID.LotCloseTime + "\x1B\x21\x00\n";
+                                receiptlines[11] = "\x1B\x21\x01" + "We are not responsible for your valuable items like laptop,       wallet,helmet etc." + "\x1B\x21\x00\n";
+                                receiptlines[12] = "\x1B\x21\x06" + "GST Number 36AACFZ1015E1ZL" + "\x1B\x21\x00\n";
+                                receiptlines[13] = "\x1B\x21\x06" + "Amount includes 18% GST" + "\x1B\x21\x00\n";
                                 receiptlines[14] = "" + "\n";
                                 receiptlines[15] = "" + "\n";
+
                             }
                         }
                         catch (Exception ex)

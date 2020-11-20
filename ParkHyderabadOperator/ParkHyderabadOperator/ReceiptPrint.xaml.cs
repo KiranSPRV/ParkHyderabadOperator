@@ -27,23 +27,24 @@ namespace ParkHyderabadOperator
                 labelPrinterName.Text = printerName;
                 if (printerName != string.Empty && printerName != "")
                 {
-                    string[] receiptlines = new string[15];
+                    string[] receiptlines = new string[16];
 
                     receiptlines[0] = "\x1B\x21\x12" + "          " + "HMRL PARKING" + "\x1B\x21\x00" + "\n";
-                    receiptlines[1] = "\x1B\x21\x01" + "       " + "Location And Lot" + "\n";
-                    receiptlines[2] = " " + "\n";
-                    receiptlines[3] = "\x1B\x21\x08" + "BIKE     No.TS05FL0960" + "\x1B\x21\x00" + "\n";
-                    receiptlines[4] = "\x1B\x21\x08" + "11/06/20 7:37" + "\x1B\x21\x00\n";
-                    receiptlines[5] = "" + "\n";
-                    receiptlines[6] = "\x1B\x21\x01" + "Paid Rs 10.00" + "\x1B\x21\x00\n";
-                    receiptlines[7] = "\x1B\x21\x01" + "Parked at - Bays: (40-50)" + "\x1B\x21\x00\n";
-                    receiptlines[8] = "\x1B\x21\x01" + "OPERATOR ID - 2001" + "\x1B\x21\x00\n";
-                    receiptlines[9] = "\x1B\x21\x01" + "We are not responsible for your valuable items like laptop,wallet,helmet etc." + "\x1B\x21\x00\n";
-                    receiptlines[10] = "\x1B\x21\x01" + "GST Number 0012" + "\x1B\x21\x00\n";
-                    receiptlines[11] = "\x1B\x21\x01" + "Amount includes 18% GST" + "\x1B\x21\x00\n";
-                    receiptlines[12] = "" + "\n";
+                    receiptlines[1] = "\x1B\x21\x01" + "       " + "Location And Lot"+ "\x1B\x21\x00" + "\n";
+                    receiptlines[2] = "\x1B\x21\x08" + "BIKE:     TS05FL0960" + "\x1B\x21\x00" + "\n";
+                    receiptlines[3] = "\x1B\x21\x08" + "(In)11/06/20 7:37" + "\x1B\x21\x00" + "\n";
+                    receiptlines[4] = "\x1B\x21\x06" + "Paid: Rs 10.00" + "\x1B\x21\x00" + "\n";
+                    receiptlines[5] = "\x1B\x21\x01" + "Parked at - Bays: (40-50)" + "\x1B\x21\x00" + "\n";
+                    receiptlines[6] = "\x1B\x21\x01" + "Operator Id :2001" + "\x1B\x21\x00" + "\n";
+                    receiptlines[7] = "\x1B\x21\x01" + "We are not responsible for your" + "\x1B\x21\x00" + "\n";
+                    receiptlines[8] = "\x1B\x21\x06" + "GST Number 0012" + "\x1B\x21\x00" + "\n";
+                    receiptlines[9] = "\x1B\x21\x01" + "Amount includes 18% GST" + "\x1B\x21\x00" + "\n";
+                    receiptlines[10] = "\x1B\x21\x03" + "We are not responsible " + "\x1B\x21\x00" + "\n";
+                    receiptlines[11] = "\x1B\x21\x05" + "We are not responsible for your" + "\x1B\x21\x00" + "\n";
+                    receiptlines[12] = "\x1B\x21\x09" + "We are not responsible for your" + "\x1B\x21\x00" + "\n";
                     receiptlines[13] = "" + "\n";
                     receiptlines[14] = "" + "\n";
+                    receiptlines[15] = "" + "\n";
 
 
 

@@ -31,7 +31,7 @@ namespace ParkHyderabadOperator
         {
             InitializeComponent();
             dal_Exceptionlog = new DALExceptionManagment();
-            App.Current.Properties["BaseURL"] = " http://35.202.198.25:81/InstaParkingOperatorAPI/"; //"http://optapi.instaparking.in/"
+            App.Current.Properties["BaseURL"] =  " http://35.202.198.25:81/InstaParkingOperatorAPI/"; //"http://optapi.instaparking.in/"; //
         }
         protected async override void OnAppearing()
         {
@@ -216,9 +216,9 @@ namespace ParkHyderabadOperator
                                     DateTime toDay = DateTime.Now;
                                     TimeSpan lotClosingTime = new TimeSpan(22, 30, 0);
                                     toDay = toDay.Date + lotClosingTime;
-                                    if ((resultObj.UserTypeID.UserTypeName.ToUpper()) == ("Operator".ToUpper()) )
+                                    if ((resultObj.UserTypeID.UserTypeName.ToUpper()) == ("Operator".ToUpper()))
                                     {
-                                        if(DateTime.Now < toDay)
+                                        if (DateTime.Now < toDay)
                                         {
                                             await Task.Run(() =>
                                             {

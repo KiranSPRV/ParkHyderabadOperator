@@ -14,7 +14,7 @@ namespace ParkHyderabadOperator
     {
         BlueToothDevicePrinting ObjblueToothDevicePrinting;
         DALExceptionManagment dal_Exceptionlog;
-        string[] receiptlines = new string[14]; // Receipt Lines
+        string[] receiptlines = new string[17]; // Receipt Lines
         public PassPaymentReceiptPage()
         {
             InitializeComponent();
@@ -40,6 +40,7 @@ namespace ParkHyderabadOperator
             try
             {
                 string vehicleType = string.Empty;
+                string stations = string.Empty;
                 labelParkingReceiptTitle.Text = "InstaParking-" + objReceipt.PassPriceID.PassTypeID.PassTypeName;
 
                 if (objReceipt.PassPriceID.PassTypeID.PassTypeCode == "DP")
@@ -67,6 +68,7 @@ namespace ParkHyderabadOperator
                     if (objReceipt.PassPriceID.StationAccess == "Single Station")
                     {
                         labelParkingLot.Text = objReceipt.LocationID.LocationName + "-" + objReceipt.PassPriceID.StationAccess;
+                        stations = objReceipt.LocationID.LocationName;
                     }
                     else if (objReceipt.PassPriceID.StationAccess == "Multi Station" || objReceipt.PassPriceID.StationAccess == "Multi Stations")
                     {
@@ -76,8 +78,7 @@ namespace ParkHyderabadOperator
                             var lstLocation = (List<Model.APIOutPutModel.Location>)App.Current.Properties["MultiSelectionLocations"];
                             if (lstLocation.Count > 0)
                             {
-
-                                string stations = string.Empty;
+                               
                                 for (var s = 0; s < lstLocation.Count; s++)
                                 {
                                     stations = stations + lstLocation[s].LocationName + ",";
@@ -90,6 +91,7 @@ namespace ParkHyderabadOperator
                     else if (objReceipt.PassPriceID.StationAccess == "All Station" || objReceipt.PassPriceID.StationAccess == "All Stations")
                     {
                         labelParkingLot.Text = "All Metro Stations";
+                        stations = "All Metro Stations";
                     }
                     labelValidFrom.Text = Convert.ToDateTime(objReceipt.StartDate).ToString("dd MMM yyyy");
                     labelValidTo.Text = Convert.ToDateTime(objReceipt.ExpiryDate).ToString("dd MMM yyyy");
@@ -132,27 +134,27 @@ namespace ParkHyderabadOperator
                     imageOperatorProfile.IsVisible = false;
                 }
 
-
-
                 try
                 {
                     if (receiptlines != null && receiptlines.Length > 0)
                     {
+                        receiptlines[0] = "\x1B\x21\x08" + "          " + "HMRL PARKING" + "\x1B\x21\x00" + "\n";
+                        receiptlines[1] = "\x1B\x21\x01" + "          " + objReceipt.CreatedBy.LocationParkingLotID.LocationID.LocationName + "\x1B\x21\x00\n";
+                        receiptlines[3] = "" + "\n";
+                        receiptlines[4] = "\x1B\x21\x08" + vehicleType + "     " + objReceipt.CustomerVehicleID.RegistrationNumber + "\x1B\x21\x00\n";
+                        receiptlines[5] = "\x1B\x21\x01" + "Valid From:" + Convert.ToDateTime(objReceipt.StartDate).ToString("dd MMM yyyy") + "\x1B\x21\x00" + "\n";
+                        receiptlines[6] = "\x1B\x21\x01" + "Valid Till:" + Convert.ToDateTime(objReceipt.ExpiryDate).ToString("dd MMM yyyy") + "\x1B\x21\x00" + "\n";
+                        receiptlines[7] = "\x1B\x21\x01" + "(Pass Type :" + objReceipt.PassPriceID.PassTypeID.PassTypeName + ")" + "\x1B\x21\x00\n";
+                        receiptlines[8] = "\x1B\x21\x01" + "Station(s):" + stations + "\x1B\x21\x01" + "\n";
+                        receiptlines[9] = "\x1B\x21\x01" + "Paid: Rs" + (objReceipt.IssuedCard ? objReceipt.TotalAmount.ToString("N2")+"(NFC Rs"+ objReceipt.PassPriceID.NFCCardPrice.ToString("N2") +")": objReceipt.Amount.ToString("N2")) + "\x1B\x21\x01" + "\n";
+                        receiptlines[10] = "\x1B\x21\x06" + "Operator Id:" + objReceipt.CreatedBy.UserCode + "\x1B\x21\x00\n";
+                        receiptlines[11] = "\x1B\x21\x01" + "(Supervisor Mobile:" + objReceipt.SuperVisorID.PhoneNumber + ")" + "\x1B\x21\x00\n";
+                        receiptlines[12] = "\x1B\x21\x01" + "We are not responsible for your valuable items like laptop,       wallet,helmet etc." + "\x1B\x21\x00\n";
+                        receiptlines[13] = "\x1B\x21\x06" + "GST Number 36AACFZ1015E1ZL" + "\x1B\x21\x00\n";
+                        receiptlines[14] = "\x1B\x21\x06" + "Amount includes 18% GST" + "\x1B\x21\x00\n";
+                        receiptlines[15] = "" + "\n";
+                        receiptlines[16] = "" + "\n";
 
-                        receiptlines[0] = "\x1B\x21\x12" + "          " + "HMRL PARKING" + "\x1B\x21\x00" + "\n";
-                        receiptlines[1] = "\x1B\x21\x01" + "       " + objReceipt.LocationID.LocationName + "\n";
-                        receiptlines[2] = " " + "\n";
-                        receiptlines[3] = "\x1B\x21\x08" + vehicleType + "     " + objReceipt.CustomerVehicleID.RegistrationNumber + "\x1B\x21\x00" + "\n";
-                        receiptlines[4] = "\x1B\x21\x08" + Convert.ToDateTime(objReceipt.StartDate).ToString("dd MMM yyyy hh:mm tt") + " to " + Convert.ToDateTime(objReceipt.ExpiryDate).ToString("dd MMM yyyy hh:mm tt") + "\x1B\x21\x00\n";
-                        receiptlines[5] = "" + "\n";
-                        receiptlines[6] = "\x1B\x21\x01" + "Paid Rs" + (objReceipt.IssuedCard ? objReceipt.TotalAmount.ToString("N2") : objReceipt.Amount.ToString("N2")) + "\x1B\x21\x00\n";
-                        receiptlines[7] = "\x1B\x21\x01" + "OPERATOR ID -" + objReceipt.CreatedBy.UserName + "-" + Convert.ToString(objReceipt.CreatedBy.UserCode) + "\x1B\x21\x00\n";
-                        receiptlines[8] = "\x1B\x21\x01" + "We are not responsible for your valuable items like laptop,      wallet,helmet etc." + "\x1B\x21\x00\n";
-                        receiptlines[9] = "\x1B\x21\x01" + "GST Number 0012" + "\x1B\x21\x00\n";
-                        receiptlines[10] = "\x1B\x21\x01" + "Amount includes 18% GST" + "\x1B\x21\x00\n";
-                        receiptlines[11] = "" + "\n";
-                        receiptlines[12] = "" + "\n";
-                        receiptlines[13] = "" + "\n";
                     }
                 }
                 catch (Exception ex)
@@ -206,7 +208,6 @@ namespace ParkHyderabadOperator
             }
 
         }
-
         private async void BtnPrint_Clicked(object sender, EventArgs e)
         {
             try

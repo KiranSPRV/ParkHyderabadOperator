@@ -32,7 +32,7 @@
                                     </Entry>
                                 </StackLayout>
                                 <Button Text="SIGN IN" x:Name="BtnSignIn" Style="{StaticResource ButtonSubmitStyle}"  Clicked="BtnSignIn_Clicked"  Margin="0,0,0,20"></Button>
-                                <Label  Text="QA V 1.2.4"  Style="{StaticResource LabelProximaBoldStyle}" FontSize="8" TextColor="#010101"   VerticalOptions="EndAndExpand" HorizontalOptions="CenterAndExpand"></Label>
+                                <Label  Text="Prod V 1.2.5"  Style="{StaticResource LabelProximaBoldStyle}" FontSize="8" TextColor="#010101"   VerticalOptions="EndAndExpand" HorizontalOptions="CenterAndExpand"></Label>
 
                             </StackLayout>
                         </Frame>
