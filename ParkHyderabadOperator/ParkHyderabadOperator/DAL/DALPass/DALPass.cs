@@ -16,7 +16,7 @@ namespace ParkHyderabadOperator.DAL.DALPass
     public class DALPass
     {
         DALExceptionManagment dal_DALExceptionManagment;
-        public  DALPass()
+        public DALPass()
         {
             dal_DALExceptionManagment = new DALExceptionManagment();
         }
@@ -146,7 +146,7 @@ namespace ParkHyderabadOperator.DAL.DALPass
                             if (apiResult.Result)
                             {
                                 List<CustomerVehiclePass> resultobj = JsonConvert.DeserializeObject<List<CustomerVehiclePass>>(Convert.ToString(apiResult.Object));
-                                if(resultobj.Count>0)
+                                if (resultobj.Count > 0)
                                 {
                                     objCustomerVehiclePass = resultobj[0];
                                 }
@@ -415,6 +415,62 @@ namespace ParkHyderabadOperator.DAL.DALPass
                 dal_DALExceptionManagment.InsertException(accessToken, "OperatarAPP", ex.Message, "DALPass", "", "GetCustomerVehicleDetailsByVehicle");
             }
             return lstCustomerVehiclePass;
+        }
+        public CustomerVehiclePass GetVehiclePassDetailsByNFC(string accessToken, string NFCCardNumber)
+        {
+            CustomerVehiclePass objCustomerVehiclePass = new CustomerVehiclePass();
+            try
+            {
+                string baseUrl = Convert.ToString(App.Current.Properties["BaseURL"]);
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(baseUrl);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    // Add the Authorization header with the AccessToken.
+                    client.DefaultRequestHeaders.Add("Authorization", "bearer  " + accessToken);
+                    // create the URL string.
+                    string url = "api/InstaOperator/getVehiclePassDetailsByNFC?NFCCardNumber=" + NFCCardNumber;
+                    // make the request
+                    HttpResponseMessage response = client.GetAsync(url).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string jsonString = response.Content.ReadAsStringAsync().Result;
+                        if (jsonString != null)
+                        {
+                            APIResponse apiResult = JsonConvert.DeserializeObject<APIResponse>(jsonString);
+                            if (apiResult.Result)
+                            {
+                                objCustomerVehiclePass = JsonConvert.DeserializeObject<CustomerVehiclePass>(Convert.ToString(apiResult.Object));
+
+
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return objCustomerVehiclePass;
+        }
+        public string IsValidNFCCard(string accessToken, string NFCCardNumber, string RegistrationNumber)
+        {
+            string nfccardVehicle = string.Empty;
+            try
+            {
+                CustomerVehiclePass objCustomerVehiclePass = GetVehiclePassDetailsByNFC(accessToken, NFCCardNumber);
+                if (RegistrationNumber.ToUpper() != objCustomerVehiclePass.CustomerVehicleID.RegistrationNumber.ToUpper())
+                {
+                    nfccardVehicle = objCustomerVehiclePass.CustomerVehicleID.RegistrationNumber;
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return nfccardVehicle;
         }
     }
 }

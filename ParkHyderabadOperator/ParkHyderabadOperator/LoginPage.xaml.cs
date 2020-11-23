@@ -20,6 +20,7 @@ namespace ParkHyderabadOperator
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LoginPage : ContentPage
+
     {
         private float Latitude;
         private float Longitude;
@@ -31,7 +32,7 @@ namespace ParkHyderabadOperator
         {
             InitializeComponent();
             dal_Exceptionlog = new DALExceptionManagment();
-            App.Current.Properties["BaseURL"] =  " http://35.202.198.25:81/InstaParkingOperatorAPI/"; //"http://optapi.instaparking.in/"; //
+            App.Current.Properties["BaseURL"] =  "http://optapi.instaparking.in/"; // " http://35.202.198.25:81/InstaParkingOperatorAPI/"; //
         }
         protected async override void OnAppearing()
         {

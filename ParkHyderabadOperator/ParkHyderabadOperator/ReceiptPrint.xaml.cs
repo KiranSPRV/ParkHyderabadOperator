@@ -37,7 +37,7 @@ namespace ParkHyderabadOperator
                     receiptlines[5] = "\x1B\x21\x01" + "Parked at - Bays: (40-50)" + "\x1B\x21\x00" + "\n";
                     receiptlines[6] = "\x1B\x21\x01" + "Operator Id :2001" + "\x1B\x21\x00" + "\n";
                     receiptlines[7] = "\x1B\x21\x01" + "We are not responsible for your" + "\x1B\x21\x00" + "\n";
-                    receiptlines[8] = "\x1B\x21\x06" + "GST Number 0012" + "\x1B\x21\x00" + "\n";
+                    receiptlines[8] = "\x1B\x21\x06" + "GST Number 36AACFZ1015E1ZL" + "\x1B\x21\x00" + "\n";
                     receiptlines[9] = "\x1B\x21\x01" + "Amount includes 18% GST" + "\x1B\x21\x00" + "\n";
                     receiptlines[10] = "\x1B\x21\x03" + "We are not responsible " + "\x1B\x21\x00" + "\n";
                     receiptlines[11] = "\x1B\x21\x05" + "We are not responsible for your" + "\x1B\x21\x00" + "\n";

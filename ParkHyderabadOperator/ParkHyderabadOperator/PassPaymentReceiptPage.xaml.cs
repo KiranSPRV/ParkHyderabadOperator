@@ -1,6 +1,8 @@
 ﻿using ParkHyderabadOperator.DAL.DALExceptionLog;
+using ParkHyderabadOperator.DAL.DALHome;
 using ParkHyderabadOperator.Model;
 using ParkHyderabadOperator.Model.APIOutPutModel;
+using ParkHyderabadOperator.ViewModel.VMPass;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,17 +17,20 @@ namespace ParkHyderabadOperator
         BlueToothDevicePrinting ObjblueToothDevicePrinting;
         DALExceptionManagment dal_Exceptionlog;
         string[] receiptlines = new string[17]; // Receipt Lines
+        DALHome dal_home;
         public PassPaymentReceiptPage()
         {
             InitializeComponent();
             ObjblueToothDevicePrinting = new BlueToothDevicePrinting();
             dal_Exceptionlog = new DALExceptionManagment();
+            dal_home = new DALHome();
         }
         public PassPaymentReceiptPage(string generatedPassType, string StationType)
         {
             InitializeComponent();
             ObjblueToothDevicePrinting = new BlueToothDevicePrinting();
             dal_Exceptionlog = new DALExceptionManagment();
+            dal_home = new DALHome();
 
         }
         public PassPaymentReceiptPage(CustomerVehiclePass objReceiptDetails)
@@ -33,6 +38,7 @@ namespace ParkHyderabadOperator
             InitializeComponent();
             ObjblueToothDevicePrinting = new BlueToothDevicePrinting();
             dal_Exceptionlog = new DALExceptionManagment();
+            dal_home = new DALHome();
             LoadCustomerPassPaymentDetails(objReceiptDetails);
         }
         public void LoadCustomerPassPaymentDetails(CustomerVehiclePass objReceipt)
@@ -72,20 +78,17 @@ namespace ParkHyderabadOperator
                     }
                     else if (objReceipt.PassPriceID.StationAccess == "Multi Station" || objReceipt.PassPriceID.StationAccess == "Multi Stations")
                     {
-
-                        if (App.Current.Properties.ContainsKey("MultiSelectionLocations"))
+                        if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                         {
-                            var lstLocation = (List<Model.APIOutPutModel.Location>)App.Current.Properties["MultiSelectionLocations"];
-                            if (lstLocation.Count > 0)
+                            List<VMMultiLocations> lstpasslocations = dal_home.GetAllPassLocationsByVehicleType(Convert.ToString(App.Current.Properties["apitoken"]), objReceipt.CustomerVehicleID.VehicleTypeID.VehicleTypeCode, objReceipt.CustomerVehiclePassID);
+                            if (lstpasslocations.Count > 0)
                             {
-                               
-                                for (var s = 0; s < lstLocation.Count; s++)
+                                for (var s = 0; s < lstpasslocations.Count; s++)
                                 {
-                                    stations = stations + lstLocation[s].LocationName + ",";
+                                    stations = stations + lstpasslocations[s].LocationName + ",";
                                 }
                                 labelParkingLot.Text = "Multi Stations:" + stations + ".";
                             }
-
                         }
                     }
                     else if (objReceipt.PassPriceID.StationAccess == "All Station" || objReceipt.PassPriceID.StationAccess == "All Stations")
@@ -133,6 +136,7 @@ namespace ParkHyderabadOperator
                 {
                     imageOperatorProfile.IsVisible = false;
                 }
+                labelGSTNumber.Text = "36AACFZ1015E1ZL";
 
                 try
                 {
@@ -146,7 +150,7 @@ namespace ParkHyderabadOperator
                         receiptlines[6] = "\x1B\x21\x01" + "Valid Till:" + Convert.ToDateTime(objReceipt.ExpiryDate).ToString("dd MMM yyyy") + "\x1B\x21\x00" + "\n";
                         receiptlines[7] = "\x1B\x21\x01" + "(Pass Type :" + objReceipt.PassPriceID.PassTypeID.PassTypeName + ")" + "\x1B\x21\x00\n";
                         receiptlines[8] = "\x1B\x21\x01" + "Station(s):" + stations + "\x1B\x21\x01" + "\n";
-                        receiptlines[9] = "\x1B\x21\x01" + "Paid: Rs" + (objReceipt.IssuedCard ? objReceipt.TotalAmount.ToString("N2")+"(NFC Rs"+ objReceipt.PassPriceID.NFCCardPrice.ToString("N2") +")": objReceipt.Amount.ToString("N2")) + "\x1B\x21\x01" + "\n";
+                        receiptlines[9] = "\x1B\x21\x01" + "Paid: Rs" + (objReceipt.IssuedCard ? objReceipt.TotalAmount.ToString("N2") + "(NFC Rs" + objReceipt.PassPriceID.NFCCardPrice.ToString("N2") + ")" : objReceipt.Amount.ToString("N2")) + "\x1B\x21\x01" + "\n";
                         receiptlines[10] = "\x1B\x21\x06" + "Operator Id:" + objReceipt.CreatedBy.UserCode + "\x1B\x21\x00\n";
                         receiptlines[11] = "\x1B\x21\x01" + "(Supervisor Mobile:" + objReceipt.SuperVisorID.PhoneNumber + ")" + "\x1B\x21\x00\n";
                         receiptlines[12] = "\x1B\x21\x01" + "We are not responsible for your valuable items like laptop,       wallet,helmet etc." + "\x1B\x21\x00\n";

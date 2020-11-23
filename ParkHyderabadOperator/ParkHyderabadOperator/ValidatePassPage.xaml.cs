@@ -15,7 +15,7 @@ namespace ParkHyderabadOperator
     public partial class ValidatePassPage : ContentPage
     {
         BlueToothDevicePrinting ObjblueToothDevicePrinting;
-        string[] receiptlines = new string[15]; // Receipt Lines
+        string[] receiptlines = new string[17]; // Receipt Lines
         List<CustomerVehicle> lstCustomerVehicle = null;
         CustomerVehiclePass objResultCustomerVehiclePass;
         DALExceptionManagment dal_Exceptionlog;
@@ -53,6 +53,7 @@ namespace ParkHyderabadOperator
         public async Task GetSelectedVehicleDetails(CustomerVehicle selectedVehicle)
         {
             string Locations = string.Empty;
+            string vehicleType = string.Empty;
             try
             {
                 if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
@@ -81,7 +82,7 @@ namespace ParkHyderabadOperator
                         }
                         else
                         {
-
+                           
                             Locations = objResultCustomerVehiclePass.LocationID.LocationName;
                         }
 
@@ -91,10 +92,12 @@ namespace ParkHyderabadOperator
                         labelValidTo.Text = Convert.ToDateTime(objResultCustomerVehiclePass.ExpiryDate).ToString("dd MMM yyyy ");
                         if (objResultCustomerVehiclePass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "2W")
                         {
+                            vehicleType = "BIKE";
                             imageVehicleImage.Source = "bike_black.png";
                         }
                         if (objResultCustomerVehiclePass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "4W")
                         {
+                            vehicleType = "CAR";
                             imageVehicleImage.Source = "car_black.png";
                         }
 
@@ -130,29 +133,28 @@ namespace ParkHyderabadOperator
 
                             if (receiptlines != null && receiptlines.Length > 0)
                             {
+                                if (objResultCustomerVehiclePass.PassPriceID.StationAccess == "All Station" || objResultCustomerVehiclePass.PassPriceID.StationAccess == "All Stations")
+                                {
+                                    Locations = "All Metro Stations";
+                                }
 
-                                receiptlines[0] = "\x1B\x21\x12" + "          " + "HMRL PARKING" + "\x1B\x21\x00" + "\n";
-                                receiptlines[1] = "\x1B\x21\x01" + "       " + Locations + "\n";
-                                receiptlines[2] = " " + "\n";
-                                receiptlines[3] = "\x1B\x21\x08" + objResultCustomerVehiclePass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode + "     " + objResultCustomerVehiclePass.CustomerVehicleID.RegistrationNumber + "\x1B\x21\x00" + "\n";
-                                receiptlines[4] = "\x1B\x21\x08" + Convert.ToDateTime(objResultCustomerVehiclePass.StartDate).ToString("dd MMM yyyy") + "-" + Convert.ToDateTime(objResultCustomerVehiclePass.ExpiryDate).ToString("dd MMM yyyy") + "\x1B\x21\x00\n";
-                                receiptlines[5] = "" + "\n";
-                                if (objResultCustomerVehiclePass.IssuedCard)
-                                {
-                                    receiptlines[6] = "\x1B\x21\x01" + "Paid Rs" + objResultCustomerVehiclePass.TotalAmount.ToString("N2") + "\x1B\x21\x00\n";
-                                }
-                                else
-                                {
-                                    receiptlines[6] = "\x1B\x21\x01" + "Paid Rs" + objResultCustomerVehiclePass.Amount.ToString("N2") + "\x1B\x21\x00\n";
-                                }
-                                receiptlines[7] = "\x1B\x21\x01" + "OPERATOR ID -" + objResultCustomerVehiclePass.CreatedBy.UserCode + "\x1B\x21\x00\n";
-                                receiptlines[8] = "\x1B\x21\x01" + "Security available " + objResultCustomerVehiclePass.PrimaryLocationParkingLotID.LotTimmings + "\x1B\x21\x00\n";
-                                receiptlines[9] = "\x1B\x21\x01" + "We are not responsible for your valuable items like laptop,      wallet,helmet etc." + "\x1B\x21\x00\n";
-                                receiptlines[10] = "\x1B\x21\x01" + "GST Number 0012" + "\x1B\x21\x00\n";
-                                receiptlines[11] = "\x1B\x21\x01" + "Amount includes 18% GST" + "\x1B\x21\x00\n";
-                                receiptlines[12] = "" + "\n";
-                                receiptlines[13] = "" + "\n";
-                                receiptlines[14] = "" + "\n";
+                                receiptlines[0] = "\x1B\x21\x08" + "          " + "HMRL PARKING" + "\x1B\x21\x00" + "\n";
+                                receiptlines[1] = "\x1B\x21\x01" + "          " + objResultCustomerVehiclePass.CreatedBy.LocationParkingLotID.LocationID.LocationName + "\x1B\x21\x00\n";
+                                receiptlines[3] = "" + "\n";
+                                receiptlines[4] = "\x1B\x21\x08" + vehicleType + "     " + objResultCustomerVehiclePass.CustomerVehicleID.RegistrationNumber + "\x1B\x21\x00\n";
+                                receiptlines[5] = "\x1B\x21\x01" + "Valid From:" + Convert.ToDateTime(objResultCustomerVehiclePass.StartDate).ToString("dd MMM yyyy") + "\x1B\x21\x00" + "\n";
+                                receiptlines[6] = "\x1B\x21\x01" + "Valid Till:" + Convert.ToDateTime(objResultCustomerVehiclePass.ExpiryDate).ToString("dd MMM yyyy") + "\x1B\x21\x00" + "\n";
+                                receiptlines[7] = "\x1B\x21\x01" + "(Pass Type :" + objResultCustomerVehiclePass.PassPriceID.PassTypeID.PassTypeName + ")" + "\x1B\x21\x00\n";
+                                receiptlines[8] = "\x1B\x21\x01" + "Station(s):" + Locations + "\x1B\x21\x01" + "\n";
+                                receiptlines[9] = "\x1B\x21\x01" + "Paid: Rs" + (objResultCustomerVehiclePass.IssuedCard ? objResultCustomerVehiclePass.TotalAmount.ToString("N2") + "(NFC Rs" + objResultCustomerVehiclePass.PassPriceID.NFCCardPrice.ToString("N2") + ")" : objResultCustomerVehiclePass.Amount.ToString("N2")) + "\x1B\x21\x01" + "\n";
+                                receiptlines[10] = "\x1B\x21\x06" + "Operator Id:" + objResultCustomerVehiclePass.CreatedBy.UserCode + "\x1B\x21\x00\n";
+                                receiptlines[11] = "\x1B\x21\x01" + "(Supervisor Mobile:" + objResultCustomerVehiclePass.SuperVisorID.PhoneNumber + ")" + "\x1B\x21\x00\n";
+                                receiptlines[12] = "\x1B\x21\x01" + "We are not responsible for your valuable items like laptop,       wallet,helmet etc." + "\x1B\x21\x00\n";
+                                receiptlines[13] = "\x1B\x21\x06" + "GST Number 36AACFZ1015E1ZL" + "\x1B\x21\x00\n";
+                                receiptlines[14] = "\x1B\x21\x06" + "Amount includes 18% GST" + "\x1B\x21\x00\n";
+                                receiptlines[15] = "" + "\n";
+                                receiptlines[16] = "" + "\n";
+
                             }
                         }
                         catch (Exception ex)

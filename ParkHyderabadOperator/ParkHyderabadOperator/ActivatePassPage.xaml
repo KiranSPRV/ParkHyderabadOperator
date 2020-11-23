@@ -8,7 +8,7 @@
     </NavigationPage.TitleView>
     <ContentPage.Content>
         <AbsoluteLayout VerticalOptions="FillAndExpand" >
-            <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,0.92"  AbsoluteLayout.LayoutFlags="All"  HorizontalOptions="FillAndExpand" >
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,0.85"  AbsoluteLayout.LayoutFlags="All"  HorizontalOptions="FillAndExpand" >
                 <StackLayout Margin="15,0,15,0" >
                     <Grid ColumnSpacing="5">
                         <Grid.RowDefinitions>
@@ -18,27 +18,39 @@
                         <Frame  Grid.Row="0" CornerRadius="25" Padding="0" BorderColor="#f9f9f9" BackgroundColor="#f9f9f9"  HeightRequest="32">
                             <SearchBar   BackgroundColor="Transparent" Margin="-20,0,0,0" FontSize="14" FontFamily="FontsFree-Net-proxima_nova_reg-webfont.ttf#FontsFree-Net-proxima_nova_reg-webfont"   Placeholder="Search..."   PlaceholderColor="#676767" x:Name="searchBar"   TextChanged="SearchBar_OnTextChanged"   HorizontalOptions="FillAndExpand"/>
                         </Frame>
-                        <StackLayout Grid.Row="1"   Orientation="Vertical" Spacing="2" Margin="0,5,0,0">
+                        <StackLayout Grid.Row="1"   Orientation="Vertical" Spacing="8" Margin="0,8,0,0">
+                           
                             <StackLayout Orientation="Vertical"  Spacing="0">
                                 <Label Text="Name" Style="{StaticResource LabelPlaceHolderStyle}" ></Label>
-                                <Entry x:Name="entryCustomerName" Style="{StaticResource EntryProximaBlackStyle}"></Entry>
+                                <Entry x:Name="entryCustomerName" Style="{StaticResource EntryProximaBlackStyle}" IsReadOnly="True"></Entry>
                             </StackLayout>
 
                             <StackLayout Orientation="Vertical"  Spacing="0">
                                 <Label Text="Phone Number" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
-                                <Entry x:Name="entryPhoneNumber" Style="{StaticResource EntryProximaBlackStyle}"></Entry>
+                                <Entry x:Name="entryPhoneNumber" Style="{StaticResource EntryProximaBlackStyle}" IsReadOnly="True"></Entry>
                             </StackLayout>
 
                             <StackLayout Orientation="Horizontal"  Spacing="0">
                                 <StackLayout HorizontalOptions="FillAndExpand">
                                     <Label Text="Registration Number" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
-                                    <Entry x:Name="entryRegistrationNumber" Style="{StaticResource EntryProximaBlackStyle}"></Entry>
+                                    <Entry x:Name="entryRegistrationNumber" Style="{StaticResource EntryProximaBlackStyle}" IsReadOnly="True"></Entry>
                                 </StackLayout>
                                 <StackLayout  VerticalOptions="CenterAndExpand">
                                     <Image x:Name="imgCustomerVehcileType"  HeightRequest="25" VerticalOptions="CenterAndExpand" HorizontalOptions="EndAndExpand"/>
                                 </StackLayout>
                             </StackLayout>
-
+                            <StackLayout  x:Name="slNFCNewCardPayment"  HorizontalOptions="FillAndExpand" Margin="5,0,5,0">
+                                <StackLayout Spacing="0" VerticalOptions="StartAndExpand" Orientation="Horizontal">
+                                    <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="Start" >
+                                        <CheckBox x:Name="chkNewCard"  IsChecked="False" CheckedChanged="ChkNewCard_CheckedChanged"  Style="{StaticResource ChekBoxRegularBlueStyle}" />
+                                        <Label Style="{StaticResource LabelRegularStartCenterStyle}" Text="NEW CARD" ></Label>
+                                    </StackLayout>
+                                    <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="EndAndExpand" >
+                                        <CheckBox x:Name="chkhasCard"  IsChecked="False" CheckedChanged="ChkhasCard_CheckedChanged"  Style="{StaticResource ChekBoxRegularBlueStyle}" />
+                                        <Label Style="{StaticResource LabelRegularStartCenterStyle}" Text="HAS CARD" ></Label>
+                                    </StackLayout>
+                                </StackLayout>
+                            </StackLayout>
                             <StackLayout Orientation="Horizontal"  Spacing="0" x:Name="slNFC">
                                 <StackLayout Orientation="Vertical" Spacing="0"  BackgroundColor="#f4f4f4" HorizontalOptions="FillAndExpand">
                                     <Label Text="Tap NFC Card" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
@@ -70,21 +82,9 @@
                         </ListView>
                     </Grid>
                 </StackLayout>
-                <StackLayout  x:Name="slNFCNewCardPayment" Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="15,0,15,0">
-                        <StackLayout Spacing="0" VerticalOptions="StartAndExpand">
-                            <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="Start" >
-                                <CheckBox x:Name="chkNewCard"  IsChecked="False" CheckedChanged="ChkNewCard_CheckedChanged"  Style="{StaticResource ChekBoxRegularBlueStyle}" />
-                                <Label Style="{StaticResource LabelRegularStartCenterStyle}" Text="NEW CARD" ></Label>
-                            </StackLayout>
-                        <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="Start" >
-                            <CheckBox x:Name="chkhasCard"  IsChecked="False" CheckedChanged="ChkNewCard_CheckedChanged"  Style="{StaticResource ChekBoxRegularBlueStyle}" />
-                            <Label Style="{StaticResource LabelRegularStartCenterStyle}" Text="HAS CARD" ></Label>
-                        </StackLayout>
-                    </StackLayout>
-                        
-                </StackLayout>
+               
             </StackLayout>
-            <StackLayout  AbsoluteLayout.LayoutBounds="0,1,1,0.1"  AbsoluteLayout.LayoutFlags="All"  HorizontalOptions="FillAndExpand" >
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,1,1,0.15"  AbsoluteLayout.LayoutFlags="All"  HorizontalOptions="FillAndExpand" >
                 <StackLayout VerticalOptions="StartAndExpand" Margin="15,5,15,5" x:Name="slContinue">
                     <Frame CornerRadius="5" Padding="0"   BorderColor="#efefef"    BackgroundColor="#FFFFFF">
                         <StackLayout  Orientation="Vertical"  VerticalOptions="CenterAndExpand" Spacing="5">
@@ -92,7 +92,7 @@
                         </StackLayout>
                     </Frame>
                 </StackLayout>
-                <StackLayout Orientation="Horizontal"   x:Name="stlayoutCheckInPayment">
+                <StackLayout Orientation="Horizontal"   x:Name="stlayoutNFCCardPayment" Margin="15,5,15,5">
                     <StackLayout   HorizontalOptions="FillAndExpand" BackgroundColor="#2ECC71" Padding="10" >
                         <StackLayout.GestureRecognizers >
                             <TapGestureRecognizer x:Name="slCashPayment" Tapped="SlCashPayment_Tapped"/>
@@ -113,6 +113,12 @@
                     </StackLayout>
                 </StackLayout>
             </StackLayout>
+            <ContentView x:Name="StklauoutactivityIndicator" BackgroundColor="Transparent"  IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                <StackLayout Orientation="Vertical" HeightRequest="150" WidthRequest="100" BackgroundColor="Transparent" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="0">
+                    <ActivityIndicator  x:Name="activity" IsEnabled="True" IsVisible="False" IsRunning="False"   HeightRequest="80" Color="#010101"  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></ActivityIndicator>
+                    <Label x:Name="LabelLodaingMsg" Text="Loading..."  Style="{StaticResource LabelProximaBoldStyle}" FontSize="18" TextColor="#010101"   VerticalOptions="StartAndExpand" HorizontalOptions="CenterAndExpand"></Label>
+                </StackLayout>
+            </ContentView>
         </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>

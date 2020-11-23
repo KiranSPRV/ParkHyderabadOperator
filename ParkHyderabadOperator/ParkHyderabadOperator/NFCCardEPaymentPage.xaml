@@ -9,8 +9,7 @@
     <ContentPage.Content>
         <AbsoluteLayout VerticalOptions="FillAndExpand" >
             <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,1"  AbsoluteLayout.LayoutFlags="All"  HorizontalOptions="FillAndExpand" >
-                <StackLayout Spacing="10" Margin="15">
-
+                <StackLayout Spacing="25" Margin="15">
                     <Frame CornerRadius="1" Padding="10"  BorderColor="#f6f6f7" BackgroundColor="#FFFFFF" >
                         <StackLayout Spacing="30">
                             <StackLayout>
@@ -33,7 +32,7 @@
                         </StackLayout>
 
                     </Frame>
-                    <StackLayout Spacing="20"  x:Name="slYESNO">
+                    <StackLayout Spacing="15"  x:Name="slYESNO">
                         <Label Text="HAVE YOU RECEIVED PAYMENT?" Style="{StaticResource LabelProximaRegMediumStyle}"  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
                         <StackLayout Orientation="Horizontal" x:Name="stlayoutYESNO">
                             <Button x:Name="btnYes" Style="{StaticResource ButtonRegularShamrockStyle}" TextColor="#FFFFFF"  Text="YES"  HorizontalOptions="FillAndExpand" Clicked="BtnYes_Clicked"/>
@@ -44,6 +43,7 @@
                         <Button x:Name="btnGenerateNFCCard" Style="{StaticResource ButtonRegularShamrockStyle}" Text="GENERATE NFCCARD" Clicked="BtnGenerateNFCCard_Clicked"  VerticalOptions="CenterAndExpand"/>
                     </StackLayout>
                 </StackLayout>
+                
             </StackLayout>
             <ContentView x:Name="StklauoutactivityIndicator" BackgroundColor="Transparent"  IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
                 <StackLayout Orientation="Vertical" HeightRequest="150" WidthRequest="100" BackgroundColor="Transparent" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="0">

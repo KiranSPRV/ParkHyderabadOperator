@@ -73,7 +73,7 @@ namespace ParkHyderabadOperator
                         receiptlines[8] = "\x1B\x21\x01" + "OPERATOR ID -" + objCheckInReceipt.UserCode + "\x1B\x21\x00\n";
                         receiptlines[9] = "\x1B\x21\x01" + "Security available " + objCheckInReceipt.LocationParkingLotID.LotTimmings + "\x1B\x21\x00\n";
                         receiptlines[10] = "\x1B\x21\x01" + "We are not responsible for your valuable items like laptop,      wallet,helmet etc." + "\x1B\x21\x00\n";
-                        receiptlines[11] = "\x1B\x21\x01" + "GST Number 0012" + "\x1B\x21\x00\n";
+                        receiptlines[11] = "\x1B\x21\x01" + "GST Number 36AACFZ1015E1ZL" + "\x1B\x21\x00\n";
                         receiptlines[12] = "\x1B\x21\x01" + "Amount includes 18% GST" + "\x1B\x21\x00\n";
                         receiptlines[13] = "" + "\n";
                         receiptlines[14] = "" + "\n";

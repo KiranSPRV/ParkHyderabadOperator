@@ -3,6 +3,7 @@ using ParkHyderabadOperator.DAL.DALPass;
 using ParkHyderabadOperator.Model;
 using ParkHyderabadOperator.Model.APIOutPutModel;
 using System;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -23,14 +24,33 @@ namespace ParkHyderabadOperator
             InitializeComponent();
             dal_CustomerPass = new DALPass();
             dal_Exceptionlog = new DALExceptionManagment();
-            objCustomerPassNewNFC = objNewNFC;
+            stLayoutNFCCard.IsVisible = false;
+            try
+            {
+                objCustomerPassNewNFC = objNewNFC;
+                if (objCustomerPassNewNFC.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "2W")
+                {
+                    ImgVehicleType.Source = ImageSource.FromFile("bike_black.png");
+                }
+                else if (objCustomerPassNewNFC.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "4W")
+                {
+                    ImgVehicleType.Source = ImageSource.FromFile("car_black.png");
+                }
+                labelVehicleRegNumber.Text = objCustomerPassNewNFC.CustomerVehicleID.RegistrationNumber;
+                labelParkingLocation.Text = objCustomerPassNewNFC.CreatedBy.LocationParkingLotID.LocationID.LocationName + "-" + objCustomerPassNewNFC.PassPriceID.StationAccess;
+                labelNFCCardAmount.Text = objCustomerPassNewNFC.PassPriceID.NFCCardPrice.ToString("N2");
+            }
+            catch (Exception ex)
+            {
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "NFCCardCashPaymentPage.xaml.cs", "", "NFCCardCashPaymentPage");
+            }
         }
-        private  void BtnYes_Clicked(object sender, EventArgs e)
+        private void BtnYes_Clicked(object sender, EventArgs e)
         {
             try
             {
                 stlayoutYESNO.IsVisible = false;
-                stLayoutDailyPassGeneratePassReceipt.IsVisible = true;
+                stLayoutNFCCard.IsVisible = true;
             }
             catch (Exception ex) { }
         }
@@ -40,7 +60,7 @@ namespace ParkHyderabadOperator
             {
                 stlayoutYESNO.IsVisible = false;
                 slCashPaymentGeneratePass.IsVisible = false;
-                var passPage = new PassPage();
+                var passPage = new ActivatePassPage();
                 await Navigation.PushAsync(passPage);
             }
             catch (Exception ex)
@@ -54,18 +74,28 @@ namespace ParkHyderabadOperator
             {
                 if (DeviceInternet.InternetConnected())
                 {
+                    ShowLoading(true);
+                    CustomerVehiclePass resultPass = null;
+                    PassPaymentReceiptPage PassPaymentReceiptPage = null;
                     if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                     {
-
-                        CustomerVehiclePass resultPass = dal_CustomerPass.SaveCustomerVehiclePassNewNFCCard(Convert.ToString(App.Current.Properties["apitoken"]), objCustomerPassNewNFC);
+                        await Task.Run(() =>
+                        {
+                            resultPass = dal_CustomerPass.SaveCustomerVehiclePassNewNFCCard(Convert.ToString(App.Current.Properties["apitoken"]), objCustomerPassNewNFC);
+                            if (resultPass != null && resultPass.CustomerVehiclePassID != 0)
+                            {
+                                PassPaymentReceiptPage = new PassPaymentReceiptPage(resultPass);
+                            }
+                        });
                         if (resultPass != null && resultPass.CustomerVehiclePassID != 0)
                         {
                             await DisplayAlert("Alert", "Customer vehicle pass created successfully", "Ok");
-                            var PassPaymentReceiptPage = new PassPaymentReceiptPage(resultPass);
                             await Navigation.PushAsync(PassPaymentReceiptPage);
+                            ShowLoading(false);
                         }
                         else
                         {
+                            ShowLoading(false);
                             await DisplayAlert("Alert", "Fail,Please contact admin", "Ok");
                         }
 
@@ -74,23 +104,26 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
+                    ShowLoading(false);
                     await DisplayAlert("Alert", "Please check your internet.", "Ok");
                 }
+
             }
             catch (Exception ex)
             {
+                ShowLoading(false);
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "NFCCardCashPaymentPage.xaml.cs", "", "BtnGenerateNFCCard_Clicked");
             }
         }
-        
+
         #region Payment Calculation
-        private async void EntryCashReceived_TextChanged(object sender, TextChangedEventArgs e)
+        private void EntryCashReceived_TextChanged(object sender, TextChangedEventArgs e)
         {
             try
             {
                 if (entryCashReceived.Text.Length > 0 && entryCashReceived.Text != null)
                 {
-                    decimal cardAmount = (objCustomerPassNewNFC.CardAmount);
+                    decimal cardAmount = (objCustomerPassNewNFC.PassPriceID.NFCCardPrice);
                     decimal returnAmount = Math.Abs((Convert.ToDecimal(entryCashReceived.Text) - cardAmount));
                     entryCashReturn.Text = returnAmount.ToString("N2");
                 }
@@ -102,5 +135,11 @@ namespace ParkHyderabadOperator
             }
         }
         #endregion
+        public void ShowLoading(bool show)
+        {
+            StklauoutactivityIndicator.IsVisible = show;
+            activity.IsVisible = show;
+            activity.IsRunning = show;
+        }
     }
 }
