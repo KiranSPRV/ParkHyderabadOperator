@@ -45,12 +45,27 @@ namespace ParkHyderabadOperator
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "NFCCardCashPaymentPage.xaml.cs", "", "NFCCardCashPaymentPage");
             }
         }
-        private void BtnYes_Clicked(object sender, EventArgs e)
+        private async void BtnYes_Clicked(object sender, EventArgs e)
         {
             try
             {
-                stlayoutYESNO.IsVisible = false;
-                stLayoutNFCCard.IsVisible = true;
+                decimal nfcAmount = (objCustomerPassNewNFC.PassPriceID.NFCCardPrice == null || objCustomerPassNewNFC.PassPriceID.NFCCardPrice == 0) ? 0 : objCustomerPassNewNFC.PassPriceID.NFCCardPrice;
+                if (entryCashReceived.Text != null && entryCashReceived.Text != "0")
+                {
+                    if (Convert.ToDecimal(entryCashReceived.Text) >= nfcAmount)
+                    {
+
+                        stlayoutYESNO.IsVisible = false;
+                        stLayoutNFCCard.IsVisible = true;
+
+                    }
+                    else
+                    {
+                        ShowLoading(false);
+                        await DisplayAlert("Alert", "Please enter valid Amount", "Ok");
+                    }
+
+                }
             }
             catch (Exception ex) { }
         }
@@ -75,8 +90,10 @@ namespace ParkHyderabadOperator
                 if (DeviceInternet.InternetConnected())
                 {
                     ShowLoading(true);
+                    btnGenerateNFCCard.IsVisible = false;
                     CustomerVehiclePass resultPass = null;
-                    PassPaymentReceiptPage PassPaymentReceiptPage = null;
+                    NFCCardPaymentReceiptPagae PassPaymentReceiptPage = null;
+
                     if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                     {
                         await Task.Run(() =>
@@ -84,34 +101,38 @@ namespace ParkHyderabadOperator
                             resultPass = dal_CustomerPass.SaveCustomerVehiclePassNewNFCCard(Convert.ToString(App.Current.Properties["apitoken"]), objCustomerPassNewNFC);
                             if (resultPass != null && resultPass.CustomerVehiclePassID != 0)
                             {
-                                PassPaymentReceiptPage = new PassPaymentReceiptPage(resultPass);
+                                PassPaymentReceiptPage = new NFCCardPaymentReceiptPagae(resultPass);
                             }
                         });
                         if (resultPass != null && resultPass.CustomerVehiclePassID != 0)
                         {
-                            await DisplayAlert("Alert", "Customer vehicle pass created successfully", "Ok");
+                            await DisplayAlert("Alert", "Vehicle Pass created successfully", "Ok");
                             await Navigation.PushAsync(PassPaymentReceiptPage);
                             ShowLoading(false);
+                            btnGenerateNFCCard.IsVisible = true;
                         }
                         else
                         {
                             ShowLoading(false);
-                            await DisplayAlert("Alert", "Fail,Please contact admin", "Ok");
+                            btnGenerateNFCCard.IsVisible = true;
+                            await DisplayAlert("Alert", "NFC Card creation failed,Please contact Admin", "Ok");
                         }
 
 
                     }
-                }
-                else
-                {
-                    ShowLoading(false);
-                    await DisplayAlert("Alert", "Please check your internet.", "Ok");
-                }
 
+                    else
+                    {
+                        ShowLoading(false);
+                        btnGenerateNFCCard.IsVisible = true;
+                        await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
+                    }
+                }
             }
             catch (Exception ex)
             {
                 ShowLoading(false);
+                btnGenerateNFCCard.IsVisible = true;
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "NFCCardCashPaymentPage.xaml.cs", "", "BtnGenerateNFCCard_Clicked");
             }
         }

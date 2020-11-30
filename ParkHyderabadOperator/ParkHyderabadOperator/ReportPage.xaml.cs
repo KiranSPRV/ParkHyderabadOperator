@@ -160,7 +160,7 @@ namespace ParkHyderabadOperator
                 else
                 {
 
-                    await DisplayAlert("Alert", "Unable to proceed,login user and token details are not avialable", "Ok");
+                    await DisplayAlert("Alert", "Unable to proceed,login user and token details unavailable", "Ok");
                 }
             }
             catch (Exception ex)
@@ -249,7 +249,7 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please check your internet.", "Ok");
+                    await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
                     ShowLoading(false);
                 }
             }
@@ -271,7 +271,7 @@ namespace ParkHyderabadOperator
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Please check your internet.", "Ok");
+                        await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
                         ShowLoading(false);
                     }
                 }

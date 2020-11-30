@@ -6,9 +6,11 @@ using ParkHyderabadOperator.Model.APIOutPutModel;
 using ParkHyderabadOperator.Model.LotOccupancy;
 using ParkHyderabadOperator.ViewModel.VMHome;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using ParkHyderabadOperator.ViewModel;
 
 namespace ParkHyderabadOperator
 {
@@ -40,8 +42,20 @@ namespace ParkHyderabadOperator
                     User objLoginUser = (User)App.Current.Properties["LoginUser"];
                     objLoginUser.LocationParkingLotID.LocationParkingLotID = 0;
                     lstlots = dal_Home.GetUserAllocatedLocationAndLots(Convert.ToString(App.Current.Properties["apitoken"]), objLoginUser);
-                    // Include ALL 
-                    VMLocationLots objlotAll = new VMLocationLots();
+                    if (objLoginUser.UserTypeID.UserTypeName.ToUpper() != "OPERATOR".ToUpper())
+                    {
+                        // Include ALL 
+                        VMLocationLots objlotAll = new VMLocationLots();
+                        objlotAll.LocationParkingLotID = 0;
+                        objlotAll.LotName = "ALL";
+                        objlotAll.LocationParkingLotName = "ALL";
+                        objlotAll.LocationID = 0;
+                        objlotAll.LocationName = "ALL";
+                        objlotAll.IsActive = true;
+                        lstlots.Insert(0, objlotAll);
+                    }
+
+
                     if (lstlots.Count > 0)
                     {
                         pickerLocationLot.ItemsSource = lstlots;
@@ -121,14 +135,23 @@ namespace ParkHyderabadOperator
                     {
                         User objLoginUser = (User)App.Current.Properties["LoginUser"];
                         VMLocationLots objVMLocations = (VMLocationLots)pickerLocationLot.SelectedItem;
-                        objLoginUser.LocationParkingLotID.LocationParkingLotID = objVMLocations.LocationParkingLotID;
-                        LoadLocationLotActiveOperators(objVMLocations, objLoginUser.UserID);
+                        objReportUser.UserID = objLoginUser.UserID;
+                        objReportUser.LocationParkingLotID.LocationID.LocationID = objVMLocations.LocationID;
+                        objReportUser.LocationParkingLotID.LocationParkingLotID = objVMLocations.LocationParkingLotID;
+
+                        if (objVMLocations.LotName.Contains("ALL")) // Get All Locations Occupancy
+                        {
+                            var userobj = (User)App.Current.Properties["LoginUser"];
+                            objLoginUser.LocationParkingLotID.LocationParkingLotID = 0;
+                        }
+                        GetLotOccupancy(objReportUser);
+
                     }
                 }
                 else
                 {
 
-                    await DisplayAlert("Alert", "Unable to proceed,login user and token details are not avialable", "Ok");
+                    await DisplayAlert("Alert", "Token details  unavailable", "Ok");
                 }
             }
             catch (Exception ex)
@@ -150,21 +173,24 @@ namespace ParkHyderabadOperator
 
         }
         #endregion
-        public async void GetLotOccupancy(User objloginUserLot)
+        public void GetLotOccupancy(User objloginUserLot)
         {
             try
             {
                 ShowLoading(true);
-                List<LocationLotOccupancyReport> lstOccupancy = null;
+                List<VMLocationLotOccupancyReport> lstOccupancy = new List<VMLocationLotOccupancyReport>();
                 if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                 {
                     DALReport dal_Report = new DALReport();
+
                     objloginUserLot.LoginTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 06, 00, 00);
                     objloginUserLot.LogoutTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 23, 59, 59);
-                    lstOccupancy = dal_Report.GetLocationLotOccupancyReport(Convert.ToString(App.Current.Properties["apitoken"]), objloginUserLot);
-                    if (lstOccupancy != null && lstOccupancy.Count > 0)
+                    VMLocationLotOccupancyReport objOccupancy = dal_Report.VMGetLocationLotOccupancyReport(Convert.ToString(App.Current.Properties["apitoken"]), objloginUserLot);
+                    if (objOccupancy != null && objOccupancy.LocationLotOccupancyReportID.Count > 0)
                     {
-                        lvLotOccupancyReport.ItemsSource = lstOccupancy;
+                        lvLotOccupancyReport.ItemsSource = objOccupancy.LocationLotOccupancyReportID;
+                        labelTwoWheelerLotOccupancyPer.Text = objOccupancy.TotalTwoWheelerPercentage ;
+                        labelFourWheelerLotOccupancyPer.Text = objOccupancy.TotalFourWheelerPercentage;
                     }
                     else
                     {

@@ -68,7 +68,7 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "CheckIn vehicle details are not avialable.", "Ok");
+                    await DisplayAlert("Alert", "Check In vehicle details unavailable.", "Ok");
                 }
             }
             catch (Exception ex)
@@ -142,14 +142,14 @@ namespace ParkHyderabadOperator
                                 }
                                 else
                                 {
-                                    await DisplayAlert("Alert", "Unable to find bluetooth device", "Ok");
+                                    await DisplayAlert("Alert", "Unable to find Bluetooth device", "Ok");
                                     await Navigation.PushAsync(masterPage);
                                 }
                             }
                             else
                             {
 
-                                await DisplayAlert("Alert", "Check-In Fail,Please contact admin.", "Ok");
+                                await DisplayAlert("Alert", "Unable to Check In, Please contact Admin", "Ok");
                                 await Navigation.PushAsync(masterPage);
                             }
                             ShowLoading(false);
@@ -158,7 +158,7 @@ namespace ParkHyderabadOperator
                     else
                     {
 
-                        await DisplayAlert("Alert", "Please check your internet.", "Ok");
+                        await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
                         ShowLoading(false);
                     }
                     btnYes.IsVisible = true;

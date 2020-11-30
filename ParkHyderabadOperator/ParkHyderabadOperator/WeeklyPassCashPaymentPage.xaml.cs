@@ -87,13 +87,13 @@ namespace ParkHyderabadOperator
                         CustomerVehiclePass resultPass = dal_CustomerPass.CreateCustomerPass(Convert.ToString(App.Current.Properties["apitoken"]), objCustomerweeklyPass);
                         if (resultPass != null && resultPass.CustomerVehiclePassID != 0)
                         {
-                            await DisplayAlert("Alert", "Customer vehicle pass created successfully", "Ok");
+                            await DisplayAlert("Alert", "Vehicle Pass created successfully", "Ok");
                             var PassPaymentReceiptPage = new PassPaymentReceiptPage(resultPass);
                             await Navigation.PushAsync(PassPaymentReceiptPage);
                         }
                         else
                         {
-                            await DisplayAlert("Alert", "Fail,Please contact admin", "Ok");
+                            await DisplayAlert("Alert", "Payment Failed,Please contact Admin", "Ok");
                         }
 
 
@@ -101,7 +101,7 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please check your internet.", "Ok");
+                    await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
                 }
             }
             catch (Exception ex)

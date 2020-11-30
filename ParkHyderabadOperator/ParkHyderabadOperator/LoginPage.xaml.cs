@@ -25,14 +25,15 @@ namespace ParkHyderabadOperator
         private float Latitude;
         private float Longitude;
         private bool IsOnline = false;
-        DALExceptionManagment dal_Exceptionlog;
+        DALExceptionManagment dal_Exceptionlog; 
         string LoginDeviceID = string.Empty;
         string cookieUserName, cookiePassword = string.Empty;
         public LoginPage()
         {
             InitializeComponent();
             dal_Exceptionlog = new DALExceptionManagment();
-            App.Current.Properties["BaseURL"] =  "http://optapi.instaparking.in/"; // " http://35.202.198.25:81/InstaParkingOperatorAPI/"; //
+            App.Current.Properties["BaseURL"] =  "http://35.202.198.25:81/InstaParkingOperatorAPI/";        //"http://optapi.instaparking.in/";  //
+
         }
         protected async override void OnAppearing()
         {
@@ -59,7 +60,7 @@ namespace ParkHyderabadOperator
             {
                 if (App.Current.Properties["LoginUser"] == null)
                 {
-                    await DisplayAlert("Alert", "User details are not avilabel,Please login", "Cancel");
+                    await DisplayAlert("Alert", "User details unavailable", "Cancel");
                 }
             }
 
@@ -109,7 +110,7 @@ namespace ParkHyderabadOperator
                     }
                     catch (Exception ex)
                     {
-                        await DisplayAlert("Alert", "Unable to connect api.", "Ok");
+                        await DisplayAlert("Alert", "Unable to connect API.Please contact Admin", "Ok");
                         dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "LoginPage.xaml.cs", "", "GetAPIToken");
                         string exmsg = ex.Message;
                     }
@@ -119,7 +120,7 @@ namespace ParkHyderabadOperator
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Alert", "Unable to connect api.", "Ok");
+                await DisplayAlert("Alert", "Unable to connect API.Please contact Admin", "Ok");
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "LoginPage.xaml.cs", "", "GetAPIToken");
 
             }
@@ -138,27 +139,27 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please enable your device location.", "Ok");
+                    await DisplayAlert("Alert", "Please enable your Device location.", "Ok");
                 }
             }
             catch (FeatureNotSupportedException fnsEx)
             {
-                await DisplayAlert("Alert", "Please enable your device location." + fnsEx.Message, "Ok");
+                await DisplayAlert("Alert", "Please enable your Device location." + fnsEx.Message, "Ok");
                 // Handle not supported on device exception
             }
             catch (FeatureNotEnabledException fneEx)
             {
-                await DisplayAlert("Alert", "Please enable your device location." + fneEx.Message, "Ok");
+                await DisplayAlert("Alert", "Please enable your Device location." + fneEx.Message, "Ok");
                 // Handle not enabled on device exception
             }
             catch (PermissionException pEx)
             {
-                await DisplayAlert("Alert", "Please enable your device location." + pEx.Message, "Ok");
+                await DisplayAlert("Alert", "Please enable your Device location." + pEx.Message, "Ok");
                 // Handle permission exception
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Alert", "Please enable your device location." + ex.Message, "Ok");
+                await DisplayAlert("Alert", "Please enable your Device location." + ex.Message, "Ok");
                 // Unable to get location
             }
         }
@@ -213,7 +214,7 @@ namespace ParkHyderabadOperator
                                     App.Current.Properties["LoginUser"] = resultObj;
                                     resultObj.LoginDeviceID = LoginDeviceID;
                                     MasterHomePage masterPage = null;
-                                    await DisplayAlert("Alert", "Your location and lot details are:" + resultObj.LocationParkingLotID.LocationID.LocationName + "-" + resultObj.LocationParkingLotID.LocationParkingLotName, "Ok");
+                                    await DisplayAlert("Alert", "Your Location and Lot details are:" + resultObj.LocationParkingLotID.LocationID.LocationName + "-" + resultObj.LocationParkingLotID.LocationParkingLotName, "Ok");
                                     DateTime toDay = DateTime.Now;
                                     TimeSpan lotClosingTime = new TimeSpan(22, 30, 0);
                                     toDay = toDay.Date + lotClosingTime;
@@ -236,7 +237,7 @@ namespace ParkHyderabadOperator
                                         }
                                         else
                                         {
-                                            await DisplayAlert("Alert", "Please contact admin,lot time ("+ toDay + ") closed", "Cancel");
+                                            await DisplayAlert("Alert", "Please contact Admin,lot time ("+ toDay + ") closed", "Cancel");
                                             ShowLoading(false);
                                         }
                                     }
@@ -273,14 +274,14 @@ namespace ParkHyderabadOperator
                         }
                         else
                         {
-                            DisplayAlert("Alert", "Unable to connect api.", "Ok");
+                            DisplayAlert("Alert", "Unable to connect API.Please contact Admin", "Ok");
                             ShowLoading(false);
                         }
 
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Please check your internet.", "Ok");
+                        await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
                         ShowLoading(false);
                     }
 
@@ -295,7 +296,7 @@ namespace ParkHyderabadOperator
             {
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "LoginPage.xaml.cs", "", "BtnSignIn_Clicked");
                 ShowLoading(false);
-                await DisplayAlert("Alert", "Unable to connect api" + ex.Message, "Ok");
+                await DisplayAlert("Alert", "Unable to connect API" + ex.Message, "Ok");
             }
 
         }

@@ -104,7 +104,7 @@ namespace ParkHyderabadOperator
                 else
                 {
 
-                    DisplayAlert("Alert", "Vehicle already checkout", "Ok");
+                    DisplayAlert("Alert", "Vehicle already Checkedout", "Ok");
 
                 }
             }

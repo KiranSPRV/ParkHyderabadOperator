@@ -213,7 +213,7 @@ namespace ParkHyderabadOperator
                     else
                     {
 
-                        DisplayAlert("Alert", "Selected vehicle details are unable to get,Please contact admin.", "Ok");
+                        DisplayAlert("Alert", "Vehicle details unvailable,Please contact Admin", "Ok");
 
                     }
                 }
@@ -346,7 +346,7 @@ namespace ParkHyderabadOperator
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Alert", "Fail,please contact admin", "Ok");
+                await DisplayAlert("Alert", "Payment Failed,Please contact Admin", "Ok");
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "PassCheckInVehicleInformation.xaml.cs", "", "BtnExtendedTime_Clicked");
             }
         }
@@ -385,7 +385,7 @@ namespace ParkHyderabadOperator
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Fail,please contact admin", "Ok");
+                        await DisplayAlert("Alert", "Payment Failed,Please contact Admin", "Ok");
                     }
 
                 }
@@ -394,7 +394,7 @@ namespace ParkHyderabadOperator
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Alert", "Fail,please contact admin", "Ok");
+                await DisplayAlert("Alert", "Payment Failed,Please contact Admin", "Ok");
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "PassCheckInVehicleInformation.xaml.cs", "", "BtnCheckOut_Clicked");
                 ShowLoading(false);
                 BtnCheckOut.IsVisible = false;
@@ -454,12 +454,12 @@ namespace ParkHyderabadOperator
                             }
                             else
                             {
-                                await DisplayAlert("Alert", "Fai,Please contact admin", "Ok");
+                                await DisplayAlert("Alert", "Fai,Please contact Admin", "Ok");
                             }
                         }
                         else
                         {
-                            await DisplayAlert("Alert", "Unable to get user details,Please contact admin", "Ok");
+                            await DisplayAlert("Alert", "Unable to get user details,Please contact Admin", "Ok");
                         }
                     }
                     else
@@ -470,7 +470,7 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please select reason", "Ok");
+                    await DisplayAlert("Alert", "Please select Reason", "Ok");
                 }
                 ShowLoading(true);
                 BtnClamp.IsEnabled = true;
@@ -557,7 +557,7 @@ namespace ParkHyderabadOperator
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Unable to find bluetooth device", "Ok");
+                        await DisplayAlert("Alert", "Unable to find Bluetooth device", "Ok");
                         await Navigation.PushAsync(masterPage);
                     }
 

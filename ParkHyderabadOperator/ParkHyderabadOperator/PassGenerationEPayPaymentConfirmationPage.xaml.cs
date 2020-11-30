@@ -80,7 +80,7 @@ namespace ParkHyderabadOperator
             catch (Exception ex)
             {
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "MonthlyPassCashPaymentPage.xaml.cs", "", "CheckNFCSupported");
-                DisplayAlert("Alert", "Unable to proceed,Please contact admin" + ex.Message, "Ok");
+                DisplayAlert("Alert", "Unable to proceed,Please contact Admin" + ex.Message, "Ok");
             }
         }
         private void BtnYes_Clicked(object sender, EventArgs e)
@@ -137,75 +137,84 @@ namespace ParkHyderabadOperator
             try
             {
                 ShowLoading(true);
+                btnGeneratePass.IsVisible = false;
+
+                string existingnfcCardVehcile = string.Empty;
                 if (DeviceInternet.InternetConnected())
                 {
                     CustomerVehiclePass resultPass = null;
-                if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
-                {
-                    if (!IsVehiclehasPass())
+                    if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                     {
-                        if (App.Current.Properties.ContainsKey("MultiSelectionLocations"))
+                        existingnfcCardVehcile = dal_CustomerPass.IsValidNFCCard(Convert.ToString(App.Current.Properties["apitoken"]), labelNFCCard.Text, objInputMonthlyPass.CustomerVehicleID.RegistrationNumber);
+                        if (existingnfcCardVehcile == string.Empty)
                         {
-                            List<Model.APIOutPutModel.Location> lstMultiLication = (List<Model.APIOutPutModel.Location>)App.Current.Properties["MultiSelectionLocations"];
-                            await Task.Run(() =>
+                            if (App.Current.Properties.ContainsKey("MultiSelectionLocations"))
                             {
-                                objInputMonthlyPass.CardNumber = labelNFCCard.Text;
-                                objInputMonthlyPass.BarCode = labelBARCode.Text;
-                                objInputMonthlyPass.IsMultiLot = true;
-                                VMMultiStationCustomerVehiclePass objvmMultiStations = new VMMultiStationCustomerVehiclePass();
-                                objvmMultiStations.CustomerVehiclePassID = objInputMonthlyPass;
-                                objvmMultiStations.LocationID = lstMultiLication;
+                                List<Model.APIOutPutModel.Location> lstMultiLication = (List<Model.APIOutPutModel.Location>)App.Current.Properties["MultiSelectionLocations"];
+                                await Task.Run(() =>
+                                {
+                                    objInputMonthlyPass.CardNumber = labelNFCCard.Text;
+                                    objInputMonthlyPass.BarCode = labelBARCode.Text;
+                                    objInputMonthlyPass.IsMultiLot = true;
+                                    VMMultiStationCustomerVehiclePass objvmMultiStations = new VMMultiStationCustomerVehiclePass();
+                                    objvmMultiStations.CustomerVehiclePassID = objInputMonthlyPass;
+                                    objvmMultiStations.LocationID = lstMultiLication;
 
-                                resultPass = dal_CustomerPass.CreateMultiStationCustomerPass(Convert.ToString(App.Current.Properties["apitoken"]), objvmMultiStations);
-                            });
-                            if (resultPass != null && resultPass.CustomerVehiclePassID != 0)
-                            {
-                                StopNFCListening();
-                                await DisplayAlert("Alert", "Customer vehicle pass created successfully", "Ok");
-                                var passPaymentReceiptPage = new PassPaymentReceiptPage(resultPass);
-                                await Navigation.PushAsync(passPaymentReceiptPage);
+                                    resultPass = dal_CustomerPass.CreateMultiStationCustomerPass(Convert.ToString(App.Current.Properties["apitoken"]), objvmMultiStations);
+                                });
+                                if (resultPass != null && resultPass.CustomerVehiclePassID != 0)
+                                {
+                                    StopNFCListening();
+                                    await DisplayAlert("Alert", "Vehicle Pass created successfully", "Ok");
+                                    var passPaymentReceiptPage = new PassPaymentReceiptPage(resultPass);
+                                    await Navigation.PushAsync(passPaymentReceiptPage);
+                                }
+                                else
+                                {
+                                    await DisplayAlert("Alert", "Payment Failed,Please contact Admin", "Ok");
+                                }
                             }
                             else
                             {
-                                await DisplayAlert("Alert", "Fail,Please contact admin", "Ok");
+                                await Task.Run(() =>
+                                {
+                                    objInputMonthlyPass.CardNumber = labelNFCCard.Text;
+                                    resultPass = dal_CustomerPass.CreateCustomerPass(Convert.ToString(App.Current.Properties["apitoken"]), objInputMonthlyPass);
+                                });
+                                if (resultPass != null && resultPass.CustomerVehiclePassID != 0)
+                                {
+                                    await DisplayAlert("Alert", "Vehicle Pass created successfully", "Ok");
+                                    var passPaymentReceiptPage = new PassPaymentReceiptPage(resultPass);
+                                    await Navigation.PushAsync(passPaymentReceiptPage);
+                                }
+                                else
+                                {
+                                    await DisplayAlert("Alert", "Payment Failed,Please contact Admin", "Ok");
+                                }
                             }
                         }
                         else
                         {
-                            await Task.Run(() =>
-                            {
-                                objInputMonthlyPass.CardNumber = labelNFCCard.Text;
-                                resultPass = dal_CustomerPass.CreateCustomerPass(Convert.ToString(App.Current.Properties["apitoken"]), objInputMonthlyPass);
-                            });
-                            if (resultPass != null && resultPass.CustomerVehiclePassID != 0)
-                            {
-                                await DisplayAlert("Alert", "Customer vehicle pass created successfully", "Ok");
-                                var passPaymentReceiptPage = new PassPaymentReceiptPage(resultPass);
-                                await Navigation.PushAsync(passPaymentReceiptPage);
-                            }
-                            else
-                            {
-                                await DisplayAlert("Alert", "Fail,Please contact admin", "Ok");
-                            }
+                            ShowLoading(false);
+                            await DisplayAlert("Alert", "NFC Card already assigned to " + existingnfcCardVehcile + "", "Ok");
+
                         }
 
-                    }
-                    else
-                    {
-                        await DisplayAlert("Alert", labelNFCCard.Text + ":This NFC card already in use for another vehicle.", "Ok");
-                    }
-                    ShowLoading(false);
+                        ShowLoading(false);
+                        btnGeneratePass.IsVisible = true;
 
-                }
+                    }
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please check your internet.", "Ok");
+                    await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
                     ShowLoading(false);
+                    btnGeneratePass.IsVisible = true;
                 }
             }
             catch (Exception ex)
             {
+                btnGeneratePass.IsVisible = true;
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "MonthlyPassCashPaymentPage.xaml.cs", "", "BtnGeneratePassReceipt_Clicked");
             }
         }
@@ -231,12 +240,12 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "NFC is not supported,Please contact admin", "Ok");
+                    await DisplayAlert("Alert", "NFC  not supported,Please contact Admin", "Ok");
                 }
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Alert", "Unable to proceed,Please contact admin" + ex.Message, "Ok");
+                await DisplayAlert("Alert", "Unable to proceed,Please contact Admin" + ex.Message, "Ok");
             }
         }
         async void SubscribeEvents()
@@ -248,7 +257,7 @@ namespace ParkHyderabadOperator
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Alert", "Unable to proceed,Please contact admin" + ex.Message, "Ok");
+                await DisplayAlert("Alert", "Unable to proceed,Please contact Admin" + ex.Message, "Ok");
             }
         }
         async void UnsubscribeEvents()
@@ -261,7 +270,7 @@ namespace ParkHyderabadOperator
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Alert", "Unable to proceed,Please contact admin" + ex.Message, "Ok");
+                await DisplayAlert("Alert", "Unable to proceed,Please contact Admin" + ex.Message, "Ok");
             }
         }
         async void Current_OnMessageReceived(ITagInfo tagInfo)
@@ -283,14 +292,14 @@ namespace ParkHyderabadOperator
                 else
                 {
 
-                    await DisplayAlert("Alert", "NFC Card serialNumber unable to found.", "Ok");
+                    await DisplayAlert("Alert", "NFC Card serial number unable to found.", "Ok");
                     return;
 
                 }
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Alert", "Unable to proceed,Please contact admin" + ex.Message, "Ok");
+                await DisplayAlert("Alert", "Unable to proceed,Please contact Admin" + ex.Message, "Ok");
             }
         }
         async void Current_OnTagDiscovered(ITagInfo tagInfo, bool format)
@@ -299,7 +308,7 @@ namespace ParkHyderabadOperator
             {
                 if (!CrossNFC.Current.IsWritingTagSupported)
                 {
-                    await DisplayAlert("Alert", "Writing tag is not supported on this device", "Ok");
+                    await DisplayAlert("Alert", "Writing tag not supported on this device", "Ok");
                     return;
                 }
 
@@ -354,7 +363,7 @@ namespace ParkHyderabadOperator
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Alert", "Unable to proceed,Please contact admin" + ex.Message, "Ok");
+                await DisplayAlert("Alert", "Unable to proceed,Please contact Admin" + ex.Message, "Ok");
             }
         }
         /// <summary>

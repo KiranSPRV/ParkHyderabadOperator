@@ -122,14 +122,14 @@ namespace ParkHyderabadOperator
                         }
                         else
                         {
-                            await DisplayAlert("Alert", "Fail,Please contact admin.", "Ok");
+                            await DisplayAlert("Alert", "Check-Out Failed,Please contact Admin.", "Ok");
                         }
 
                     }
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please check your internet.", "Ok");
+                    await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
                 }
                 ShowLoading(false);
                 btnCheckOut.IsVisible = true;

@@ -221,27 +221,27 @@ namespace ParkHyderabadOperator
                                 }
                                 else
                                 {
-                                    await DisplayAlert("Alert", "Enter valid registration number", "Ok");
+                                    await DisplayAlert("Alert", "Please enter valid Registration Number", "Ok");
                                 }
                             }
                             else
                             {
-                                await DisplayAlert("Alert", entryRegistrationNumber.Text.ToUpper() + ": This vehicle already has pass.", "Ok");
+                                await DisplayAlert("Alert", entryRegistrationNumber.Text.ToUpper() + ": This vehicle already has Pass.", "Ok");
                             }
                         }
                         else
                         {
-                            await DisplayAlert("Alert", "Please enter registration number", "Ok");
+                            await DisplayAlert("Alert", "Please enter Registration Number", "Ok");
                         }
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Please enter phone number", "Ok");
+                        await DisplayAlert("Alert", "Please enter Phone Number", "Ok");
                     }
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please enter name", "Ok");
+                    await DisplayAlert("Alert", "Please enter Name", "Ok");
                 }
             }
             catch (Exception ex)
@@ -317,27 +317,27 @@ namespace ParkHyderabadOperator
                                 }
                                 else
                                 {
-                                    await DisplayAlert("Alert", "Enter valid registration number", "Ok");
+                                    await DisplayAlert("Alert", "Please enter valid Registration Number", "Ok");
                                 }
                             }
                             else
                             {
-                                await DisplayAlert("Alert", entryRegistrationNumber.Text.ToUpper() + ": This vehicle already has pass.", "Ok");
+                                await DisplayAlert("Alert", entryRegistrationNumber.Text.ToUpper() + ": This vehicle already has Pass.", "Ok");
                             }
                         }
                         else
                         {
-                            await DisplayAlert("Alert", "Please enter registration number", "Ok");
+                            await DisplayAlert("Alert", "Please enter Registration Number", "Ok");
                         }
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Please enter phone number", "Ok");
+                        await DisplayAlert("Alert", "Please enter Phone Number", "Ok");
                     }
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please enter name", "Ok");
+                    await DisplayAlert("Alert", "Please enter Name", "Ok");
                 }
 
             }

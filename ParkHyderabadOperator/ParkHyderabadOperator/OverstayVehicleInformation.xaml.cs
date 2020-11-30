@@ -162,7 +162,7 @@ namespace ParkHyderabadOperator
                     else
                     {
 
-                        DisplayAlert("Alert", "Selected vehicle details are unable to get,Please contact admin.", "Ok");
+                        DisplayAlert("Alert", "Vehicle details unvailable,Please contact Admin", "Ok");
 
                     }
                 }
@@ -311,13 +311,13 @@ namespace ParkHyderabadOperator
                         }
                         else
                         {
-                            await DisplayAlert("Alert", "Fail,Please contact admin", "Ok");
+                            await DisplayAlert("Alert", "Clamp Failed,Please contact Admin", "Ok");
                         }
                     }
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please select reason", "Ok");
+                    await DisplayAlert("Alert", "Please select Reason", "Ok");
                 }
                 BtnClamp.IsEnabled = true;
                 ShowLoading(false);
@@ -370,7 +370,7 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Extend not avilable for " + DateTime.Now.Date.ToString("MMM dd yyyy") + ",Please contact admin", "Ok");
+                    await DisplayAlert("Alert", "Extend not avilable for " + DateTime.Now.Date.ToString("MMM dd yyyy") + ",Please contact Admin", "Ok");
                 }
             }
             catch (Exception ex)
@@ -417,7 +417,7 @@ namespace ParkHyderabadOperator
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Fail,please contact admin", "Ok");
+                        await DisplayAlert("Alert", "Check-Out Failed,Please contact Admin", "Ok");
                     }
 
                 }
@@ -425,7 +425,7 @@ namespace ParkHyderabadOperator
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Alert", "Fail,please contact admin", "Ok");
+                await DisplayAlert("Alert", "Check-Out Failed,Please contact Admin", "Ok");
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "OverstayVehicleInformation.xaml.cs", "", "BtnCheckOut_Clicked");
             }
         }

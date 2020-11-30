@@ -12,34 +12,27 @@ using Xamarin.Forms.Xaml;
 namespace ParkHyderabadOperator
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class PassPaymentReceiptPage : ContentPage
+    public partial class NFCCardPaymentReceiptPagae : ContentPage
     {
         BlueToothDevicePrinting ObjblueToothDevicePrinting;
         DALExceptionManagment dal_Exceptionlog;
         string[] receiptlines = new string[17]; // Receipt Lines
         DALHome dal_home;
-        public PassPaymentReceiptPage()
+        public NFCCardPaymentReceiptPagae()
         {
             InitializeComponent();
             ObjblueToothDevicePrinting = new BlueToothDevicePrinting();
             dal_Exceptionlog = new DALExceptionManagment();
             dal_home = new DALHome();
         }
-        public PassPaymentReceiptPage(string generatedPassType, string StationType)
-        {
-            InitializeComponent();
-            ObjblueToothDevicePrinting = new BlueToothDevicePrinting();
-            dal_Exceptionlog = new DALExceptionManagment();
-            dal_home = new DALHome();
-
-        }
-        public PassPaymentReceiptPage(CustomerVehiclePass objReceiptDetails)
+        public NFCCardPaymentReceiptPagae(CustomerVehiclePass objReceiptDetails)
         {
             InitializeComponent();
             ObjblueToothDevicePrinting = new BlueToothDevicePrinting();
             dal_Exceptionlog = new DALExceptionManagment();
             dal_home = new DALHome();
             LoadCustomerPassPaymentDetails(objReceiptDetails);
+
         }
         public void LoadCustomerPassPaymentDetails(CustomerVehiclePass objReceipt)
         {
@@ -113,18 +106,8 @@ namespace ParkHyderabadOperator
 
                 labelCustomerName.Text = objReceipt.CustomerVehicleID.CustomerID.Name;
                 labelVehicleDetails.Text = objReceipt.CustomerVehicleID.RegistrationNumber;
-
-                if (objReceipt.IssuedCard)
-                {
-                    labelParkingFeesDetails.Text = objReceipt.TotalAmount.ToString("N2") + "/-";
-                    labelParkingPaymentType.Text = "Paid (Including NFC) - By " + objReceipt.PaymentTypeID.PaymentTypeName;
-                }
-                else
-                {
-                    labelParkingFeesDetails.Text = objReceipt.Amount.ToString("N2") + "/-";
-                    labelParkingPaymentType.Text = "Paid - By " + objReceipt.PaymentTypeID.PaymentTypeName;
-
-                }
+                labelParkingFeesDetails.Text = objReceipt.CardAmount.ToString("N2") + "/-";
+                labelParkingPaymentType.Text = "Paid - By " + objReceipt.NFCCardPaymentID.PaymentTypeName;
 
                 if (objReceipt.CreatedBy.UserName != "")
                 {
@@ -151,7 +134,7 @@ namespace ParkHyderabadOperator
                         receiptlines[6] = "\x1B\x21\x01" + "Valid Till:" + Convert.ToDateTime(objReceipt.ExpiryDate).ToString("dd MMM yyyy") + "\x1B\x21\x00" + "\n";
                         receiptlines[7] = "\x1B\x21\x01" + "(Pass Type :" + objReceipt.PassPriceID.PassTypeID.PassTypeName + ")" + "\x1B\x21\x00\n";
                         receiptlines[8] = "\x1B\x21\x01" + "Station(s):" + stations + "\x1B\x21\x01" + "\n";
-                        receiptlines[9] = "\x1B\x21\x01" + "Paid: Rs" + (objReceipt.IssuedCard ? objReceipt.TotalAmount.ToString("N2") + "(NFC Rs" + objReceipt.PassPriceID.NFCCardPrice.ToString("N2") + ")" : objReceipt.Amount.ToString("N2")) + "\x1B\x21\x01" + "\n";
+                        receiptlines[9] = "\x1B\x21\x01" + "Paid: Rs" + objReceipt.PassPriceID.NFCCardPrice.ToString("N2") + "\x1B\x21\x01" + "\n";
                         receiptlines[10] = "\x1B\x21\x06" + "Operator Id:" + objReceipt.CreatedBy.UserCode + "\x1B\x21\x00\n";
                         receiptlines[11] = "\x1B\x21\x01" + "(Supervisor Mobile:" + objReceipt.SuperVisorID.PhoneNumber + ")" + "\x1B\x21\x00\n";
                         receiptlines[12] = "\x1B\x21\x01" + "We are not responsible for your valuable items like laptop,       wallet,helmet etc." + "\x1B\x21\x00\n";

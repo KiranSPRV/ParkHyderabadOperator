@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.2.5" package="com.companyname.InstaParkingOP" android:installLocation="preferExternal">
-	<uses-sdk android:minSdkVersion="20" android:targetSdkVersion="28" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.2.6" package="com.sprvtec.InstaOperator" android:installLocation="preferExternal">
+	<uses-sdk android:minSdkVersion="19" />
 	<application android:usesCleartextTraffic="true" android:icon="@drawable/launcher" android:label="InstaOperator">
 		<provider android:name="android.support.v4.content.FileProvider" android:authorities="${applicationId}.fileprovider" android:exported="false" android:grantUriPermissions="true">
 			<meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths"></meta-data>
@@ -23,5 +23,4 @@
 	<uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" />
 	<uses-permission android:name="android.permission.NFC" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
-	<application android:label="INSTAOperator" android:icon="@drawable/launcher" />
 </manifest>

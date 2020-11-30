@@ -460,7 +460,7 @@ namespace ParkHyderabadOperator.DAL.DALPass
             try
             {
                 CustomerVehiclePass objCustomerVehiclePass = GetVehiclePassDetailsByNFC(accessToken, NFCCardNumber);
-                if (RegistrationNumber.ToUpper() != objCustomerVehiclePass.CustomerVehicleID.RegistrationNumber.ToUpper())
+               if( Convert.ToDateTime(objCustomerVehiclePass.ExpiryDate).Date >= DateTime.Now.Date)
                 {
                     nfccardVehicle = objCustomerVehiclePass.CustomerVehicleID.RegistrationNumber;
                 }

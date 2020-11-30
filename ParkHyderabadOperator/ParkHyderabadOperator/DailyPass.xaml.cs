@@ -145,7 +145,7 @@ namespace ParkHyderabadOperator
                         }
                         else
                         {
-                            await DisplayAlert("Alert", "Please enter registration number", "Ok");
+                            await DisplayAlert("Alert", "Please enter Registration Number", "Ok");
                         }
                     }
                     else
@@ -155,7 +155,7 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please enter name", "Ok");
+                    await DisplayAlert("Alert", "Please enter Name", "Ok");
                 }
 
             }
@@ -209,17 +209,17 @@ namespace ParkHyderabadOperator
                         }
                         else
                         {
-                            await DisplayAlert("Alert", "Please enter registration number", "Ok");
+                            await DisplayAlert("Alert", "Please enter Registration Number", "Ok");
                         }
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Please enter phone number", "Ok");
+                        await DisplayAlert("Alert", "Please enter Phone Number", "Ok");
                     }
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please enter name", "Ok");
+                    await DisplayAlert("Alert", "Please enter Name", "Ok");
                 }
 
             }

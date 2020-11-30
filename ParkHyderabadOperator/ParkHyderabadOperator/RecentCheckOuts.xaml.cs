@@ -172,7 +172,7 @@ namespace ParkHyderabadOperator
                 else
                 {
 
-                    await DisplayAlert("Alert", "Unable to proceed,login user and token details are not avialable", "Ok");
+                    await DisplayAlert("Alert", "Token details  unavailable", "Ok");
                 }
             }
             catch (Exception ex)
@@ -191,7 +191,14 @@ namespace ParkHyderabadOperator
                 if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                 {
                     DALMenubar dal_menubar = new DALMenubar();
-                    pickerDay.ItemsSource = dal_menubar.GetRecentCheckOutDays();
+                  var ddlcheckOuts=  dal_menubar.GetRecentCheckOutDays();
+                    if(ddlcheckOuts.Count>0)
+                    {
+                        pickerDay.ItemsSource = ddlcheckOuts;
+                    }
+                  
+
+
                 }
 
             }
@@ -208,12 +215,13 @@ namespace ParkHyderabadOperator
                 {
                     if (objFilter.Ins == false && objFilter.Outs == false)
                     {
-                        objFilter.Ins = true;
-                        btnIns.Style = (Style)App.Current.Resources["ButtonSubmitStyle"];
-                        btnOuts.Style = (Style)App.Current.Resources["ButtonRegularMercuryStyle"];
+                        objFilter.Outs = true;
+                        btnIns.Style = (Style)App.Current.Resources["ButtonRegularMercuryStyle"];
+                        btnOuts.Style = (Style)App.Current.Resources["ButtonSubmitStyle"];
                     }
+                    GetRecentCheckOuts();
                 }
-                GetRecentCheckOuts();
+                
             }
             catch (Exception ex)
             {
@@ -297,9 +305,9 @@ namespace ParkHyderabadOperator
                                 }
                                 else
                                 {
-                                    lvCheckInChkOutReport.ItemsSource = null;
-                                    lblTotalCash.Text = "TOTAL CASH: " + "₹ 0.00";
-                                    lblTotalEPay.Text = "TOTAL EPAY: " + "₹ 0.00";
+                                   // lvCheckInChkOutReport.ItemsSource = null;
+                                   // lblTotalCash.Text = "TOTAL CASH: " + "₹ 0.00";
+                                    //lblTotalEPay.Text = "TOTAL EPAY: " + "₹ 0.00";
                                 }
                             }
                         }
@@ -327,7 +335,7 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please select day", "Ok");
+                    await DisplayAlert("Alert", "Please select Day", "Ok");
                 }
             }
             catch (Exception ex)
@@ -349,7 +357,7 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please select day", "Ok");
+                    await DisplayAlert("Alert", "Please select Day", "Ok");
                 }
             }
             catch (Exception ex)
@@ -372,7 +380,7 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please select day", "Ok");
+                    await DisplayAlert("Alert", "Please select Day", "Ok");
                 }
             }
             catch (Exception ex)
@@ -394,7 +402,7 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please select day", "Ok");
+                    await DisplayAlert("Alert", "Please select Day", "Ok");
                 }
             }
             catch (Exception ex)
@@ -449,7 +457,7 @@ namespace ParkHyderabadOperator
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Selected vehicle details are unable to get,Please contact admin.", "Ok");
+                        await DisplayAlert("Alert", "Vehicle details unvailable,Please contact Admin", "Ok");
                     }
                     try
                     {
@@ -465,7 +473,7 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please check your internet.", "Ok");
+                    await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
                 }
 
             }
@@ -509,7 +517,7 @@ namespace ParkHyderabadOperator
                     else
                     {
                         switchViolation.IsToggled = false;
-                        await DisplayAlert("Alert", "Please click Outs for foc records", "Ok");
+                        await DisplayAlert("Alert", "Please click Outs for FOC records", "Ok");
                     }
                 }
                 else

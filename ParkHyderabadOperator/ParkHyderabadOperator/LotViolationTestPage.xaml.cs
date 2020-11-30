@@ -131,7 +131,7 @@ namespace ParkHyderabadOperator
                         {
                             btnCheckIn.IsVisible = true;
                             BtnViolation.IsVisible = false;
-                            await DisplayAlert("Alert", "" + entryRegistrationNumber.Text + " this vehicle has pass", "Ok");
+                            await DisplayAlert("Alert", "" + entryRegistrationNumber.Text + " This vehicle has a valid pass", "Ok");
                         }
                         else
                         {
@@ -186,7 +186,7 @@ namespace ParkHyderabadOperator
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Please check bay numbers are not avilable", "Ok");
+                        await DisplayAlert("Alert", "Bay numbers unavailable", "Ok");
                     }
                 }
             }
@@ -213,7 +213,7 @@ namespace ParkHyderabadOperator
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Please check bay numbers are not avilable", "Ok");
+                        await DisplayAlert("Alert", "Bay numbers unavailable", "Ok");
                     }
                 }
             }
@@ -369,60 +369,60 @@ namespace ParkHyderabadOperator
                                                         }
                                                         else
                                                         {
-                                                            await DisplayAlert("Alert", "Violation entry fail,Please contact admin.", "Ok");
+                                                            await DisplayAlert("Alert", "Violation Check In failed,Please contact Admin.", "Ok");
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        await DisplayAlert("Alert", "Vehicle Already Violation at " + existingCheckIn, "Ok");
+                                                        await DisplayAlert("Alert", "Vehicle Checked In as Violation at" + existingCheckIn, "Ok");
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    await DisplayAlert("Alert", "User details and apk token not avilable.Relogin again", "Ok");
+                                                    await DisplayAlert("Alert", "User details and API token unavailable. Login again", "Ok");
                                                 }
                                             }
                                             else
                                             {
-                                                await DisplayAlert("Alert", "Please select vehicle image.", "Ok");
+                                                await DisplayAlert("Alert", "Please select Vehicle Image.", "Ok");
                                             }
 
                                         }
                                         else
                                         {
-                                            await DisplayAlert("Alert", "Please select reason.", "Ok");
+                                            await DisplayAlert("Alert", "Please select Reason.", "Ok");
                                         }
                                     }
                                     else
                                     {
-                                        await DisplayAlert("Alert", "Please check clamp or warning ", "Ok");
+                                        await DisplayAlert("Alert", "Please check Clamp or Warning ", "Ok");
                                     }
                                 }
                                 else
                                 {
-                                    await DisplayAlert("Alert", "Please select bay number.", "Ok");
+                                    await DisplayAlert("Alert", "Please select Bay Number.", "Ok");
                                 }
                             }
                             else
                             {
-                                await DisplayAlert("Alert", "Enter valid registration number", "Ok");
+                                await DisplayAlert("Alert", "Please enter valid Registration Number", "Ok");
                             }
                         }
                         else
                         {
-                            await DisplayAlert("Alert", "Please enter valid registraion number.", "Ok");
+                            await DisplayAlert("Alert", "Please enter valid Registration Number.", "Ok");
                         }
 
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Please select vehicle type", "Ok");
+                        await DisplayAlert("Alert", "Please select Vehicle type", "Ok");
                     }
                     BtnViolation.IsVisible = true;
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please check your internet.", "Ok");
+                    await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
                     ShowLoading(false);
                     BtnViolation.IsVisible = true;
                 }
@@ -486,29 +486,30 @@ namespace ParkHyderabadOperator
                                 else
                                 {
 
-                                    await DisplayAlert("Alert", "Check-In Fail,Please contact admin.", "Ok");
+                                    await DisplayAlert("Alert", "Unable to Check In, Please contact Admin", "Ok");
                                 }
                             }
                             else
                             {
-                                await DisplayAlert("Alert", "Vehicle Already Violation at " + existingCheckIn, "Ok");
+                                await DisplayAlert("Alert", "Vehicle Checked In as Violation at" + existingCheckIn, "Ok");
                             }
                         }
                         else
                         {
-                            await DisplayAlert("Alert", "Please Select Bay Number", "Ok");
+                            await DisplayAlert("Alert", "Please select Bay Number", "Ok");
                         }
                     }
                     else
 
                     {
-                        await DisplayAlert("Alert", "Please select vehicle type and registration number valid minimum 6 digits", "Ok");
+                        await DisplayAlert("Alert", "Please select vehicle type and " +
+                            "Enter Registration Number- minimum 6 digits", "Ok");
                     }
                 }
                 else
                 {
 
-                    await DisplayAlert("Alert", "Check-In Fail,Please contact admin.", "Ok");
+                    await DisplayAlert("Alert", "Unable to Check In, Please contact Admin", "Ok");
                 }
                 ShowLoading(false);
                 btnCheckIn.IsVisible = true;
@@ -605,7 +606,7 @@ namespace ParkHyderabadOperator
                         }
                         else
                         {
-                            await DisplayAlert("Alert", "Please select vehicle type", "Ok");
+                            await DisplayAlert("Alert", "Please select Vehicle type", "Ok");
                         }
                     }
                 }
@@ -629,27 +630,27 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please enable your device location.", "Ok");
+                    await DisplayAlert("Alert", "Please enable your Device location.", "Ok");
                 }
             }
             catch (FeatureNotSupportedException fnsEx)
             {
-                await DisplayAlert("Alert", "Please enable your device location." + fnsEx.Message, "Ok");
+                await DisplayAlert("Alert", "Please enable your Device location." + fnsEx.Message, "Ok");
                 // Handle not supported on device exception
             }
             catch (FeatureNotEnabledException fneEx)
             {
-                await DisplayAlert("Alert", "Please enable your device location." + fneEx.Message, "Ok");
+                await DisplayAlert("Alert", "Please enable your Device location." + fneEx.Message, "Ok");
                 // Handle not enabled on device exception
             }
             catch (PermissionException pEx)
             {
-                await DisplayAlert("Alert", "Please enable your device location." + pEx.Message, "Ok");
+                await DisplayAlert("Alert", "Please enable your Device location." + pEx.Message, "Ok");
                 // Handle permission exception
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Alert", "Please enable your device location." + ex.Message, "Ok");
+                await DisplayAlert("Alert", "Please enable your Device location." + ex.Message, "Ok");
                 // Unable to get location
             }
         }

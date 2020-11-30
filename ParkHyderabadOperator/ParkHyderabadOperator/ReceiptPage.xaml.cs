@@ -132,7 +132,7 @@ namespace ParkHyderabadOperator
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Unable to find bluetooth device", "Ok");
+                        await DisplayAlert("Alert", "Unable to find Bluetooth device", "Ok");
                         await Navigation.PushAsync(masterPage);
                     }
                     BtnPrint.IsVisible = true;

@@ -40,7 +40,7 @@
                         </StackLayout>
                     </StackLayout>
                     <StackLayout Padding="10" VerticalOptions="CenterAndExpand" x:Name="stLayoutEpaymentConfirm">
-                        <Button x:Name="btnGenerateNFCCard" Style="{StaticResource ButtonRegularShamrockStyle}" Text="GENERATE NFCCARD" Clicked="BtnGenerateNFCCard_Clicked"  VerticalOptions="CenterAndExpand"/>
+                        <Button x:Name="btnGenerateNFCCard" Style="{StaticResource ButtonRegularShamrockStyle}" Text="GENERATE NFC CARD" Clicked="BtnGenerateNFCCard_Clicked"  VerticalOptions="CenterAndExpand"/>
                     </StackLayout>
                 </StackLayout>
                 

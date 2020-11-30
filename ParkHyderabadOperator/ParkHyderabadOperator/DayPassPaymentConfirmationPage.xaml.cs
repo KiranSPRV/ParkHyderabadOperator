@@ -72,12 +72,12 @@ namespace ParkHyderabadOperator
                     CustomerVehiclePass resultPass = dal_CustomerPass.CreateCustomerPass(Convert.ToString(App.Current.Properties["apitoken"]), objCustomerDayPass);
                     if (resultPass != null && resultPass.CustomerVehiclePassID != 0)
                     {
-                        await DisplayAlert("Alert", "Customer vehicle pass created successfully", "Ok");
+                        await DisplayAlert("Alert", "Vehicle Pass created successfully", "Ok");
                         await Navigation.PushAsync(new PassPaymentReceiptPage(resultPass));
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Fail,Please contact admin", "Ok");
+                        await DisplayAlert("Alert", "Fail to crated pass ,Please contact Admin", "Ok");
                     }
 
                 }

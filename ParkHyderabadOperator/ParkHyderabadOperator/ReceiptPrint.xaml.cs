@@ -66,7 +66,7 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Unable to find bluetooth device", "Ok");
+                    await DisplayAlert("Alert", "Unable to find Bluetooth device", "Ok");
                 }
             }
             catch (Exception ex)

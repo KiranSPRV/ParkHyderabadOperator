@@ -41,6 +41,7 @@ namespace ParkHyderabadOperator
         public MasterDetailHomePage()
         {
             InitializeComponent();
+            dal_Exceptionlog = new DALExceptionManagment();
             LoadLoginUserLocationLots();
             Device.StartTimer(TimeSpan.FromMinutes(5), () =>
             {
@@ -63,14 +64,14 @@ namespace ParkHyderabadOperator
                     }
                     catch (Exception ex)
                     {
-                        dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "MonthlyPassCashPaymentPage.xaml.cs", "", "CheckNFCSupported");
+                        dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "MonthlyPassCashPaymentPage.xaml.cs", "", "OnAppearing");
                     }
                 }
 
             }
             catch (Exception ex)
             {
-                //  await DisplayAlert("Alert", "Unable to proceed,Please contact admin" + ex.Message, "Ok");
+                //  await DisplayAlert("Alert", "Unable to proceed,Please contact Admin" + ex.Message, "Ok");
             }
         }
         public MasterDetailHomePage(ParkedVehiclesFilter lstFilters)
@@ -88,7 +89,7 @@ namespace ParkHyderabadOperator
             }
             catch (Exception ex)
             {
-
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "MonthlyPassCashPaymentPage.xaml.cs", "", "MasterDetailHomePage");
             }
             try
             {
@@ -97,7 +98,7 @@ namespace ParkHyderabadOperator
             catch (Exception ex)
             {
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "MonthlyPassCashPaymentPage.xaml.cs", "", "CheckNFCSupported");
-                DisplayAlert("Alert", "Unable to proceed,Please contact admin" + ex.Message, "Ok");
+                DisplayAlert("Alert", "Unable to proceed,Please contact Admin" + ex.Message, "Ok");
             }
         }
 
@@ -145,7 +146,7 @@ namespace ParkHyderabadOperator
                 else
                 {
 
-                    await DisplayAlert("Alert", "Login user details are not able to find,Please try to relogin.", "Ok");
+                    await DisplayAlert("Alert", "Lost API Token,Please login agin", "Ok");
                 }
             }
             catch (Exception ex)
@@ -183,7 +184,7 @@ namespace ParkHyderabadOperator
                 else
                 {
 
-                    await DisplayAlert("Alert", "Unable to proceed,login user and token details are not avialable", "Ok");
+                    await DisplayAlert("Alert", "Token details  unavailable", "Ok");
                 }
             }
             catch (Exception ex)
@@ -208,9 +209,17 @@ namespace ParkHyderabadOperator
                     {
                         User objLoginUser = (User)App.Current.Properties["LoginUser"];
                         objinput = new ParkedVehiclesFilter();
-
-                        objinput.LocationParkingLotID = objLoginUser.LocationParkingLotID.LocationParkingLotID;
+                        VMLocationLots objVMLocations = (VMLocationLots)pickerLocationLot.SelectedItem;
                         objinput.LocationID = objLoginUser.LocationParkingLotID.LocationID.LocationID;
+                        objinput.LocationParkingLotID = objLoginUser.LocationParkingLotID.LocationParkingLotID;
+                        if (objLoginUser.LocationParkingLotID.LocationParkingLotID==null|| objLoginUser.LocationParkingLotID.LocationParkingLotID ==0)
+                        {
+                            if(objVMLocations!=null)
+                            {
+                                objinput.LocationParkingLotID = objLoginUser.LocationParkingLotID.LocationParkingLotID;
+                            }
+                        }
+                        
                     }
 
                     VMLocationLotParkedVehicles vmVehicles = dal_Home.GetAllParkedVehicles(Convert.ToString(App.Current.Properties["apitoken"]), objinput);
@@ -223,7 +232,7 @@ namespace ParkHyderabadOperator
             }
             catch (Exception ex)
             {
-
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "MasterDetailHomePage.xaml.cs", "", "LoadParkedVehicle");
             }
         }
         private void SrbSearchVehicle_TextChanged(object sender, TextChangedEventArgs e)
@@ -246,7 +255,10 @@ namespace ParkHyderabadOperator
                 ShowLoading(false);
 
             }
-            catch (Exception ex) { }
+            catch (Exception ex) 
+            {
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "MasterDetailHomePage.xaml.cs", "", "SrbSearchVehicle_TextChanged");
+            }
         }
         private async void LstVWParkingVehicle_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
@@ -276,7 +288,7 @@ namespace ParkHyderabadOperator
                         }
                         else
                         {
-                            await DisplayAlert("Alert", "Selected vehicle details are unable to get,Please contact admin.", "Ok");
+                            await DisplayAlert("Alert", "Vehicle details unvailable,Please contact Admin", "Ok");
                         }
 
                     }
@@ -297,7 +309,7 @@ namespace ParkHyderabadOperator
                         }
                         else
                         {
-                            await DisplayAlert("Alert", "Selected vehicle details are unable to get,Please contact admin.", "Ok");
+                            await DisplayAlert("Alert", "Vehicle details unvailable,Please contact Admin", "Ok");
                         }
                     }
                     else if (objSelecteditem.StatusCode == "P" || objSelecteditem.StatusCode == "A" || objSelecteditem.StatusCode == "CHKIN" || objSelecteditem.StatusCode == "G")
@@ -313,7 +325,7 @@ namespace ParkHyderabadOperator
                         }
                         else
                         {
-                            await DisplayAlert("Alert", "Selected vehicle details are unable to get,Please contact admin.", "Ok");
+                            await DisplayAlert("Alert", "Vehicle details unvailable,Please contact Admin", "Ok");
                         }
                     }
                     try
@@ -330,7 +342,7 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please check your internet.", "Ok");
+                    await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
                 }
 
             }
@@ -358,7 +370,7 @@ namespace ParkHyderabadOperator
             }
             catch (Exception ex)
             {
-
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "MasterDetailHomePage.xaml.cs", "", "LstVWParkingVehicle_Refreshing");
             }
         }
         #endregion
@@ -376,12 +388,12 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please check your internet.", "Ok");
+                    await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
                 }
             }
             catch (Exception ex)
             {
-
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "MasterDetailHomePage.xaml.cs", "", "ToolbarFilter_Clicked");
             }
         }
 
@@ -417,7 +429,7 @@ namespace ParkHyderabadOperator
                     {
                         ShowLoading(false);
                         BtnCheckIn.IsVisible = true;
-                        await DisplayAlert("Alert", "Please check lot closed today.", "Ok");
+                        await DisplayAlert("Alert", "Please check Lot closed today.", "Ok");
                     }
 
 
@@ -426,7 +438,7 @@ namespace ParkHyderabadOperator
                 {
                     ShowLoading(false);
                     BtnCheckIn.IsVisible = true;
-                    await DisplayAlert("Alert", "Please check your internet.", "Ok");
+                    await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
 
                 }
                 BtnCheckIn.IsVisible = true;
@@ -434,6 +446,7 @@ namespace ParkHyderabadOperator
             }
             catch (Exception ex)
             {
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "MasterDetailHomePage.xaml.cs", "", "BtnCheckIn_Clicked");
                 BtnCheckIn.IsVisible = true;
                 ShowLoading(false);
             }
@@ -460,7 +473,7 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please check lot closed today.", "Ok");
+                    await DisplayAlert("Alert", "Please check Lot closed today.", "Ok");
                 }
                 BtnPass.IsVisible = true;
                 ShowLoading(false);
@@ -469,6 +482,7 @@ namespace ParkHyderabadOperator
             {
                 BtnPass.IsVisible = true;
                 ShowLoading(false);
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "MasterDetailHomePage.xaml.cs", "", "BtnPass_Clicked");
             }
         }
         private async void BtnViolation_Clicked(object sender, EventArgs e)
@@ -498,12 +512,12 @@ namespace ParkHyderabadOperator
                     }
                    else
                     {
-                        await DisplayAlert("Alert", "Please check parking timings from " + todayLotOpenTime + " to " + todayLotCloseTime, "Ok");
+                        await DisplayAlert("Alert", "Please check Lot timings from " + todayLotOpenTime + " to " + todayLotCloseTime, "Ok");
                     }
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please check lot closed today.", "Ok");
+                    await DisplayAlert("Alert", "Please check Lot closed today.", "Ok");
                 }
                 BtnViolation.IsVisible = true;
                 ShowLoading(false);
@@ -512,6 +526,7 @@ namespace ParkHyderabadOperator
             {
                 BtnViolation.IsVisible = true;
                 ShowLoading(false);
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "MasterDetailHomePage.xaml.cs", "", "BtnViolation_Clicked");
             }
         }
         #endregion
@@ -545,12 +560,13 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
-                    DisplayAlert("Alert", "NFC is not supported,Please contact admin", "Ok");
+                    DisplayAlert("Alert", "NFC  not supported,Please contact Admin", "Ok");
                 }
             }
             catch (Exception ex)
             {
-                DisplayAlert("Alert", "Unable to proceed,Please contact admin" + ex.Message, "Ok");
+                DisplayAlert("Alert", "Unable to proceed,Please contact Admin" + ex.Message, "Ok");
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "MasterDetailHomePage.xaml.cs", "", "CheckNFCSupported");
             }
         }
         void SubscribeEvents()
@@ -562,7 +578,7 @@ namespace ParkHyderabadOperator
             }
             catch (Exception ex)
             {
-
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "MasterDetailHomePage.xaml.cs", "", "SubscribeEvents");
             }
         }
         void UnsubscribeEvents()
@@ -576,7 +592,7 @@ namespace ParkHyderabadOperator
             }
             catch (Exception ex)
             {
-
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "MasterDetailHomePage.xaml.cs", "", "UnsubscribeEvents");
             }
         }
         void CurrentHome_OnMessageReceived(ITagInfo tagInfo)
@@ -619,7 +635,7 @@ namespace ParkHyderabadOperator
                     else
                     {
 
-                        DisplayAlert("Alert", "NFC Card serialNumber unable to found.", "Ok");
+                        DisplayAlert("Alert", "NFC Card serial number unable to found.", "Ok");
                         return;
 
                     }
@@ -627,7 +643,8 @@ namespace ParkHyderabadOperator
             }
             catch (Exception ex)
             {
-                DisplayAlert("Alert", "Unable to proceed,Please contact admin" + ex.Message, "Ok");
+                DisplayAlert("Alert", "Unable to proceed,Please contact Admin" + ex.Message, "Ok");
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "MasterDetailHomePage.xaml.cs", "", "CurrentHome_OnMessageReceived");
             }
         }
         void Current_OnTagDiscovered(ITagInfo tagInfo, bool format)
@@ -636,7 +653,7 @@ namespace ParkHyderabadOperator
             {
                 if (!CrossNFC.Current.IsWritingTagSupported)
                 {
-                    DisplayAlert("Alert", "Writing tag is not supported on this device", "Ok");
+                    DisplayAlert("Alert", "Writing tag not supported on this device", "Ok");
                     return;
                 }
 
@@ -687,11 +704,13 @@ namespace ParkHyderabadOperator
                 catch (System.Exception ex)
                 {
                     DisplayAlert("Alert", ex.Message, "Ok");
+
                 }
             }
             catch (Exception ex)
             {
-                DisplayAlert("Alert", "Unable to proceed,Please contact admin" + ex.Message, "Ok");
+                DisplayAlert("Alert", "Unable to proceed,Please contact Admin" + ex.Message, "Ok");
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "MasterDetailHomePage.xaml.cs", "", "Current_OnTagDiscovered");
             }
         }
         /// <summary>

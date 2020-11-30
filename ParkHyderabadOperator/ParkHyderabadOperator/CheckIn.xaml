@@ -70,9 +70,12 @@
                         </StackLayout>
                     </StackLayout>
                 </StackLayout>
-                <StackLayout x:Name="slGovVehicleImage">
-                    <Frame CornerRadius="5" Padding="10" BorderColor="#efefef" BackgroundColor="#f9f9f9" VerticalOptions="StartAndExpand">
-                        <ImageButton x:Name="btnCamera" Source="Camera.png"  BackgroundColor="Transparent" HorizontalOptions="CenterAndExpand" Aspect="AspectFit" VerticalOptions="Center" Clicked="BtnCamera_Clicked" HeightRequest="50"></ImageButton>
+                <StackLayout x:Name="slGovVehicleImage" Orientation="Horizontal" Margin="15,0,15,0" HorizontalOptions="FillAndExpand" Padding="2">
+                    <Frame CornerRadius="5" Padding="10" BorderColor="#efefef" BackgroundColor="#f9f9f9" VerticalOptions="StartAndExpand" HorizontalOptions="FillAndExpand">
+                        <ImageButton x:Name="BtnGallery" Source="Gallery.png"  BackgroundColor="Transparent"  Aspect="AspectFit" VerticalOptions="Center" Clicked="BtnGallery_Clicked"  HeightRequest="50"></ImageButton>
+                    </Frame>
+                    <Frame CornerRadius="5" Padding="10" BorderColor="#efefef" BackgroundColor="#f9f9f9" VerticalOptions="EndAndExpand" HorizontalOptions="FillAndExpand" >
+                        <ImageButton x:Name="btnCamera" Source="Camera.png"  BackgroundColor="Transparent" Aspect="AspectFit" VerticalOptions="Center" Clicked="BtnCamera_Clicked" HeightRequest="50"></ImageButton>
                     </Frame>
                 </StackLayout>
                 <StackLayout x:Name="slParkinghours" Spacing="10">

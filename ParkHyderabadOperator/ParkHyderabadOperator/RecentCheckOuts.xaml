@@ -17,7 +17,7 @@
                         <Picker x:Name="pickerOperator"   ItemDisplayBinding="{Binding UserCode}"  HorizontalOptions="FillAndExpand"  VerticalOptions="CenterAndExpand"   Style="{StaticResource PickerProximaRegStyle}" FontSize="14"  WidthRequest="50"/>
                     </Frame>
                     <Frame  CornerRadius="5" Padding="0" BackgroundColor="#FFFFFF"  HorizontalOptions="FillAndExpand">
-                        <Picker x:Name="pickerDay"   Title="Select Day"  HorizontalOptions="FillAndExpand"  VerticalOptions="CenterAndExpand"   Style="{StaticResource PickerProximaRegStyle}" FontSize="14" ItemDisplayBinding="{Binding Day}" SelectedIndexChanged="PickerDay_SelectedIndexChanged"  WidthRequest="40"/>
+                        <Picker x:Name="pickerDay"  Title="Select Day"   HorizontalOptions="FillAndExpand"  VerticalOptions="CenterAndExpand"   Style="{StaticResource PickerProximaRegStyle}" FontSize="14" ItemDisplayBinding="{Binding Day}" SelectedIndexChanged="PickerDay_SelectedIndexChanged"  WidthRequest="40"/>
                     </Frame>
                 </StackLayout>
                 <StackLayout   BackgroundColor="#FFFFFF">
@@ -28,10 +28,10 @@
                                 <Button x:Name="btnFourWheeler" Text="4W"  VerticalOptions="StartAndExpand"  Style="{StaticResource ButtonRegularMercuryStyle}"  HeightRequest="33" WidthRequest="46" Clicked="BtnFourWheeler_Clicked"/>
                             </StackLayout>
                             <StackLayout x:Name="slInOut" Orientation="Horizontal" Spacing="5">
-                                <Button x:Name="btnIns" Text="INs" VerticalOptions="StartAndExpand" Style="{StaticResource ButtonRegularMercuryStyle}"  HeightRequest="33" WidthRequest="62" Clicked="BtnIns_Clicked"/>
+                                <Button x:Name="btnIns" IsVisible="false" Text="INs" VerticalOptions="StartAndExpand" Style="{StaticResource ButtonRegularMercuryStyle}"  HeightRequest="33" WidthRequest="62" Clicked="BtnIns_Clicked"/>
                                 <Button x:Name="btnOuts" Text="OUTs" VerticalOptions="StartAndExpand" Style="{StaticResource ButtonRegularMercuryStyle}"  HeightRequest="33" WidthRequest="62" Clicked="BtnOuts_Clicked"/>
                             </StackLayout>
-                            <StackLayout Orientation="Horizontal"  VerticalOptions="StartAndExpand">
+                            <StackLayout Orientation="Horizontal"  VerticalOptions="EndAndExpand">
                                 <Label Text="FOC" Style="{StaticResource LabelRegularRedStyle}" VerticalOptions="CenterAndExpand"/>
                                 <Switch IsToggled="False" x:Name="switchViolation" Toggled="SwitchViolation_Toggled"/>
                             </StackLayout>
@@ -81,7 +81,13 @@
                                                 </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
-                                    </StackLayout >
+                                        <Frame CornerRadius="3" Padding="0"  BorderColor="{Binding ApplicationTypeID.ApplicationTypeColor}" BackgroundColor="{Binding ApplicationTypeID.ApplicationTypeColor}" HorizontalOptions="StartAndExpand"   Margin="10,0,0,0">
+                                            <StackLayout HeightRequest="21" WidthRequest="22"   >
+                                                <Label Text="{Binding ApplicationTypeID.ApplicationTypeCode}"  TextColor="#FFFFFF" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" FontSize="13" FontAttributes="Bold" Margin="2,0,0,0"></Label>
+                                            </StackLayout>
+                                        </Frame>
+                                    </StackLayout>
+
 
                                 </Grid>
                             </ViewCell>

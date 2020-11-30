@@ -248,14 +248,14 @@ namespace ParkHyderabadOperator
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Unable to find bluetooth device", "Ok");
+                        await DisplayAlert("Alert", "Unable to find Bluetooth device", "Ok");
                     }
                 }
             }
             catch (Exception ex)
             {
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ValidatePassPage.xaml.cs", "", "BtnPrint_Clicked");
-                await DisplayAlert("Alert", "Unable to print,Please contact admin", "Ok");
+                await DisplayAlert("Alert", "Unable to Print,Please contact Admin", "Ok");
             }
         }
     }

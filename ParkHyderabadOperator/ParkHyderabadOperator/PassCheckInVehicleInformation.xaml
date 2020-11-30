@@ -6,7 +6,9 @@
     <NavigationPage.TitleView >
         <StackLayout Orientation="Horizontal" VerticalOptions="CenterAndExpand">
             <Label Text="VEHICLE INFO" HorizontalOptions="CenterAndExpand"   VerticalOptions="Center"  Style="{StaticResource LabelPageHeadingStyle}" Margin="0,0,15,0"/>
-            <ImageButton x:Name="imgbtnPrint" HeightRequest="26" Source="print.png" HorizontalOptions="EndAndExpand" Margin="0,0,15,0" Clicked="ImgbtnPrint_Clicked" ></ImageButton>
+            <Frame CornerRadius="5" BorderColor="#D4D5D9" Padding="5" HasShadow ="False"  BackgroundColor="#F0F0F0" HorizontalOptions="EndAndExpand" Margin="0,0,15,0" >
+                <ImageButton x:Name="imgbtnPrint" HeightRequest="26" Source="print.png" HorizontalOptions="FillAndExpand"  Clicked="ImgbtnPrint_Clicked" ></ImageButton>
+            </Frame>
         </StackLayout>
     </NavigationPage.TitleView>
     <ContentPage.Content>

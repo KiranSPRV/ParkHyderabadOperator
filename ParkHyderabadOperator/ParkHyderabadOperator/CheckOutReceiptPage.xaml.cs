@@ -85,7 +85,7 @@ namespace ParkHyderabadOperator
                         receiptlines[3] = "\x1B\x21\x08" + vehicleType + ":" + objCheckOutReceipt.CustomerVehicleID.RegistrationNumber + "\x1B\x21\x00\n";
                         receiptlines[4] = "\x1B\x21\x01" + "In :" + (objCheckOutReceipt.ActualStartTime == null ? "" : Convert.ToDateTime(objCheckOutReceipt.ActualStartTime).ToString("dd MMM yyyy,hh:mm tt")) + "\x1B\x21\x00" + "\n";
                         receiptlines[5] = "\x1B\x21\x01" + "Out:" + (objCheckOutReceipt.ActualEndTime == null ? "" : Convert.ToDateTime(objCheckOutReceipt.ActualEndTime).ToString("dd MMM yyyy,hh:mm tt")) + "\x1B\x21\x00" + "\n";
-                        receiptlines[6] = "\x1B\x21\x01" + "Paid Amount: Rs" + (objCheckOutReceipt.ExtendAmount + objCheckOutReceipt.ViolationFees + objCheckOutReceipt.ClampFees).ToString("N2") + "\x1B\x21\x01" + "\n";
+                        receiptlines[6] = "\x1B\x21\x01" + "Paid Amount: Rs" + ( objCheckOutReceipt.PaidAmount).ToString("N2") + "\x1B\x21\x01" + "\n";
                         receiptlines[7] = "\x1B\x21\x01" + "(Includes Violation)" + "\x1B\x21\x01" + "\n";
                         receiptlines[8] = "\x1B\x21\x01" + "Violation Fee:" + "Rs" + (objCheckOutReceipt.ClampFees).ToString("N2") + "\x1B\x21\x01" + "\n";
                         receiptlines[9] = "\x1B\x21\x06" + "Operator Id:" + objCheckOutReceipt.UserCode + "\x1B\x21\x00\n";
@@ -132,7 +132,7 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Unable to find bluetooth device", "Ok");
+                    await DisplayAlert("Alert", "Unable to find Bluetooth device", "Ok");
                 }
                 ShowLoading(false);
             }

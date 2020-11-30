@@ -72,7 +72,7 @@
             </StackLayout>
             <StackLayout  AbsoluteLayout.LayoutBounds="0,1,1,0.15"  AbsoluteLayout.LayoutFlags="All"  HorizontalOptions="FillAndExpand" x:Name="slCashPaymentGeneratePass">
                 <StackLayout Padding="10" VerticalOptions="CenterAndExpand" x:Name="stLayoutNFCCard">
-                    <Button x:Name="btnGenerateNFCCard" Style="{StaticResource ButtonRegularShamrockStyle}" Text="GENERATE NFCCARD" TextColor="#FFFFFF" Clicked="BtnGenerateNFCCard_Clicked"/>
+                    <Button x:Name="btnGenerateNFCCard" Style="{StaticResource ButtonRegularShamrockStyle}" Text="GENERATE NFC CARD" TextColor="#FFFFFF" Clicked="BtnGenerateNFCCard_Clicked"/>
                 </StackLayout>
             </StackLayout>
             <ContentView x:Name="StklauoutactivityIndicator" BackgroundColor="Transparent"  IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">

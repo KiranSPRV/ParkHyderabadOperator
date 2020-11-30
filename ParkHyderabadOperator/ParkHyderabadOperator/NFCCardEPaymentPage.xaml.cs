@@ -78,7 +78,7 @@ namespace ParkHyderabadOperator
                 {
                     ShowLoading(true);
                     CustomerVehiclePass resultPass = null;
-                    PassPaymentReceiptPage PassPaymentReceiptPage = null;
+                    NFCCardPaymentReceiptPagae PassPaymentReceiptPage = null;
                     if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                     {
                         await Task.Run(() =>
@@ -86,19 +86,19 @@ namespace ParkHyderabadOperator
                              resultPass = dal_CustomerPass.SaveCustomerVehiclePassNewNFCCard(Convert.ToString(App.Current.Properties["apitoken"]), objCustomerPassNewNFC);
                             if (resultPass != null && resultPass.CustomerVehiclePassID != 0)
                             {
-                                PassPaymentReceiptPage = new PassPaymentReceiptPage(resultPass);
+                                PassPaymentReceiptPage = new NFCCardPaymentReceiptPagae(resultPass);
                             }
                         });
                         if (resultPass != null && resultPass.CustomerVehiclePassID != 0)
                         {
-                            await DisplayAlert("Alert", "Customer vehicle pass created successfully", "Ok");
+                            await DisplayAlert("Alert", "Vehicle Pass created successfully", "Ok");
                             await Navigation.PushAsync(PassPaymentReceiptPage);
                             ShowLoading(false);
                         }
                         else
                         {
                             ShowLoading(false);
-                            await DisplayAlert("Alert", "Fail,Please contact admin", "Ok");
+                            await DisplayAlert("Alert", "NFC Card creation failed,Please contact Admin", "Ok");
                         }
 
 
@@ -106,7 +106,7 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please check your internet.", "Ok");
+                    await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
                 }
 
             }

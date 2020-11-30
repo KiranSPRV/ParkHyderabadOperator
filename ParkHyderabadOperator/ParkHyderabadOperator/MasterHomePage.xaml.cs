@@ -150,7 +150,7 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please check your internet.", "Ok");
+                    await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
 
                 }
 
@@ -216,27 +216,27 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
-                    DisplayAlert("Alert", "Please enable your device location.", "Ok");
+                    DisplayAlert("Alert", "Please enable your Device location.", "Ok");
                 }
             }
             catch (FeatureNotSupportedException fnsEx)
             {
-                DisplayAlert("Alert", "Please enable your device location.", "Ok");
+                DisplayAlert("Alert", "Please enable your Device location.", "Ok");
                 // Handle not supported on device exception
             }
             catch (FeatureNotEnabledException fneEx)
             {
-                DisplayAlert("Alert", "Please enable your device location.", "Ok");
+                DisplayAlert("Alert", "Please enable your Device location.", "Ok");
                 // Handle not enabled on device exception
             }
             catch (PermissionException pEx)
             {
-                DisplayAlert("Alert", "Please enable your device location.", "Ok");
+                DisplayAlert("Alert", "Please enable your Device location.", "Ok");
                 // Handle permission exception
             }
             catch (Exception ex)
             {
-                DisplayAlert("Alert", "Please enable your device location.", "Ok");
+                DisplayAlert("Alert", "Please enable your Device location.", "Ok");
                 // Unable to get location
             }
         }

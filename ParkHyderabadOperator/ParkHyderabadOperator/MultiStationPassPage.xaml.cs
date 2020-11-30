@@ -93,7 +93,7 @@ namespace ParkHyderabadOperator
                     else
                     {
                         resultbox.IsChecked = false;
-                        await DisplayAlert("Alert", "You can only select a maximum of 3 stations", "Ok");
+                        await DisplayAlert("Alert", "Maximum 3 stations only", "Ok");
                     }
                 }
                 else
@@ -130,7 +130,7 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please select stations", "Ok");
+                    await DisplayAlert("Alert", "Please select Stations", "Ok");
                 }
             }
             catch (Exception ex)

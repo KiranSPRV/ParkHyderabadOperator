@@ -5,6 +5,7 @@ using ParkHyderabadOperator.Model;
 using ParkHyderabadOperator.Model.APIInputModel;
 using ParkHyderabadOperator.Model.APIOutPutModel;
 using Plugin.Media;
+using Plugin.Media.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -87,7 +88,7 @@ namespace ParkHyderabadOperator
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Please contact admin,Selected lot bay numbers are not available (Check lot bay numbers/lot timing)", "Ok");
+                        await DisplayAlert("Alert", "Please contact Admin,(Check Bay numbers/Lot timing)", "Ok");
                     }
 
                 }
@@ -244,7 +245,7 @@ namespace ParkHyderabadOperator
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Please check bay numbers are not avilable", "Ok");
+                        await DisplayAlert("Alert", "Bay numbers unavailable", "Ok");
                     }
                 }
                 ShowLoading(false);
@@ -296,7 +297,7 @@ namespace ParkHyderabadOperator
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Please check bay numbers are not avilable", "Ok");
+                        await DisplayAlert("Alert", "Bay numbers unavailable", "Ok");
                     }
                 }
                 ShowLoading(false);
@@ -385,7 +386,7 @@ namespace ParkHyderabadOperator
                                             else
                                             {
                                                 stlayoutCheckInPayment.IsVisible = false;
-                                                await DisplayAlert("Alert", "Please check parking timings from " + lstLocationParkingLotVehiclePrice[f].LotOpenTime + " to " + lstLocationParkingLotVehiclePrice[f].LotCloseTime, "Ok");
+                                                await DisplayAlert("Alert", "Please check Lot timings from " + lstLocationParkingLotVehiclePrice[f].LotOpenTime + " to " + lstLocationParkingLotVehiclePrice[f].LotCloseTime, "Ok");
                                                 return;
                                             }
 
@@ -395,7 +396,7 @@ namespace ParkHyderabadOperator
                                     {
                                         stlayoutCheckInPayment.IsVisible = false;
                                         pickerBayNumers.IsEnabled = false;
-                                        await DisplayAlert("Alert", "Please check parking timings from " + lstLocationParkingLotVehiclePrice[f].LotOpenTime + " to " + lstLocationParkingLotVehiclePrice[f].LotCloseTime, "Ok");
+                                        await DisplayAlert("Alert", "Please check Lot timings from " + lstLocationParkingLotVehiclePrice[f].LotOpenTime + " to " + lstLocationParkingLotVehiclePrice[f].LotCloseTime, "Ok");
                                         return;
                                     }
                                 }
@@ -403,7 +404,7 @@ namespace ParkHyderabadOperator
                             if (labelParkingFee.Text == string.Empty || labelParkingFee.Text == null)
                             {
                                 stlayoutCheckInPayment.IsVisible = false;
-                                await DisplayAlert("Alert", "Please contact admin parking fees details are not available for this hours.", "Ok");
+                                await DisplayAlert("Alert", "Please contact Admin parking fees details are not available for this hours.", "Ok");
 
                                 return;
                             }
@@ -411,7 +412,7 @@ namespace ParkHyderabadOperator
                         else
                         {
                             stlayoutCheckInPayment.IsVisible = false;
-                            await DisplayAlert("Alert", "Parking details are not found", "Ok");
+                            await DisplayAlert("Alert", "Parking details not found", "Ok");
                         }
                     }
                 }
@@ -434,7 +435,7 @@ namespace ParkHyderabadOperator
             }
             else
             {
-                await DisplayAlert("Alert", "Please select vehicle type", "Ok");
+                await DisplayAlert("Alert", "Please select Vehicle type", "Ok");
             }
         }
         #endregion
@@ -545,35 +546,35 @@ namespace ParkHyderabadOperator
                                         else
                                         {
 
-                                            await DisplayAlert("Alert", "Unable to proceed,login user and token details are not avialable", "Ok");
+                                            await DisplayAlert("Alert", "Token details  unavailable", "Ok");
                                         }
                                     }
                                 }
                                 else
                                 {
 
-                                    await DisplayAlert("Alert", "Please select parking hours.", "Ok");
+                                    await DisplayAlert("Alert", "Please select Parking hours.", "Ok");
                                 }
                             }
                             else
                             {
-                                await DisplayAlert("Alert", "Please select bay number.", "Ok");
+                                await DisplayAlert("Alert", "Please select Bay Number.", "Ok");
                             }
 
                         }
                         else
                         {
-                            await DisplayAlert("Alert", "Enter valid registration number", "Ok");
+                            await DisplayAlert("Alert", "Please enter valid Registration Number", "Ok");
                         }
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Please enter valid registration number.", "Ok");
+                        await DisplayAlert("Alert", "Please enter valid Registration Number.", "Ok");
                     }
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please select vehicle type", "Ok");
+                    await DisplayAlert("Alert", "Please select Vehicle type", "Ok");
                 }
                 ShowLoading(false);
             }
@@ -691,35 +692,35 @@ namespace ParkHyderabadOperator
                                         }
                                         else
                                         {
-                                            await DisplayAlert("Alert", "Unable to proceed,login user and token details are not avialable", "Ok");
+                                            await DisplayAlert("Alert", "Token details  unavailable", "Ok");
                                         }
                                     }
 
                                 }
                                 else
                                 {
-                                    await DisplayAlert("Alert", "Please select parking hours.", "Ok");
+                                    await DisplayAlert("Alert", "Please select Parking hours.", "Ok");
                                 }
                             }
                             else
                             {
-                                await DisplayAlert("Alert", "Please select bay number.", "Ok");
+                                await DisplayAlert("Alert", "Please select Bay Number.", "Ok");
                             }
 
                         }
                         else
                         {
-                            await DisplayAlert("Alert", "Enter valid registration number", "Ok");
+                            await DisplayAlert("Alert", "Please enter valid Registration Number", "Ok");
                         }
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Please enter valid registration number.", "Ok");
+                        await DisplayAlert("Alert", "Please enter valid Registration Number.", "Ok");
                     }
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please select vehicle type", "Ok");
+                    await DisplayAlert("Alert", "Please select Vehicle type", "Ok");
                 }
                 ShowLoading(false);
             }
@@ -848,17 +849,17 @@ namespace ParkHyderabadOperator
                                                             }
                                                             else
                                                             {
-                                                                await DisplayAlert("Alert", "Check-In Fail,Please contact admin.", "Ok");
+                                                                await DisplayAlert("Alert", "Unable to Check In, Please contact Admin", "Ok");
                                                             }
                                                         }
                                                         else
                                                         {
-                                                            await DisplayAlert("Alert", "Please select vehicle image.", "Ok");
+                                                            await DisplayAlert("Alert", "Please select Vehicle Image.", "Ok");
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        await DisplayAlert("Alert", "Please enter phone number.", "Ok");
+                                                        await DisplayAlert("Alert", "Please enter Phone Number.", "Ok");
                                                     }
                                                 }
                                                 else if (objCustomerPass != null)
@@ -881,7 +882,7 @@ namespace ParkHyderabadOperator
                                                     }
                                                     else
                                                     {
-                                                        await DisplayAlert("Alert", "Check-In Fail,Please contact admin.", "Ok");
+                                                        await DisplayAlert("Alert", "Unable to Check In, Please contact Admin", "Ok");
                                                     }
                                                 }
                                             }
@@ -893,37 +894,37 @@ namespace ParkHyderabadOperator
                                     }
                                     else
                                     {
-                                        await DisplayAlert("Alert", "Please select bay number", "Ok");
+                                        await DisplayAlert("Alert", "Please select Bay Number", "Ok");
                                     }
 
                                 }
                                 else
                                 {
 
-                                    await DisplayAlert("Alert", "Please select bay number", "Ok");
+                                    await DisplayAlert("Alert", "Please select Bay Number", "Ok");
                                 }
                             }
                             else
                             {
-                                await DisplayAlert("Alert", "Enter valid registration number", "Ok");
+                                await DisplayAlert("Alert", "Please enter valid Registration Number", "Ok");
                             }
                         }
                         else
                         {
-                            await DisplayAlert("Alert", "Please enter registrtion number minimum 6 digits", "Ok");
+                            await DisplayAlert("Alert", "Please enter Registration Number minimum 6 digits", "Ok");
                         }
                     }
                     else
                     {
                         ShowLoading(false);
                         btnCheckIn.IsVisible = false;
-                        await DisplayAlert("Alert", "Please check parking close time " + Lotclosetime.ToString("HH:mm tt"), "Ok");
+                        await DisplayAlert("Alert", "Please check Lot closing time " + Lotclosetime.ToString("HH:mm tt"), "Ok");
                         return;
                     }
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please select vehicle type", "Ok");
+                    await DisplayAlert("Alert", "Please select Vehicle type", "Ok");
                 }
                 btnCheckIn.IsVisible = true;
                 ShowLoading(false);
@@ -992,9 +993,66 @@ namespace ParkHyderabadOperator
             }
             catch (Exception ex)
             {
-                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "Violation.xaml.cs", "", "BtnCamera_Clicked");
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "CheckIn.xaml.cs", "", "BtnCamera_Clicked");
                 await DisplayAlert("No Camera", "Unable to open:" + ex.Message, "OK");
             }
+        }
+        private async void BtnGallery_Clicked(object sender, EventArgs e)
+        {
+            try
+            {
+
+                try
+                {
+                    if (!CrossMedia.Current.IsPickPhotoSupported)
+                    {
+                      await  DisplayAlert("Photos Not Supported", ":( Permission not granted to photos.", "OK");
+                        return;
+                    }
+                    MediaFile file = await Plugin.Media.CrossMedia.Current.PickPhotoAsync(new Plugin.Media.Abstractions.PickMediaOptions
+                    {
+                        PhotoSize = PhotoSize.Custom,
+                        CustomPhotoSize = 20,//Resize to 90% of original
+                        CompressionQuality = 92
+
+                    });
+
+
+                    if (file == null)
+                        return;
+                    string fileName = string.Empty;
+
+                    if (file.Path.Contains('/'))
+                    {
+                        try
+                        {
+
+                            string[] getfilename = file.Path.Split('/');
+                            fileName = getfilename[getfilename.Length - 1];
+                            var memoryStream = new MemoryStream();
+                            file.GetStream().CopyTo(memoryStream);
+                            imgCameraByteData = memoryStream.ToArray();
+                            BtnGallery.Source = file.Path;
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                        
+
+                    }
+
+                }
+                catch (Exception ex) { }
+
+            }
+            catch (Exception ex)
+            {
+
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "CheckIn.xaml.cs", "", "BtnGallery_Clicked");
+                await DisplayAlert("No Camera", "Unable to open:" + ex.Message, "OK");
+            }
+
         }
         public string VerifyVehicleCheckInStatus() // Verify Vehicle Check-In
         {
@@ -1062,7 +1120,7 @@ namespace ParkHyderabadOperator
                                             imgBtnTwoWheeler.Source = ImageSource.FromFile("Twowheeler_circle.png");
                                             imgBtnFourWheeler.Source = ImageSource.FromFile("Fourwheeler_circle_ticked.png");
                                         }
-                                        await DisplayAlert("Alert", "" + entryRegistrationNumber.Text + " this vehicle has pass", "Ok");
+                                        await DisplayAlert("Alert", "" + entryRegistrationNumber.Text + " This vehicle has a valid pass", "Ok");
                                     }
                                     else if (objCustomerPass.LocationID.LocationID == objloginuser.LocationParkingLotID.LocationID.LocationID)
                                     {
@@ -1081,7 +1139,7 @@ namespace ParkHyderabadOperator
                                             imgBtnTwoWheeler.Source = ImageSource.FromFile("Twowheeler_circle.png");
                                             imgBtnFourWheeler.Source = ImageSource.FromFile("Fourwheeler_circle_ticked.png");
                                         }
-                                        await DisplayAlert("Alert", "" + entryRegistrationNumber.Text + " this vehicle has pass", "Ok");
+                                        await DisplayAlert("Alert", "" + entryRegistrationNumber.Text + " This vehicle has a valid pass", "Ok");
                                     }
                                     else
                                     {

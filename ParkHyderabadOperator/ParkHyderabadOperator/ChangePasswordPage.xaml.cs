@@ -59,45 +59,45 @@ namespace ParkHyderabadOperator
                                         }
                                         else
                                         {
-                                            await DisplayAlert("Alert", "Unable to update password,Please contact admin", "Ok");
+                                            await DisplayAlert("Alert", "Unable to update Password,Please contact Admin", "Ok");
                                             var masterPage = new MasterHomePage();
                                             await Navigation.PushAsync(masterPage);
                                         }
                                     }
                                     else
                                     {
-                                        await DisplayAlert("Alert", "Please check your password and confirmation password do not match", "Cancel");
+                                        await DisplayAlert("Alert", "Password and Confirm Password do not match", "Cancel");
                                         ShowLoading(false);
                                     }
                                 }
                                 else
                                 {
-                                    await DisplayAlert("Alert", "Please enter valid confirm password", "Cancel");
+                                    await DisplayAlert("Alert", "Please enter valid Confirm Password", "Cancel");
                                     ShowLoading(false);
                                 }
                             }
                             else
                             {
-                                await DisplayAlert("Alert", "Please enter valid new password", "Cancel");
+                                await DisplayAlert("Alert", "Please enter valid New Password", "Cancel");
                                 ShowLoading(false);
                             }
 
                         }
                         else
                         {
-                            await DisplayAlert("Alert", "Please enter valid current password", "Cancel");
+                            await DisplayAlert("Alert", "Please enter valid Current Password", "Cancel");
                             ShowLoading(false);
                         }
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Unable to get password details", "Cancel");
+                        await DisplayAlert("Alert", "Unable to get Password details", "Cancel");
                         ShowLoading(false);
                     }
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please check your internet.", "Ok");
+                    await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
                     ShowLoading(false);
                 }
             }

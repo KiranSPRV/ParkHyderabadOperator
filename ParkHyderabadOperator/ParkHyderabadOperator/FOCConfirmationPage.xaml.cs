@@ -125,24 +125,24 @@ namespace ParkHyderabadOperator
                             }
                             else
                             {
-                                await DisplayAlert("Alert", "Fail,Please contact admin.", "Ok");
+                                await DisplayAlert("Alert", "FOC Failed,Please contact Admin.", "Ok");
                             }
 
 
                         }
                         else
                         {
-                            await DisplayAlert("Alert", "Login user details and api details are not avilable,Please contact admin", "Ok");
+                            await DisplayAlert("Alert", "Lost API Token,Please login agin", "Ok");
                         }
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Please select reason", "Ok");
+                        await DisplayAlert("Alert", "Please select Reason", "Ok");
                     }
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please check your internet.", "Ok");
+                    await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
                 }
             }
             catch (Exception ex)
