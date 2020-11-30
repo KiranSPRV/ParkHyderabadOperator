@@ -4,7 +4,7 @@
              x:Class="ParkHyderabadOperator.MasterHomePage"
              NavigationPage.HasNavigationBar="False" >
 
-    
+
     <MasterDetailPage.Master >
         <ContentPage Title="Master Page"  IconImageSource="Menu.png" HeightRequest="50">
             <ContentPage.Content>
