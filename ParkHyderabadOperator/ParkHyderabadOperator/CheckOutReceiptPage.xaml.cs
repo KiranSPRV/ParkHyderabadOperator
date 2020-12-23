@@ -18,7 +18,7 @@ namespace ParkHyderabadOperator
         public CheckOutReceiptPage()
         {
             InitializeComponent();
-           
+
             ObjblueToothDevicePrinting = new BlueToothDevicePrinting();
             LoadParkingVehicleDetails(null, null, VehicleInformation);
         }
@@ -85,7 +85,7 @@ namespace ParkHyderabadOperator
                         receiptlines[3] = "\x1B\x21\x08" + vehicleType + ":" + objCheckOutReceipt.CustomerVehicleID.RegistrationNumber + "\x1B\x21\x00\n";
                         receiptlines[4] = "\x1B\x21\x01" + "In :" + (objCheckOutReceipt.ActualStartTime == null ? "" : Convert.ToDateTime(objCheckOutReceipt.ActualStartTime).ToString("dd MMM yyyy,hh:mm tt")) + "\x1B\x21\x00" + "\n";
                         receiptlines[5] = "\x1B\x21\x01" + "Out:" + (objCheckOutReceipt.ActualEndTime == null ? "" : Convert.ToDateTime(objCheckOutReceipt.ActualEndTime).ToString("dd MMM yyyy,hh:mm tt")) + "\x1B\x21\x00" + "\n";
-                        receiptlines[6] = "\x1B\x21\x01" + "Paid Amount: Rs" + ( objCheckOutReceipt.PaidAmount).ToString("N2") + "\x1B\x21\x01" + "\n";
+                        receiptlines[6] = "\x1B\x21\x01" + "Paid Amount: Rs" + (objCheckOutReceipt.PaidAmount).ToString("N2") + "\x1B\x21\x01" + "\n";
                         receiptlines[7] = "\x1B\x21\x01" + "(Includes Violation)" + "\x1B\x21\x01" + "\n";
                         receiptlines[8] = "\x1B\x21\x01" + "Violation Fee:" + "Rs" + (objCheckOutReceipt.ClampFees).ToString("N2") + "\x1B\x21\x01" + "\n";
                         receiptlines[9] = "\x1B\x21\x06" + "Operator Id:" + objCheckOutReceipt.UserCode + "\x1B\x21\x00\n";
@@ -114,25 +114,34 @@ namespace ParkHyderabadOperator
             {
                 ShowLoading(true);
                 string printerName = string.Empty;
+                MasterHomePage masterPage = null;
                 printerName = ObjblueToothDevicePrinting.GetBlueToothDevices();
-                if (printerName != string.Empty && printerName != "")
+                await Task.Run(() =>
                 {
-                    if (receiptlines.Length > 0)
+                    if (printerName != string.Empty && printerName != "")
                     {
-                        for (var l = 0; l < receiptlines.Length; l++)
+                        if (receiptlines.Length > 0)
                         {
-                            string printtext = receiptlines[l];
-                            if (printtext != "")
+                            for (var l = 0; l < receiptlines.Length; l++)
                             {
-                                ObjblueToothDevicePrinting.PrintCommand(printerName, printtext);
+                                string printtext = receiptlines[l];
+                                if (printtext != "")
+                                {
+                                    ObjblueToothDevicePrinting.PrintCommand(printerName, printtext);
+                                }
                             }
                         }
-
                     }
+                    masterPage = new MasterHomePage();
+                });
+                if (printerName != string.Empty && printerName != "")
+                {
+                    await Navigation.PushAsync(masterPage);
                 }
                 else
                 {
                     await DisplayAlert("Alert", "Unable to find Bluetooth device", "Ok");
+                    await Navigation.PushAsync(masterPage);
                 }
                 ShowLoading(false);
             }

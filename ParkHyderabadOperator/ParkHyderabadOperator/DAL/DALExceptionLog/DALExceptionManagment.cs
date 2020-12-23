@@ -48,13 +48,8 @@ namespace ParkHyderabadOperator.DAL.DALExceptionLog
                         if (jsonString != null)
                         {
                             APIResponse apiResult = JsonConvert.DeserializeObject<APIResponse>(jsonString);
-
-
                         }
-
                     }
-
-
                 }
             }
             catch (Exception ex)

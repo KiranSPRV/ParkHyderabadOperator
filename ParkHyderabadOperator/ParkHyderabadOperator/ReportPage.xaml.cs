@@ -98,14 +98,12 @@ namespace ParkHyderabadOperator
                 {
                     DALHome dal_Home = new DALHome();
                     lstOperators = dal_Home.GetAllOperatorsOfSupervisor(Convert.ToString(App.Current.Properties["apitoken"]), objLoginUser);
-
                     if (lstOperators.Count > 0)
                     {
                         pickerOperator.ItemsSource = lstOperators;
                         pickerOperator.SelectedIndex = 1;
                     }
                 }
-
             }
             catch (Exception ex)
             {

@@ -52,6 +52,43 @@ namespace ParkHyderabadOperator.DAL.DALMenuBar
             }
             return lstCustomerVehicle;
         }
+        public List<CustomerVehicle> GetAllVehicleRegistrationNumbersBySearch(string accessToken,string RegistrationNumber)
+        {
+            List<CustomerVehicle> lstCustomerVehicle = new List<CustomerVehicle>();
+            try
+            {
+                string baseUrl = Convert.ToString(App.Current.Properties["BaseURL"]);
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(baseUrl);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    // Add the Authorization header with the AccessToken.
+                    client.DefaultRequestHeaders.Add("Authorization", "bearer  " + accessToken);
+                    // create the URL string.
+                    string url = "api/InstaOperator/getAllVehicleRegistrationNumbersBySearch?RegistrationNumber=" + Convert.ToString(RegistrationNumber);
+                    // make the request
+                    HttpResponseMessage response = client.GetAsync(url).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string jsonString = response.Content.ReadAsStringAsync().Result;
+                        if (jsonString != null)
+                        {
+                            APIResponse apiResult = JsonConvert.DeserializeObject<APIResponse>(jsonString);
+                            if (apiResult.Result)
+                            {
+                                lstCustomerVehicle = JsonConvert.DeserializeObject<List<CustomerVehicle>>(Convert.ToString(apiResult.Object));
+
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return lstCustomerVehicle;
+        }
         public List<CustomerParkingSlot> GetVehicleParkingHistory(string accessToken, CustomerVehicle objCustomerVehicle)
         {
             List<CustomerParkingSlot> lsthistory = new List<CustomerParkingSlot>();

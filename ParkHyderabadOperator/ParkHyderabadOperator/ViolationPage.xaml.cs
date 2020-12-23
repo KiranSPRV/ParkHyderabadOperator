@@ -44,7 +44,7 @@ namespace ParkHyderabadOperator
             chkWarning.IsChecked = true;
 
             LoadLocationBayNumbers();
-
+            LoadGetViolationReasons();
         }
         protected async override void OnAppearing()
         {
@@ -209,11 +209,7 @@ namespace ParkHyderabadOperator
         #endregion Vehicle-Type Selection
         private void CheckBoxClampVehicle_CheckedChanged(object sender, CheckedChangedEventArgs e)
         {
-            if (checkBoxClampVehicle.IsChecked)
-            {
-                LoadGetViolationReasons();
-
-            }
+            
 
         }
         private async void BtnCamera_Clicked(object sender, EventArgs e)
@@ -357,7 +353,7 @@ namespace ParkHyderabadOperator
                                                     }
                                                     else
                                                     {
-                                                        await DisplayAlert("Alert", "Vehicle Checked In as Violation at" + existingCheckIn, "Ok");
+                                                        await DisplayAlert("Alert", "Vehicle Checked In as Violation at " + existingCheckIn, "Ok");
                                                     }
                                                 }
                                                 else
@@ -474,7 +470,7 @@ namespace ParkHyderabadOperator
                             }
                             else
                             {
-                                await DisplayAlert("Alert", "Vehicle Checked In as Violation at" + existingCheckIn, "Ok");
+                                await DisplayAlert("Alert", "Vehicle Checked In as Violation at " + existingCheckIn, "Ok");
                             }
                         }
                         else

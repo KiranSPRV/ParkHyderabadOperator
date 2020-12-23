@@ -25,15 +25,14 @@ namespace ParkHyderabadOperator
         private float Latitude;
         private float Longitude;
         private bool IsOnline = false;
-        DALExceptionManagment dal_Exceptionlog; 
+        DALExceptionManagment dal_Exceptionlog;
         string LoginDeviceID = string.Empty;
         string cookieUserName, cookiePassword = string.Empty;
         public LoginPage()
         {
             InitializeComponent();
             dal_Exceptionlog = new DALExceptionManagment();
-            App.Current.Properties["BaseURL"] =  "http://35.202.198.25:81/InstaParkingOperatorAPI/";        //"http://optapi.instaparking.in/";  //
-
+            App.Current.Properties["BaseURL"] =  "http://optapi.instaparking.in/"; //  "http://35.202.198.25:81/InstaParkingOperatorAPIPROD/";//
         }
         protected async override void OnAppearing()
         {
@@ -182,45 +181,75 @@ namespace ParkHyderabadOperator
         {
             UserLoginVerification();
         }
+
+        [Obsolete]
         public async void UserLoginVerification()
         {
             User resultObj = null;
+            string appversionmsg = string.Empty;
             ShowLoading(true);
             IsOnline = VerifyInternet();
             try
             {
-                if ((entryUserID.Text != null && entryUserID.Text.Length >= 4) && (entryPassword.Text != null && entryPassword.Text.Length >= 8))
+                await Task.Run(() =>
                 {
-                    if (DeviceInternet.InternetConnected())
+                    appversionmsg = AppVersionServices.GetAndroidStoreAppVersion();
+                });
+                if (appversionmsg == string.Empty || appversionmsg == "")
+                {
+                    if ((entryUserID.Text != null && entryUserID.Text.Length >= 4) && (entryPassword.Text != null && entryPassword.Text.Length >= 8))
                     {
-                        await GetAPIToken();
-                        await GetCurrentLocation();
-                        if (App.Current.Properties.ContainsKey("apitoken"))
+                        if (DeviceInternet.InternetConnected())
                         {
-                            DALUserLogin objdalLogin = new DALUserLogin();
-                            UserLogin objinputuser = new UserLogin();
-                            objinputuser.UserName = entryUserID.Text.Trim();
-                            objinputuser.Password = entryPassword.Text.Trim();
-                            objinputuser.Latitude = Latitude;
-                            objinputuser.Longitude = Longitude;
-                            objinputuser.LoginDeviceID = GetDeviceUniqueID();
-                            APIResponse objAPIResponse;
-                            objAPIResponse = objdalLogin.LoginVerification(Convert.ToString(App.Current.Properties["apitoken"]), objinputuser);
-                            if (objAPIResponse != null)
+                            await GetAPIToken();
+                            await GetCurrentLocation();
+                            if (App.Current.Properties.ContainsKey("apitoken"))
                             {
-                                if (objAPIResponse.Result)
+                                DALUserLogin objdalLogin = new DALUserLogin();
+                                UserLogin objinputuser = new UserLogin();
+                                objinputuser.UserName = entryUserID.Text.Trim();
+                                objinputuser.Password = entryPassword.Text.Trim();
+                                objinputuser.Latitude = Latitude;
+                                objinputuser.Longitude = Longitude;
+                                objinputuser.LoginDeviceID = GetDeviceUniqueID();
+                                APIResponse objAPIResponse;
+                                objAPIResponse = objdalLogin.LoginVerification(Convert.ToString(App.Current.Properties["apitoken"]), objinputuser);
+                                if (objAPIResponse != null)
                                 {
-                                    resultObj = JsonConvert.DeserializeObject<User>(Convert.ToString(objAPIResponse.Object));
-                                    App.Current.Properties["LoginUser"] = resultObj;
-                                    resultObj.LoginDeviceID = LoginDeviceID;
-                                    MasterHomePage masterPage = null;
-                                    await DisplayAlert("Alert", "Your Location and Lot details are:" + resultObj.LocationParkingLotID.LocationID.LocationName + "-" + resultObj.LocationParkingLotID.LocationParkingLotName, "Ok");
-                                    DateTime toDay = DateTime.Now;
-                                    TimeSpan lotClosingTime = new TimeSpan(22, 30, 0);
-                                    toDay = toDay.Date + lotClosingTime;
-                                    if ((resultObj.UserTypeID.UserTypeName.ToUpper()) == ("Operator".ToUpper()))
+                                    if (objAPIResponse.Result)
                                     {
-                                        if (DateTime.Now < toDay)
+                                        resultObj = JsonConvert.DeserializeObject<User>(Convert.ToString(objAPIResponse.Object));
+                                        App.Current.Properties["LoginUser"] = resultObj;
+                                        resultObj.LoginDeviceID = LoginDeviceID;
+                                        MasterHomePage masterPage = null;
+                                        await DisplayAlert("Alert", "Your Location and Lot details are:" + resultObj.LocationParkingLotID.LocationID.LocationName + "-" + resultObj.LocationParkingLotID.LocationParkingLotName, "Ok");
+                                        DateTime toDay = DateTime.Now;
+                                        TimeSpan lotClosingTime = new TimeSpan(22, 30, 0);
+                                        toDay = toDay.Date + lotClosingTime;
+                                        if ((resultObj.UserTypeID.UserTypeName.ToUpper()) == ("Operator".ToUpper()))
+                                        {
+                                            if (DateTime.Now < toDay)
+                                            {
+                                                await Task.Run(() =>
+                                                {
+                                                    if (string.IsNullOrEmpty(cookieUserName) && string.IsNullOrEmpty(cookiePassword))
+                                                    {
+                                                        SaveUserLogin(Convert.ToString(App.Current.Properties["apitoken"]), resultObj);
+                                                    }
+                                                    SecureStorage.SetAsync("apitoken", Convert.ToString(App.Current.Properties["apitoken"]));
+                                                    SecureStorage.SetAsync("UserName", entryUserID.Text.Trim());
+                                                    SecureStorage.SetAsync("Password", entryPassword.Text.Trim());
+                                                    masterPage = new MasterHomePage();
+                                                });
+                                                await Navigation.PushAsync(masterPage);
+                                            }
+                                            else
+                                            {
+                                                await DisplayAlert("Alert", "Please contact Admin,lot time (" + toDay + ") closed", "Cancel");
+                                                ShowLoading(false);
+                                            }
+                                        }
+                                        else
                                         {
                                             await Task.Run(() =>
                                             {
@@ -235,61 +264,49 @@ namespace ParkHyderabadOperator
                                             });
                                             await Navigation.PushAsync(masterPage);
                                         }
-                                        else
-                                        {
-                                            await DisplayAlert("Alert", "Please contact Admin,lot time ("+ toDay + ") closed", "Cancel");
-                                            ShowLoading(false);
-                                        }
+
                                     }
                                     else
                                     {
-                                        await Task.Run(() =>
-                                        {
-                                            if (string.IsNullOrEmpty(cookieUserName) && string.IsNullOrEmpty(cookiePassword))
-                                            {
-                                                SaveUserLogin(Convert.ToString(App.Current.Properties["apitoken"]), resultObj);
-                                            }
-                                            SecureStorage.SetAsync("apitoken", Convert.ToString(App.Current.Properties["apitoken"]));
-                                            SecureStorage.SetAsync("UserName", entryUserID.Text.Trim());
-                                            SecureStorage.SetAsync("Password", entryPassword.Text.Trim());
-                                            masterPage = new MasterHomePage();
-                                        });
-                                        await Navigation.PushAsync(masterPage);
+
+                                        await DisplayAlert("Alert", objAPIResponse.Message, "Cancel");
+                                        ShowLoading(false);
                                     }
-                                    
+
                                 }
                                 else
                                 {
-                                    
-                                    await DisplayAlert("Alert", objAPIResponse.Message, "Cancel");
+                                    await DisplayAlert("Alert", "Invalid Credentials", "Cancel");
                                     ShowLoading(false);
                                 }
-
                             }
                             else
                             {
-                                await DisplayAlert("Alert", "Invalid Credentials", "Cancel");
+                                DisplayAlert("Alert", "Unable to connect API.Please contact Admin", "Ok");
                                 ShowLoading(false);
                             }
+
                         }
                         else
                         {
-                            DisplayAlert("Alert", "Unable to connect API.Please contact Admin", "Ok");
+                            await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
                             ShowLoading(false);
                         }
 
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
+                        await DisplayAlert("Alert", "Please enter Valid UserID and Password.", "Ok");
                         ShowLoading(false);
                     }
-
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please enter Valid UserID and Password.", "Ok");
+                    await DisplayAlert("Alert", appversionmsg, "Ok");
                     ShowLoading(false);
+                    Device.OpenUri(new Uri("https://play.google.com/store/apps/details?id=com.sprvtec.InstaOperator"));
+                    DependencyService.Get<ILaunchActivity>().LaunchActivityInAndroid("com.sprvtec.InstaOperator");
+
                 }
             }
             catch (Exception ex)

@@ -21,7 +21,6 @@ namespace ParkHyderabadOperator
         List<VMLocationLots> lstlots = null;
         List<User> lstOperators = null;
         User objReportUser = null;
-
         public LotOccupancyPage()
         {
             InitializeComponent();
@@ -39,22 +38,18 @@ namespace ParkHyderabadOperator
                 if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                 {
                     DALHome dal_Home = new DALHome();
-                    User objLoginUser = (User)App.Current.Properties["LoginUser"];
+                    var objLoginUser = (User)App.Current.Properties["LoginUser"];
                     objLoginUser.LocationParkingLotID.LocationParkingLotID = 0;
                     lstlots = dal_Home.GetUserAllocatedLocationAndLots(Convert.ToString(App.Current.Properties["apitoken"]), objLoginUser);
-                    if (objLoginUser.UserTypeID.UserTypeName.ToUpper() != "OPERATOR".ToUpper())
-                    {
-                        // Include ALL 
-                        VMLocationLots objlotAll = new VMLocationLots();
-                        objlotAll.LocationParkingLotID = 0;
-                        objlotAll.LotName = "ALL";
-                        objlotAll.LocationParkingLotName = "ALL";
-                        objlotAll.LocationID = 0;
-                        objlotAll.LocationName = "ALL";
-                        objlotAll.IsActive = true;
-                        lstlots.Insert(0, objlotAll);
-                    }
-
+                    // Include ALL 
+                    VMLocationLots objlotAll = new VMLocationLots();
+                    objlotAll.LocationParkingLotID = 0;
+                    objlotAll.LotName = "ALL";
+                    objlotAll.LocationParkingLotName = "ALL";
+                    objlotAll.LocationID = 0;
+                    objlotAll.LocationName = "ALL";
+                    objlotAll.IsActive = true;
+                    lstlots.Insert(0, objlotAll);
 
                     if (lstlots.Count > 0)
                     {
@@ -178,7 +173,12 @@ namespace ParkHyderabadOperator
             try
             {
                 ShowLoading(true);
-                List<VMLocationLotOccupancyReport> lstOccupancy = new List<VMLocationLotOccupancyReport>();
+                lvLotOccupancyReport.ItemsSource = null;
+                labelTwoWheelerLotOccupancyPer.Text = string.Empty;
+                labelFourWheelerLotOccupancyPer.Text = string.Empty;
+                labelTwoWheelerLotCapcity.Text = string.Empty;
+                labelFourWheelerLotCapacity.Text = string.Empty;
+                List <VMLocationLotOccupancyReport> lstOccupancy = new List<VMLocationLotOccupancyReport>();
                 if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                 {
                     DALReport dal_Report = new DALReport();
@@ -191,11 +191,11 @@ namespace ParkHyderabadOperator
                         lvLotOccupancyReport.ItemsSource = objOccupancy.LocationLotOccupancyReportID;
                         labelTwoWheelerLotOccupancyPer.Text = objOccupancy.TotalTwoWheelerPercentage ;
                         labelFourWheelerLotOccupancyPer.Text = objOccupancy.TotalFourWheelerPercentage;
+                        labelTwoWheelerLotCapcity.Text = objOccupancy.TotalTwoWheelerLotCapacity;
+                        labelFourWheelerLotCapacity.Text = objOccupancy.TotalFourWheelerLotCapacity;
+                        
                     }
-                    else
-                    {
-                        lvLotOccupancyReport.ItemsSource = null;
-                    }
+                    
                 }
                 ShowLoading(false);
             }

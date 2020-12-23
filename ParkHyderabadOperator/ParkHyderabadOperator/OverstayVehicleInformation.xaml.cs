@@ -68,7 +68,7 @@ namespace ParkHyderabadOperator
                         labelOverstayTo.Text = objresult.ActualEndTime == null ? DateTime.Now.ToString("dd MMM yyyy, hh:mm tt") : Convert.ToDateTime(objresult.ActualEndTime).ToString("dd MMM yyyy, hh:mm tt");
 
                         User objloginuser = (User)App.Current.Properties["LoginUser"];
-                        if (objloginuser.UserTypeID.UserTypeName.ToUpper() != "Operator".ToUpper() )
+                        if (objloginuser.UserTypeID.UserTypeName.ToUpper() != "Operator".ToUpper())
                         {
                             slFOC.IsVisible = true;
                         }
@@ -86,8 +86,18 @@ namespace ParkHyderabadOperator
                         imageParkingFeeImage.Source = "rupee_black.png";
                         labelParkingFeesDetails.Text = (objresult.PaidAmount).ToString("N2") + "/-"; //(objresult.Amount+objresult.ExtendAmount).ToString("N2") + "/-";
 
-                        TimeSpan parkingduration =  Convert.ToDateTime(objresult.ActualEndTime)- Convert.ToDateTime(objresult.ExpectedStartTime);
-                        labelParkingPaymentType.Text = "Paid for " + string.Format(((Math.Abs(parkingduration.Hours) == 0 || Math.Abs(parkingduration.Hours) == 1) ? Convert.ToInt32(objresult.Duration) : parkingduration.Hours) + "hr") + "- By " + objresult.PaymentTypeID.PaymentTypeName;
+                        TimeSpan parkingduration = Convert.ToDateTime(objresult.ActualEndTime) - Convert.ToDateTime(objresult.ExpectedStartTime);
+                        objresult.Duration = (objresult.Duration == "" || objresult.Duration == string.Empty ? "0" : objresult.Duration);
+                        if (objresult.ApplicationTypeID.ApplicationTypeCode == "P")
+                        {
+                            labelParkingFeesDetails.Text = "Pass Check-In";
+                            labelParkingPaymentType.Text = "";
+                            imageParkingFeeImage.Source = "";
+                        }
+                        else
+                        {
+                            labelParkingPaymentType.Text = "Paid for " + string.Format(((Math.Abs(parkingduration.Hours) == 0 || Math.Abs(parkingduration.Hours) == 1) ? Convert.ToInt32(objresult.Duration) : parkingduration.Hours) + "hr") + "- By " + objresult.PaymentTypeID.PaymentTypeName;
+                        }
 
                         DateTime? actualendime = objresult.ActualEndTime == null ? DateTime.Now : Convert.ToDateTime(objresult.ActualEndTime);
                         if (actualendime != null)

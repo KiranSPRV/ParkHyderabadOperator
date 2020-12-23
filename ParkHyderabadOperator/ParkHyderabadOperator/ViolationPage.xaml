@@ -51,7 +51,7 @@
                             </StackLayout>
                             <StackLayout Orientation="Horizontal" Spacing="10">
                                 <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="Start">
-                                    <CheckBox x:Name="checkBoxClampVehicle"  IsChecked="False" 
+                                    <CheckBox x:Name="checkBoxClampVehicle"  IsChecked="True" IsEnabled="False"
                                           Style="{StaticResource ChekBoxRegularBlueStyle}" CheckedChanged="CheckBoxClampVehicle_CheckedChanged" />
                                     <Label Style="{StaticResource LabelRegularStartCenterStyle}" Text="CLAMP VEHICLE"   ></Label>
                                 </StackLayout>

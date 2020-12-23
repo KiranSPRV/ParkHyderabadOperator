@@ -8,8 +8,8 @@
     </NavigationPage.TitleView>
     <ContentPage.Content>
         <AbsoluteLayout VerticalOptions="FillAndExpand" >
-            <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,0.4"  AbsoluteLayout.LayoutFlags="All" BackgroundColor="#f8f8f8">
-                <Frame CornerRadius="5" Padding="0" BackgroundColor="#f8f8f8"  BorderColor="#f8f8f8" Margin="20,10,20,0">
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,0.7"  AbsoluteLayout.LayoutFlags="All" BackgroundColor="#f8f8f8">
+                <Frame CornerRadius="5" Padding="0" BackgroundColor="#f8f8f8"  BorderColor="#f8f8f8" Margin="20,10,20,0" VerticalOptions="FillAndExpand">
                     <StackLayout  Spacing="0" BackgroundColor="#FFFFFF">
                         <Frame CornerRadius="0" Padding="5"  BorderColor="#f8f8f8" HorizontalOptions="FillAndExpand">
                             <StackLayout Orientation="Horizontal">
@@ -17,7 +17,7 @@
                                 <Label Text="Please select any 3 stations" Style="{StaticResource LabelRegularStyle}" VerticalOptions="CenterAndExpand"></Label>
                             </StackLayout>
                         </Frame>
-                        <ListView x:Name="lstStations"  SeparatorVisibility="None"    HeightRequest="150">
+                        <ListView x:Name="lstStations"  SeparatorVisibility="None"    HeightRequest="300" >
                             <ListView.ItemTemplate >
                                 <DataTemplate>
                                     <ViewCell>
@@ -32,10 +32,10 @@
                     </StackLayout>
                 </Frame>
             </StackLayout>
-            <StackLayout  AbsoluteLayout.LayoutBounds="0,1,1,0.6"  AbsoluteLayout.LayoutFlags="All"  >
-                <StackLayout  Padding="15">
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,1,1,0.3"  AbsoluteLayout.LayoutFlags="All"  >
+                <StackLayout  Padding="13">
                     <Label x:Name="labelSelectedStations" Style="{StaticResource LabelProximaRegStyle}"  LineBreakMode="WordWrap"></Label>
-                    <StackLayout VerticalOptions="CenterAndExpand" Margin="0,10,0,10">
+                    <StackLayout VerticalOptions="CenterAndExpand" Margin="0,15,0,10">
                         <Frame CornerRadius="5" Padding="0"   BorderColor="#efefef"   AbsoluteLayout.LayoutBounds="0,1,1,0.1"  AbsoluteLayout.LayoutFlags="All"  BackgroundColor="#FFFFFF">
                             <StackLayout  Orientation="Vertical"  VerticalOptions="CenterAndExpand" Spacing="10">
                                 <Button Text="CONTINUE" x:Name="BtnContinue" Style="{StaticResource ButtonRegularDodgerBlueStyle}" Clicked="BtnContinue_Clicked"></Button>

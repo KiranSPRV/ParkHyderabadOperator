@@ -1,4 +1,7 @@
-﻿using ParkHyderabadOperator.DAL.DALPass;
+﻿using ParkHyderabadOperator.DAL.DALCheckIn;
+using ParkHyderabadOperator.DAL.DALExceptionLog;
+using ParkHyderabadOperator.DAL.DALPass;
+using ParkHyderabadOperator.Model.APIInputModel;
 using ParkHyderabadOperator.Model.APIOutPutModel;
 using System;
 using System.Collections.Generic;
@@ -15,12 +18,16 @@ namespace ParkHyderabadOperator
 
         List<CustomerVehicle> lstCustomerVehicle = null;
         CustomerVehiclePass objResultCustomerVehiclePass;
+        DALExceptionManagment dal_Exceptionlog;
+        DALCheckIn dal_DALCheckIn;
         public ReNewPassPage()
         {
             InitializeComponent();
 
             lstCustomerVehicle = new List<CustomerVehicle>();
             objResultCustomerVehiclePass = new CustomerVehiclePass();
+            dal_DALCheckIn = new DALCheckIn();
+            dal_Exceptionlog = new DALExceptionManagment();
             if (App.Current.Properties.ContainsKey("ReNewPassCustomerVehicle"))
             {
                 App.Current.Properties.Remove("ReNewPassCustomerVehicle");
@@ -50,35 +57,47 @@ namespace ParkHyderabadOperator
         {
             try
             {
+                string IsPassInOverstay = string.Empty;
                 if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                 {
                     User objloginuser = (User)App.Current.Properties["LoginUser"];
                     DALPass dal_Pass = new DALPass();
+
                     objResultCustomerVehiclePass = dal_Pass.GetCustomerVehicleDetailsByVehicle(Convert.ToString(App.Current.Properties["apitoken"]), selectedVehicle);
                     if (objResultCustomerVehiclePass != null)
                     {
-                        entryCustomerName.Text = objResultCustomerVehiclePass.CustomerVehicleID.CustomerID.Name;
-                        entryPhoneNumber.Text = objResultCustomerVehiclePass.CustomerVehicleID.CustomerID.PhoneNumber;
-                        entryRegistrationNumber.Text = objResultCustomerVehiclePass.CustomerVehicleID.RegistrationNumber;
-                        labelNFCCardAmount.Text = objResultCustomerVehiclePass.PassPriceID.NFCCardPrice == 0 ? "0.00" : " ( ₹ " + objResultCustomerVehiclePass.PassPriceID.NFCCardPrice.ToString("N2") + " EXTRA )";
-                        BtnChoosePass.IsEnabled = true;
-                        // Verify Customer Vehicle Type
-                        if (objResultCustomerVehiclePass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "2W")
+                        IsPassInOverstay = VerifyPassVehicleCheckInStatus(objResultCustomerVehiclePass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode, objResultCustomerVehiclePass.CustomerVehicleID.RegistrationNumber);
+                        if(IsPassInOverstay==string.Empty)
                         {
-                            imgCustomerVehcileType.Source = ImageSource.FromFile("bike_black.png");
-                        }
-                        else if (objResultCustomerVehiclePass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "4W")
-                        {
-                            imgCustomerVehcileType.Source = ImageSource.FromFile("car_black.png");
-                        }
-                        if (objResultCustomerVehiclePass.PassPriceID.PassTypeID.PassTypeCode.ToUpper() == "WP")
-                        {
-                            slNFC.IsVisible = false;
+                            entryCustomerName.Text = objResultCustomerVehiclePass.CustomerVehicleID.CustomerID.Name;
+                            entryPhoneNumber.Text = objResultCustomerVehiclePass.CustomerVehicleID.CustomerID.PhoneNumber;
+                            entryRegistrationNumber.Text = objResultCustomerVehiclePass.CustomerVehicleID.RegistrationNumber;
+                            labelNFCCardAmount.Text = objResultCustomerVehiclePass.PassPriceID.NFCCardPrice == 0 ? "0.00" : " ( ₹ " + objResultCustomerVehiclePass.PassPriceID.NFCCardPrice.ToString("N2") + " EXTRA )";
+                            BtnChoosePass.IsEnabled = true;
+                            // Verify Customer Vehicle Type
+                            if (objResultCustomerVehiclePass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "2W")
+                            {
+                                imgCustomerVehcileType.Source = ImageSource.FromFile("bike_black.png");
+                            }
+                            else if (objResultCustomerVehiclePass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "4W")
+                            {
+                                imgCustomerVehcileType.Source = ImageSource.FromFile("car_black.png");
+                            }
+                            if (objResultCustomerVehiclePass.PassPriceID.PassTypeID.PassTypeCode.ToUpper() == "WP")
+                            {
+                                slNFC.IsVisible = false;
+                            }
+                            else
+                            {
+                                slNFC.IsVisible = true;
+                            }
                         }
                         else
                         {
-                            slNFC.IsVisible = true;
+                            
+                            await DisplayAlert("Alert", "Please clear due amount to Buy/Renew Pass", "Ok");
                         }
+
 
                     }
                 }
@@ -157,5 +176,31 @@ namespace ParkHyderabadOperator
             {
             }
         }
+        public string VerifyPassVehicleCheckInStatus(string vehicleTypeCode,string registrationNumber) // Verify Vehicle already parked
+        {
+            string alreadyCheckIn = string.Empty;
+            try
+            {
+                if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
+                {
+
+                    VehicleCheckIn objPassVehicle = new VehicleCheckIn();
+                    objPassVehicle.RegistrationNumber = registrationNumber;
+                    objPassVehicle.VehicleTypeCode = vehicleTypeCode;
+                    CustomerParkingSlot resultobj = dal_DALCheckIn.VerifyVehicleChekcInStatus(Convert.ToString(App.Current.Properties["apitoken"]), objPassVehicle);
+                    if (resultobj.CustomerParkingSlotID != 0 && resultobj.StatusID.StatusCode=="O")
+                    {
+                        alreadyCheckIn = resultobj.LocationParkingLotID.LocationID.LocationName + "-" + resultobj.LocationParkingLotID.LocationParkingLotName;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ReNewPassPage.xaml.cs", "", "VerifyPassVehicleCheckInStatus");
+            }
+            return alreadyCheckIn;
+        }
+
     }
 }

@@ -48,7 +48,6 @@ namespace ParkHyderabadOperator.Model
             }
 
         }
-
         public async void PrintPdfFile(Stream imgfile, string printerName)
 
         {

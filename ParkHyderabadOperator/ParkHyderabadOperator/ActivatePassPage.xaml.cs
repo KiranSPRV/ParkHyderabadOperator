@@ -154,12 +154,11 @@ namespace ParkHyderabadOperator
         #endregion
 
         private async void BtnContinue_Clicked(object sender, EventArgs e)
-
         {
             try
             {
                 string existingnfcCardVehcile = string.Empty;
-                PassPaymentReceiptPage passPaymentReceiptPage = null;
+                ActivatePassReciptPage passPaymentReceiptPage = null;
                 if (labelNFCCard.Text != null)
                 {
                     ShowLoading(true);
@@ -179,7 +178,7 @@ namespace ParkHyderabadOperator
                                 User objloginuser = (User)App.Current.Properties["LoginUser"];
                                 objResultCustomerVehiclePass.CreatedBy.UserID = objloginuser.UserID;
                                 objResultCustomerVehiclePass = dal_Pass.ActivateCustomerVehiclePass(Convert.ToString(App.Current.Properties["apitoken"]), objResultCustomerVehiclePass);
-                                passPaymentReceiptPage = new PassPaymentReceiptPage(objResultCustomerVehiclePass);
+                                passPaymentReceiptPage = new ActivatePassReciptPage(objResultCustomerVehiclePass);
                             });
                             await Navigation.PushAsync(passPaymentReceiptPage);
                             slContinue.IsVisible = true;
@@ -651,7 +650,6 @@ namespace ParkHyderabadOperator
         }
 
         #endregion
-
         public void ShowLoading(bool show)
         {
             StklauoutactivityIndicator.IsVisible = show;

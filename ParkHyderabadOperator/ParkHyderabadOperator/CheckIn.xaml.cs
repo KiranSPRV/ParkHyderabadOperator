@@ -372,12 +372,12 @@ namespace ParkHyderabadOperator
                                                     lstLocationParkingLotVehiclePrice = dal_DALCheckIn.GetLocationParkingLotVehicleParkingFees(Convert.ToString(App.Current.Properties["apitoken"]), SelectedVehicle, Convert.ToInt32(minHours), objloginuser.LocationParkingLotID.LocationParkingLotID, 0);
                                                     if (lstLocationParkingLotVehiclePrice.Count > 0)
                                                     {
+                                                        IsminChckinTime = true;
                                                         pickerHours.SelectedItem = lsthoursPicker.Min();
                                                         labelSpotExpiresMessage.Text = string.Empty;
                                                         labelParkingFee.Text = lstLocationParkingLotVehiclePrice[0].Fees.ToString("N");
                                                         labelSpotExpiresMessage.Text = lstLocationParkingLotVehiclePrice[0].LotCloseTime;
                                                         Lotclosetime = DateTime.Parse(lstLocationParkingLotVehiclePrice[f].LotCloseTime);
-                                                        IsminChckinTime = true;
                                                         stlayoutCheckInPayment.IsVisible = true;
                                                     }
                                                 }
@@ -825,36 +825,43 @@ namespace ParkHyderabadOperator
                                                     // Government vehicle Check In
                                                     if (entryPhoneNumber.Text != null && entryPhoneNumber.Text != "")
                                                     {
-                                                        if (imgCameraByteData != null && imgCameraByteData.Length > 0)
+                                                        if (Convert.ToString(entryPhoneNumber.Text).Length >= 10)
                                                         {
-                                                            objPassVehicle.StatusName = "Government";
-                                                            objPassVehicle.GovernmentVehicleImage = ByteArrayCompressionUtility.Compress(imgCameraByteData);
-                                                            if (resultloc != null)
+                                                            if (imgCameraByteData != null && imgCameraByteData.Length > 0)
                                                             {
-                                                                objPassVehicle.VehicleImageLottitude = Convert.ToDecimal(resultloc.Latitude);
-                                                                objPassVehicle.VehicleImageLongitude = Convert.ToDecimal(resultloc.Longitude);
-                                                            }
+                                                                objPassVehicle.StatusName = "Government";
+                                                                objPassVehicle.GovernmentVehicleImage = ByteArrayCompressionUtility.Compress(imgCameraByteData);
+                                                                if (resultloc != null)
+                                                                {
+                                                                    objPassVehicle.VehicleImageLottitude = Convert.ToDecimal(resultloc.Latitude);
+                                                                    objPassVehicle.VehicleImageLongitude = Convert.ToDecimal(resultloc.Longitude);
+                                                                }
 
-                                                            await Task.Run(() =>
-                                                              {
-                                                                  msg = dal_DALCheckIn.SaveGovernmentVehicleCheckIn(Convert.ToString(App.Current.Properties["apitoken"]), objPassVehicle);
-                                                                  if (msg == "Success")
+                                                                await Task.Run(() =>
                                                                   {
-                                                                      masterpage = new MasterHomePage();
-                                                                  }
-                                                              });
-                                                            if (msg == "Success")
-                                                            {
-                                                                await Navigation.PushAsync(masterpage);
+                                                                      msg = dal_DALCheckIn.SaveGovernmentVehicleCheckIn(Convert.ToString(App.Current.Properties["apitoken"]), objPassVehicle);
+                                                                      if (msg == "Success")
+                                                                      {
+                                                                          masterpage = new MasterHomePage();
+                                                                      }
+                                                                  });
+                                                                if (msg == "Success")
+                                                                {
+                                                                    await Navigation.PushAsync(masterpage);
+                                                                }
+                                                                else
+                                                                {
+                                                                    await DisplayAlert("Alert", "Unable to Check In, Please contact Admin", "Ok");
+                                                                }
                                                             }
                                                             else
                                                             {
-                                                                await DisplayAlert("Alert", "Unable to Check In, Please contact Admin", "Ok");
+                                                                await DisplayAlert("Alert", "Please select Vehicle Image.", "Ok");
                                                             }
                                                         }
                                                         else
                                                         {
-                                                            await DisplayAlert("Alert", "Please select Vehicle Image.", "Ok");
+                                                            await DisplayAlert("Alert", "Please enter valid Phone Number.", "Ok");
                                                         }
                                                     }
                                                     else
@@ -1006,7 +1013,7 @@ namespace ParkHyderabadOperator
                 {
                     if (!CrossMedia.Current.IsPickPhotoSupported)
                     {
-                      await  DisplayAlert("Photos Not Supported", ":( Permission not granted to photos.", "OK");
+                        await DisplayAlert("Photos Not Supported", ":( Permission not granted to photos.", "OK");
                         return;
                     }
                     MediaFile file = await Plugin.Media.CrossMedia.Current.PickPhotoAsync(new Plugin.Media.Abstractions.PickMediaOptions
@@ -1038,7 +1045,7 @@ namespace ParkHyderabadOperator
                         {
 
                         }
-                        
+
 
                     }
 
@@ -1103,57 +1110,77 @@ namespace ParkHyderabadOperator
                                 });
                                 if (objCustomerPass.CustomerVehiclePassID != 0 && Convert.ToDateTime(objCustomerPass.ExpiryDate).Date >= DateTime.Now.Date)
                                 {
-                                    if ((objCustomerPass.PassPriceID.StationAccess == "All Stations" || objCustomerPass.PassPriceID.StationAccess == "All Station"))
+                                    if(SelectedVehicle == objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode.ToUpper())
                                     {
-                                        stLayoutCheckIn.IsVisible = true;
-                                        stlayoutCheckInPayment.IsVisible = false;
-                                        slParkinghours.IsVisible = false;
-                                        SelectedVehicle = objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode.ToUpper();
-                                        if (SelectedVehicle == "2W")
+                                        if ((objCustomerPass.PassPriceID.StationAccess == "All Stations" || objCustomerPass.PassPriceID.StationAccess == "All Station"))
                                         {
 
-                                            imgBtnTwoWheeler.Source = ImageSource.FromFile("Twowheeler_circle_ticked.png");
-                                            imgBtnFourWheeler.Source = ImageSource.FromFile("Fourwheeler_circle.png");
-                                        }
-                                        else if (SelectedVehicle == "4W")
-                                        {
-                                            imgBtnTwoWheeler.Source = ImageSource.FromFile("Twowheeler_circle.png");
-                                            imgBtnFourWheeler.Source = ImageSource.FromFile("Fourwheeler_circle_ticked.png");
-                                        }
-                                        await DisplayAlert("Alert", "" + entryRegistrationNumber.Text + " This vehicle has a valid pass", "Ok");
-                                    }
-                                    else if (objCustomerPass.LocationID.LocationID == objloginuser.LocationParkingLotID.LocationID.LocationID)
-                                    {
-                                        stLayoutCheckIn.IsVisible = true;
-                                        stlayoutCheckInPayment.IsVisible = false;
-                                        slParkinghours.IsVisible = false;
-                                        SelectedVehicle = objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode.ToUpper();
-                                        if (SelectedVehicle == "2W")
-                                        {
+                                            stLayoutCheckIn.IsVisible = true;
+                                            stlayoutCheckInPayment.IsVisible = false;
+                                            slParkinghours.IsVisible = false;
+                                            SelectedVehicle = objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode.ToUpper();
+                                            if (SelectedVehicle == "2W")
+                                            {
 
-                                            imgBtnTwoWheeler.Source = ImageSource.FromFile("Twowheeler_circle_ticked.png");
-                                            imgBtnFourWheeler.Source = ImageSource.FromFile("Fourwheeler_circle.png");
+                                                imgBtnTwoWheeler.Source = ImageSource.FromFile("Twowheeler_circle_ticked.png");
+                                                imgBtnFourWheeler.Source = ImageSource.FromFile("Fourwheeler_circle.png");
+                                            }
+                                            else if (SelectedVehicle == "4W")
+                                            {
+                                                imgBtnTwoWheeler.Source = ImageSource.FromFile("Twowheeler_circle.png");
+                                                imgBtnFourWheeler.Source = ImageSource.FromFile("Fourwheeler_circle_ticked.png");
+                                            }
+
+                                            await DisplayAlert("Alert", "" + entryRegistrationNumber.Text + " This vehicle has a valid pass", "Ok");
                                         }
-                                        else if (SelectedVehicle == "4W")
+                                        else if (objCustomerPass.LocationID.LocationID == objloginuser.LocationParkingLotID.LocationID.LocationID)
                                         {
-                                            imgBtnTwoWheeler.Source = ImageSource.FromFile("Twowheeler_circle.png");
-                                            imgBtnFourWheeler.Source = ImageSource.FromFile("Fourwheeler_circle_ticked.png");
+                                            stLayoutCheckIn.IsVisible = true;
+                                            stlayoutCheckInPayment.IsVisible = false;
+                                            slParkinghours.IsVisible = false;
+                                            SelectedVehicle = objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode.ToUpper();
+                                            if (SelectedVehicle == "2W")
+                                            {
+
+                                                imgBtnTwoWheeler.Source = ImageSource.FromFile("Twowheeler_circle_ticked.png");
+                                                imgBtnFourWheeler.Source = ImageSource.FromFile("Fourwheeler_circle.png");
+                                            }
+                                            else if (SelectedVehicle == "4W")
+                                            {
+                                                imgBtnTwoWheeler.Source = ImageSource.FromFile("Twowheeler_circle.png");
+                                                imgBtnFourWheeler.Source = ImageSource.FromFile("Fourwheeler_circle_ticked.png");
+                                            }
+                                            await DisplayAlert("Alert", "" + entryRegistrationNumber.Text + " This vehicle has a valid pass", "Ok");
                                         }
-                                        await DisplayAlert("Alert", "" + entryRegistrationNumber.Text + " This vehicle has a valid pass", "Ok");
+                                        else
+                                        {
+                                            stLayoutCheckIn.IsVisible = false;
+                                            stlayoutCheckInPayment.IsVisible = true;
+                                            slParkinghours.IsVisible = true;
+                                            if (SelectedVehicle == string.Empty || SelectedVehicle == "")
+                                            {
+                                                imgBtnTwoWheeler.Source = ImageSource.FromFile("Twowheeler_circle.png");
+                                                imgBtnFourWheeler.Source = ImageSource.FromFile("Fourwheeler_circle.png");
+                                            }
+                                        }
+                                        slGovernment.IsVisible = false;
                                     }
                                     else
                                     {
+                                        string passvehicletype = string.Empty;
                                         stLayoutCheckIn.IsVisible = false;
-                                        stlayoutCheckInPayment.IsVisible = true;
-                                        slParkinghours.IsVisible = true;
-                                        if (SelectedVehicle == string.Empty || SelectedVehicle == "")
+                                        stlayoutCheckInPayment.IsVisible = false;
+                                        slParkinghours.IsVisible = false;
+                                        if (objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode.ToUpper() == "2W")
                                         {
-                                            imgBtnTwoWheeler.Source = ImageSource.FromFile("Twowheeler_circle.png");
-                                            imgBtnFourWheeler.Source = ImageSource.FromFile("Fourwheeler_circle.png");
+                                            passvehicletype = "two wheeler";
                                         }
+                                        else if (objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode.ToUpper() == "4W")
+                                        {
+                                            passvehicletype = "four wheeler";
+                                        }
+                                        await DisplayAlert("Alert", "" + entryRegistrationNumber.Text + " This vehicle has a "+ passvehicletype + " pass,Please select valid vehicle type", "Ok");
                                     }
-                                    slGovernment.IsVisible = false;
-
                                 }
                                 else
                                 {

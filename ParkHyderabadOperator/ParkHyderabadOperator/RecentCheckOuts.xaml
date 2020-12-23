@@ -57,13 +57,21 @@
                                         <Label Text="{Binding RegistrationNumber}"    Style="{StaticResource LabelRegularBlackColorStyle}" TextColor="{Binding VehilceStatusColor}"  FontSize="12" VerticalOptions="CenterAndExpand"></Label>
                                     </StackLayout>
                                     <StackLayout   Grid.Column="1" Spacing="5" >
-                                        <Label  TextColor="{Binding VehilceStatusColor}" Style="{StaticResource LabelRegularBlackColorStyle}"     FontSize="12" Margin="10,0,0,0">
-                                            <Label.FormattedText>
-                                                <FormattedString>
-                                                    <Span  Text="{Binding Duration}" />
-                                                </FormattedString>
-                                            </Label.FormattedText>
-                                        </Label>
+                                        <StackLayout Orientation="Horizontal" Spacing="10">
+                                            <Label  TextColor="{Binding VehilceStatusColor}" Style="{StaticResource LabelRegularBlackColorStyle}"   VerticalOptions="CenterAndExpand"  FontSize="12" Margin="10,0,0,0">
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span  Text="{Binding Duration}" />
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                            <Frame CornerRadius="3" Padding="0"  BorderColor="{Binding ApplicationTypeID.ApplicationTypeColor}" BackgroundColor="{Binding ApplicationTypeID.ApplicationTypeColor}"  HorizontalOptions="EndAndExpand">
+                                                <StackLayout HeightRequest="21" WidthRequest="22"   >
+                                                    <Label Text="{Binding ApplicationTypeID.ApplicationTypeCode}"  TextColor="#FFFFFF" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" FontSize="13" FontAttributes="Bold" Margin="2,0,0,0"></Label>
+                                                </StackLayout>
+                                            </Frame>
+                                        </StackLayout>
+
                                         <Label  Style="{StaticResource LabelRegularBlackColorStyle}" TextColor="{Binding VehilceStatusColor}"   FontSize="12"  >
                                             <Label.FormattedText>
                                                 <FormattedString>
@@ -81,11 +89,7 @@
                                                 </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
-                                        <Frame CornerRadius="3" Padding="0"  BorderColor="{Binding ApplicationTypeID.ApplicationTypeColor}" BackgroundColor="{Binding ApplicationTypeID.ApplicationTypeColor}" HorizontalOptions="StartAndExpand"   Margin="10,0,0,0">
-                                            <StackLayout HeightRequest="21" WidthRequest="22"   >
-                                                <Label Text="{Binding ApplicationTypeID.ApplicationTypeCode}"  TextColor="#FFFFFF" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" FontSize="13" FontAttributes="Bold" Margin="2,0,0,0"></Label>
-                                            </StackLayout>
-                                        </Frame>
+
                                     </StackLayout>
 
 

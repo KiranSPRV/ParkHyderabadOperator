@@ -29,19 +29,17 @@ namespace ParkHyderabadOperator
             lstVehicle = new List<CustomerVehicle>();
             lstVehicleHistory = new List<CustomerParkingSlot>();
             ObjblueToothDevicePrinting = new BlueToothDevicePrinting();
-            ListVehicles();
+
         }
 
         #region Search BAR
-        public void ListVehicles()
+        public void ListVehicles(string RegistrationNumber)
         {
             try
             {
-
                 if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                 {
-
-                    lstVehicle = dal_Menubar.GetAllVehicleRegistrationNumbers(Convert.ToString(App.Current.Properties["apitoken"]));
+                    lstVehicle = dal_Menubar.GetAllVehicleRegistrationNumbersBySearch(Convert.ToString(App.Current.Properties["apitoken"]), RegistrationNumber);
                     listViewVehicleRegistrationNumbers.ItemsSource = lstVehicle;
                 }
 
@@ -56,18 +54,40 @@ namespace ParkHyderabadOperator
         {
             listViewVehicleRegistrationNumbers.IsVisible = true;
             listViewVehicleRegistrationNumbers.BeginRefresh();
-
             try
             {
-                var dataEmpty = lstVehicle.Where(i => i.RegistrationNumber.ToLower().Contains(e.NewTextValue.ToLower()));
-                if (string.IsNullOrWhiteSpace(e.NewTextValue))
+                if (e.NewTextValue != null && e.NewTextValue != "")
                 {
-                    listViewVehicleRegistrationNumbers.IsVisible = false;
-                    LstVWParkingVehicle.ItemsSource = null;
-                    searchBar.Text = "";
+                    if (e.NewTextValue.Length >= 3)
+                    {
+                        ListVehicles(e.NewTextValue.ToLower());
+                        if (lstVehicle.Count > 0)
+                        {
+                            var dataEmpty = lstVehicle.Where(i => i.RegistrationNumber.ToLower().Contains(e.NewTextValue.ToLower()));
+                            if (string.IsNullOrWhiteSpace(e.NewTextValue))
+                            {
+                                listViewVehicleRegistrationNumbers.IsVisible = false;
+                                LstVWParkingVehicle.ItemsSource = null;
+                                searchBar.Text = "";
+                            }
+                            else
+                                listViewVehicleRegistrationNumbers.ItemsSource = lstVehicle.Where(i => i.RegistrationNumber.ToLower().Contains(e.NewTextValue.ToLower()));
+                        }
+                    }
+                    else
+                    {
+                        LstVWParkingVehicle.ItemsSource = null;
+                        listViewVehicleRegistrationNumbers.IsVisible = false;
+                       
+                    }
+
                 }
                 else
-                    listViewVehicleRegistrationNumbers.ItemsSource = lstVehicle.Where(i => i.RegistrationNumber.ToLower().Contains(e.NewTextValue.ToLower()));
+                {
+                    LstVWParkingVehicle.ItemsSource = null;
+                    listViewVehicleRegistrationNumbers.IsVisible = false;
+
+                }
             }
             catch (Exception ex)
             {
@@ -114,6 +134,7 @@ namespace ParkHyderabadOperator
             {
                 CustomerParkingSlot objresult = null;
                 string vehicleType = string.Empty;
+                ShowLoading(true);
                 if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                 {
                     lstVehicleHistory = dal_Menubar.GetVehicleParkingHistory(Convert.ToString(App.Current.Properties["apitoken"]), objregistraionnumber);
@@ -156,9 +177,11 @@ namespace ParkHyderabadOperator
                     }
 
                 }
+                ShowLoading(false);
             }
             catch (Exception ex)
             {
+                ShowLoading(false);
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "HistoryPage.xaml.cs", "", "LoadVehicleParkingHistory");
             }
         }
@@ -241,6 +264,13 @@ namespace ParkHyderabadOperator
 
         }
 
+        public void ShowLoading(bool show)
+        {
+            StklauoutactivityIndicator.IsVisible = show;
+            activity.IsVisible = show;
+            activity.IsRunning = show;
+           
 
+        }
     }
 }

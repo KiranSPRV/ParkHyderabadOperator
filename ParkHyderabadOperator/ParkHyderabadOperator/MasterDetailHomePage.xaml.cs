@@ -216,7 +216,7 @@ namespace ParkHyderabadOperator
                         {
                             if(objVMLocations!=null)
                             {
-                                objinput.LocationParkingLotID = objLoginUser.LocationParkingLotID.LocationParkingLotID;
+                                objinput.LocationParkingLotID = objVMLocations.LocationParkingLotID;
                             }
                         }
                         

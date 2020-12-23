@@ -4,21 +4,22 @@ using ParkHyderabadOperator.Model;
 using ParkHyderabadOperator.Model.APIInputModel;
 using ParkHyderabadOperator.Model.APIOutPutModel;
 using System;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace ParkHyderabadOperator
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class WeeklyPassCashPaymentPage : ContentPage
-	{
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class WeeklyPassCashPaymentPage : ContentPage
+    {
         string IsNewOrReNew = string.Empty;
         CustomerVehiclePass objCustomerweeklyPass;
         DALPass dal_CustomerPass;
         DALExceptionManagment dal_Exceptionlog;
-        public WeeklyPassCashPaymentPage ()
-		{
-			InitializeComponent ();
+        public WeeklyPassCashPaymentPage()
+        {
+            InitializeComponent();
             dal_CustomerPass = new DALPass();
             dal_Exceptionlog = new DALExceptionManagment();
         }
@@ -74,33 +75,54 @@ namespace ParkHyderabadOperator
 
             }
         }
-       
+
         private async void BtnGeneratePassReceipt_Clicked(object sender, EventArgs e)
         {
             try
             {
+                btnGeneratePassReceipt.IsVisible = false;
+                CustomerVehiclePass resultPass = null;
+                PassPaymentReceiptPage PassPaymentReceiptPage = null;
+                ShowLoading(true);
                 if (DeviceInternet.InternetConnected())
                 {
                     if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                     {
-
-                        CustomerVehiclePass resultPass = dal_CustomerPass.CreateCustomerPass(Convert.ToString(App.Current.Properties["apitoken"]), objCustomerweeklyPass);
-                        if (resultPass != null && resultPass.CustomerVehiclePassID != 0)
+                        decimal passAmount = (objCustomerweeklyPass.TotalAmount == null || objCustomerweeklyPass.TotalAmount == 0) ? objCustomerweeklyPass.Amount : objCustomerweeklyPass.TotalAmount;
+                        if (Convert.ToDecimal(entryCashReceived.Text) >= passAmount)
                         {
-                            await DisplayAlert("Alert", "Vehicle Pass created successfully", "Ok");
-                            var PassPaymentReceiptPage = new PassPaymentReceiptPage(resultPass);
-                            await Navigation.PushAsync(PassPaymentReceiptPage);
+                            await Task.Run(() =>
+                            {
+                                resultPass = dal_CustomerPass.CreateCustomerPass(Convert.ToString(App.Current.Properties["apitoken"]), objCustomerweeklyPass);
+                                if (resultPass != null && resultPass.CustomerVehiclePassID != 0)
+                                {
+                                    PassPaymentReceiptPage = new PassPaymentReceiptPage(resultPass);
+                                }
+                            });
+                            if (resultPass != null && resultPass.CustomerVehiclePassID != 0)
+                            {
+                                await DisplayAlert("Alert", "Vehicle Pass created successfully", "Ok");
+                                await Navigation.PushAsync(PassPaymentReceiptPage);
+
+                            }
+                            else
+                            {
+                                await DisplayAlert("Alert", "Payment Failed,Please contact Admin", "Ok");
+                            }
                         }
                         else
                         {
-                            await DisplayAlert("Alert", "Payment Failed,Please contact Admin", "Ok");
-                        }
 
+                            btnGeneratePassReceipt.IsVisible = true;
+                            await DisplayAlert("Alert", "Please enter valid pass amount.", "Ok");
+                        }
+                        ShowLoading(false);
 
                     }
                 }
                 else
                 {
+                    ShowLoading(false);
                     await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
                 }
             }
@@ -129,7 +151,7 @@ namespace ParkHyderabadOperator
             }
         }
         #endregion
-        
+
         public void ShowLoading(bool show)
         {
             StklauoutactivityIndicator.IsVisible = show;

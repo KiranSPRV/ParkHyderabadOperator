@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ParkHyderabadOperator.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,12 +10,21 @@ using Xamarin.Forms.Xaml;
 
 namespace ParkHyderabadOperator
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class PrinterTest : ContentPage
-	{
-		public PrinterTest ()
-		{
-			InitializeComponent ();
-		}
-	}
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class PrinterTest : ContentPage
+    {
+
+        public PrinterTest()
+        {
+            InitializeComponent();
+            try
+            {
+                AppVersionServices.GetAndroidStoreAppVersion();
+            }
+            catch (Exception ex)
+            {
+                string exmsg = ex.Message;
+            }
+        }
+    }
 }

@@ -17,8 +17,7 @@
                 <ImageButton x:Name="BtnBack" Margin="15,0,0,0"  Source="Navigatinbar_back.png" HeightRequest="16"  HorizontalOptions="Start" VerticalOptions="CenterAndExpand"  BackgroundColor="Transparent" Clicked="BtnBack_Clicked" ></ImageButton>
                 <Label Text="PASS"  Style="{StaticResource LabelPageHeadingStyle}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Padding="0,0,25,0"></Label>
             </StackLayout>
-
-            <StackLayout  AbsoluteLayout.LayoutBounds="0,0.35,1,0.7"  AbsoluteLayout.LayoutFlags="All"  >
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,0.35,1,0.8"  AbsoluteLayout.LayoutFlags="All"  >
                 <StackLayout  Spacing="15" Margin="15">
                     <Frame CornerRadius="10"   BackgroundColor="#3293fa" Padding="0">
                         <Button x:Name="btnNewPass" FontSize="18" HeightRequest="100" Text="NEW PASS"  Style="{StaticResource ButtonTransparentStyle}" FontAttributes="Bold" Clicked="BtnNewPass_Clicked" VerticalOptions="FillAndExpand"></Button>

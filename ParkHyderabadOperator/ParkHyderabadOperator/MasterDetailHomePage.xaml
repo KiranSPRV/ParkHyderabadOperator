@@ -18,7 +18,7 @@
                     <StackLayout Spacing="5">
                         <StackLayout Orientation="Horizontal"   Margin="15,0,20,0" >
                             <Frame CornerRadius="15" Padding="0"  BorderColor="#f9f9f9" BackgroundColor="#f9f9f9" >
-                                <SearchBar BackgroundColor="Transparent" Margin="-10,0,0,0" HeightRequest="35" Keyboard="Chat"    FontSize="14" FontFamily="ProximaNova-Regular.otf#ProximaNova-Regular"   Placeholder="Search..."   PlaceholderColor="#BCBCBC"  x:Name="srbSearchVehicle"  TextChanged="SrbSearchVehicle_TextChanged"  >
+                                <SearchBar BackgroundColor="Transparent" Margin="-10,0,0,0" HeightRequest="35" Keyboard="Numeric"    FontSize="14" FontFamily="ProximaNova-Regular.otf#ProximaNova-Regular"   Placeholder="Search..."   PlaceholderColor="#BCBCBC"  x:Name="srbSearchVehicle"  TextChanged="SrbSearchVehicle_TextChanged"  >
                                     <SearchBar.Behaviors>
                                         <localBehaviors:TextChangedBehavior />
                                     </SearchBar.Behaviors>
@@ -51,7 +51,6 @@
                             </Grid>
                         </Frame>
                     </StackLayout>
-
                 </StackLayout>
                 <StackLayout  Margin="5" VerticalOptions="FillAndExpand"  >
                     <ListView x:Name="LstVWParkingVehicle" IsPullToRefreshEnabled="True"   SeparatorColor="Black" RowHeight="45" ItemSelected="LstVWParkingVehicle_ItemSelected"  Refreshing="LstVWParkingVehicle_Refreshing" >
