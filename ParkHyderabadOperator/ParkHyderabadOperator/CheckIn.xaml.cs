@@ -35,7 +35,7 @@ namespace ParkHyderabadOperator
         int minimumcheckinMinutes = 120;// 2hrs
         bool IsminChckinTime = false;
 
-
+    
         public CheckIn() // New Check-In
         {
             InitializeComponent();
@@ -752,6 +752,7 @@ namespace ParkHyderabadOperator
             {
                 if (chkGovernment.IsChecked)
                 {
+                    checkInTime = DateTime.Now;
                     stLayoutCheckIn.IsVisible = true;
                     slGovVehicleImage.IsVisible = true;
                     stlayoutCheckInPayment.IsVisible = false;
@@ -788,7 +789,7 @@ namespace ParkHyderabadOperator
                 ShowLoading(true);
                 if (SelectedVehicle != string.Empty)
                 {
-                    checkInTime = DateTime.Now;
+                   
                     if (checkInTime < Lotclosetime)
                     {
                         if (entryRegistrationNumber.Text != null && (entryRegistrationNumber.Text.Length >= 6 && entryRegistrationNumber.Text.Length <= 10))
@@ -1221,6 +1222,7 @@ namespace ParkHyderabadOperator
             try
             {
                 CheckInVehicleValidation();
+               
             }
             catch (Exception ex)
             {

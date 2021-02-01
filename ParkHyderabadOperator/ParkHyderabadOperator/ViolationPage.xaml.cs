@@ -30,6 +30,7 @@ namespace ParkHyderabadOperator
         byte[] imgCameraByteData = null;
         private float Latitude;
         private float Longitude;
+        DateTime violationTime;
         public ViolationPage()
         {
             InitializeComponent();
@@ -98,6 +99,7 @@ namespace ParkHyderabadOperator
         {
 
             ViolationVehicleValidations();
+            violationTime = DateTime.Now.Date;
         }
         public async void ViolationVehicleValidations()
         {
@@ -209,7 +211,7 @@ namespace ParkHyderabadOperator
         #endregion Vehicle-Type Selection
         private void CheckBoxClampVehicle_CheckedChanged(object sender, CheckedChangedEventArgs e)
         {
-            
+
 
         }
         private async void BtnCamera_Clicked(object sender, EventArgs e)
@@ -324,8 +326,18 @@ namespace ParkHyderabadOperator
                                                             objViolationAndClamp.ReasonID = objselectedreason.ViolationReasonID;
                                                             objViolationAndClamp.ReasonName = objselectedreason.Reason;
                                                             objViolationAndClamp.VehicleTypeCode = SelectedVehicle;
-                                                            objViolationAndClamp.ViolationStartTime = DateTime.Now;
-                                                            objViolationAndClamp.ViolationTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm tt");
+                                                            DateTime openTime = DateTime.Parse(objloginuser.LocationParkingLotID.LotOpenTime);
+                                                            if (DateTime.Now < openTime)
+                                                            {
+                                                                objViolationAndClamp.ViolationStartTime = openTime;
+                                                                objViolationAndClamp.ViolationTime = openTime.ToString("MM/dd/yyyy HH:mm tt");
+                                                            }
+                                                            else
+                                                            {
+                                                                objViolationAndClamp.ViolationStartTime = violationTime;
+                                                                objViolationAndClamp.ViolationTime = violationTime.ToString("MM/dd/yyyy HH:mm tt");
+                                                            }
+
                                                             objViolationAndClamp.IsWarning = Convert.ToBoolean(chkWarning.IsChecked);
                                                             objViolationAndClamp.VehicleImageLottitude = Convert.ToDecimal(Latitude);
                                                             objViolationAndClamp.VehicleImageLongitude = Convert.ToDecimal(Longitude);

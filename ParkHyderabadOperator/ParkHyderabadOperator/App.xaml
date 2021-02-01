@@ -456,6 +456,8 @@
                 <Setter Property="HeightRequest" Value="40" />
             </Style>
 
+            
+            
             <!--CHECK BOX-->
             <Style x:Key="ChekBoxRegularBlueStyle" TargetType="CheckBox">
                 <Setter Property="HorizontalOptions" Value="FillAndExpand" />

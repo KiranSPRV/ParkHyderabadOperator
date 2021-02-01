@@ -25,7 +25,16 @@ namespace ParkHyderabadOperator
         {
             btnPreviousMonth.Style = (Style)App.Current.Resources["ButtonSubmitStyle"];
             btnCurrentMonth.Style = (Style)App.Current.Resources["ButtonRegularWhiteStyle"];
-            DateTime firstDayOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 1);
+            DateTime firstDayOfMonth ;
+            if (DateTime.Now.Month==1)
+            {
+                 firstDayOfMonth = new DateTime((DateTime.Now.Year-1), 12, 1);
+            }
+            else
+            {
+                 firstDayOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 1);
+            }
+          
             GetUserTimeSheet(firstDayOfMonth, firstDayOfMonth.AddMonths(1).AddDays(-1));
         }
         private void BtnCurrentMonth_Clicked(object sender, EventArgs e)

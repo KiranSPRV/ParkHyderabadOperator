@@ -174,9 +174,12 @@ namespace ParkHyderabadOperator
                             objLoginUser.LocationParkingLotID.LocationParkingLotName = objVMLocations.LotName;
                             objLoginUser.LocationParkingLotID.LocationID.LocationID = objVMLocations.LocationID;
                             objLoginUser.LocationParkingLotID.LocationID.LocationName = objVMLocations.LocationName;
+                            objLoginUser.LocationParkingLotID.LotOpenTime = objVMLocations.LotOpenTime;
                             IsTodayHoliday = objVMLocations.IsActive;
                             todayLotOpenTime = objVMLocations.LotOpenTime;
                             todayLotCloseTime = objVMLocations.LotCloseTime;
+                            objLoginUser.LocationParkingLotID.LotCloseTime= objVMLocations.LotCloseTime;
+                            
                             LoadParkedVehicle(objloclot);
                         }
                     }
@@ -494,8 +497,7 @@ namespace ParkHyderabadOperator
                 if (!IsTodayHoliday)
                 {
                     var opentime=Convert.ToDateTime(todayLotOpenTime);
-                    if (DateTime.Now> Convert.ToDateTime(todayLotOpenTime) && DateTime.Now<Convert.ToDateTime( todayLotCloseTime))
-                    {
+                    
                         bool doesPageExists = Navigation.NavigationStack.Any(p => p is ViolationPage);
                         if (!doesPageExists)
                         {
@@ -509,11 +511,7 @@ namespace ParkHyderabadOperator
 
                         }
 
-                    }
-                   else
-                    {
-                        await DisplayAlert("Alert", "Please check Lot timings from " + todayLotOpenTime + " to " + todayLotCloseTime, "Ok");
-                    }
+                    
                 }
                 else
                 {
