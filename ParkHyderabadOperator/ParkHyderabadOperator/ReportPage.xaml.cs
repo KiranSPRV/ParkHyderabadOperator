@@ -42,8 +42,7 @@ namespace ParkHyderabadOperator
                 if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                 {
                     DALHome dal_Home = new DALHome();
-                    User objLoginUser = (User)App.Current.Properties["LoginUser"];
-                    objLoginUser.LocationParkingLotID.LocationParkingLotID = 0; // For getting all lots of login user
+                    var objLoginUser = (User)App.Current.Properties["LoginUser"];
                     lstlots = dal_Home.GetUserAllocatedLocationAndLots(Convert.ToString(App.Current.Properties["apitoken"]), objLoginUser);
                     // Include ALL 
                     VMLocationLots objlotAll = new VMLocationLots();
@@ -149,7 +148,6 @@ namespace ParkHyderabadOperator
                         User objLoginUser = (User)App.Current.Properties["LoginUser"];
                         VMLocationLots objVMLocations = (VMLocationLots)pickerLocationLot.SelectedItem;
                         objLoginUser.LocationParkingLotID.LocationParkingLotID = objVMLocations.LocationParkingLotID;
-
                         LoadLocationLotActiveOperators(objVMLocations, objLoginUser.UserID);
 
 

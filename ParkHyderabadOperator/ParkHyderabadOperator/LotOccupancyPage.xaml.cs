@@ -39,7 +39,6 @@ namespace ParkHyderabadOperator
                 {
                     DALHome dal_Home = new DALHome();
                     var objLoginUser = (User)App.Current.Properties["LoginUser"];
-                    objLoginUser.LocationParkingLotID.LocationParkingLotID = 0;
                     lstlots = dal_Home.GetUserAllocatedLocationAndLots(Convert.ToString(App.Current.Properties["apitoken"]), objLoginUser);
                     // Include ALL 
                     VMLocationLots objlotAll = new VMLocationLots();
@@ -128,17 +127,11 @@ namespace ParkHyderabadOperator
                 {
                     if (pickerLocationLot.SelectedItem != null)
                     {
-                        User objLoginUser = (User)App.Current.Properties["LoginUser"];
+                        var objLoginUser = (User)App.Current.Properties["LoginUser"];
                         VMLocationLots objVMLocations = (VMLocationLots)pickerLocationLot.SelectedItem;
                         objReportUser.UserID = objLoginUser.UserID;
                         objReportUser.LocationParkingLotID.LocationID.LocationID = objVMLocations.LocationID;
                         objReportUser.LocationParkingLotID.LocationParkingLotID = objVMLocations.LocationParkingLotID;
-
-                        if (objVMLocations.LotName.Contains("ALL")) // Get All Locations Occupancy
-                        {
-                            var userobj = (User)App.Current.Properties["LoginUser"];
-                            objLoginUser.LocationParkingLotID.LocationParkingLotID = 0;
-                        }
                         GetLotOccupancy(objReportUser);
 
                     }
@@ -174,10 +167,17 @@ namespace ParkHyderabadOperator
             {
                 ShowLoading(true);
                 lvLotOccupancyReport.ItemsSource = null;
-                labelTwoWheelerLotOccupancyPer.Text = string.Empty;
-                labelFourWheelerLotOccupancyPer.Text = string.Empty;
+                
                 labelTwoWheelerLotCapcity.Text = string.Empty;
+                labelThreeWheelerLotCapcity.Text = string.Empty;
                 labelFourWheelerLotCapacity.Text = string.Empty;
+                labelHVWheelerLotCapcity.Text = string.Empty;
+
+                labelTwoWheelerLotOccupancyPer.Text = string.Empty;
+                labelThreeWheelerLotOccupancyPer.Text = string.Empty;
+                labelFourWheelerLotOccupancyPer.Text = string.Empty;
+                labelHeavyWheelerLotOccupancyPer.Text = string.Empty;
+
                 List <VMLocationLotOccupancyReport> lstOccupancy = new List<VMLocationLotOccupancyReport>();
                 if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                 {
@@ -189,10 +189,16 @@ namespace ParkHyderabadOperator
                     if (objOccupancy != null && objOccupancy.LocationLotOccupancyReportID.Count > 0)
                     {
                         lvLotOccupancyReport.ItemsSource = objOccupancy.LocationLotOccupancyReportID;
-                        labelTwoWheelerLotOccupancyPer.Text = objOccupancy.TotalTwoWheelerPercentage ;
-                        labelFourWheelerLotOccupancyPer.Text = objOccupancy.TotalFourWheelerPercentage;
+
                         labelTwoWheelerLotCapcity.Text = objOccupancy.TotalTwoWheelerLotCapacity;
+                        labelThreeWheelerLotCapcity.Text = objOccupancy.TotalThreeWheelerLotCapacity;
                         labelFourWheelerLotCapacity.Text = objOccupancy.TotalFourWheelerLotCapacity;
+                        labelHVWheelerLotCapcity.Text = objOccupancy.TotalHeavyWheelerLotCapacity;
+
+                        labelTwoWheelerLotOccupancyPer.Text = objOccupancy.TotalTwoWheelerPercentage ;
+                        labelThreeWheelerLotOccupancyPer.Text = objOccupancy.TotalThreeWheelerPercentage; 
+                        labelFourWheelerLotOccupancyPer.Text = objOccupancy.TotalFourWheelerPercentage;
+                        labelHeavyWheelerLotOccupancyPer.Text = objOccupancy.TotalHeavyWheelerPercentage;
                         
                     }
                     

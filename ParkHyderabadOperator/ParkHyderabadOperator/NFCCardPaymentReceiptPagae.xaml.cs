@@ -40,29 +40,13 @@ namespace ParkHyderabadOperator
             {
                 string vehicleType = string.Empty;
                 string stations = string.Empty;
+                
                 labelParkingReceiptTitle.Text = "InstaParking-" + objReceipt.PassPriceID.PassTypeID.PassTypeName;
-
-                if (objReceipt.PassPriceID.PassTypeID.PassTypeCode == "DP")
-                {
-                    labelParkingLot.Text = objReceipt.LocationID.LocationName + "-" + objReceipt.PassPriceID.StationAccess;
-                    labelValidFrom.Text = Convert.ToDateTime(objReceipt.StartDate).ToString("dd MMM yyyy hh:mm tt");
-                    labelValidTo.Text = Convert.ToDateTime(objReceipt.ExpiryDate).ToString("dd MMM yyyy hh:mm tt");
-
-                }
-                else if (objReceipt.PassPriceID.PassTypeID.PassTypeCode == "EP")
-                {
-                    labelParkingLot.Text = objReceipt.LocationID.LocationName + "-" + objReceipt.PassPriceID.StationAccess;
-                    labelValidFrom.Text = Convert.ToDateTime(objReceipt.StartDate).ToString("dd MMM yyyy");
-                    labelValidTo.Text = Convert.ToDateTime(objReceipt.ExpiryDate).ToString("dd MMM yyyy");
-
-                }
-                else if (objReceipt.PassPriceID.PassTypeID.PassTypeCode == "WP")
-                {
-                    labelParkingLot.Text = objReceipt.LocationID.LocationName + "-" + objReceipt.PassPriceID.StationAccess;
-                    labelValidFrom.Text = Convert.ToDateTime(objReceipt.StartDate).ToString("dd MMM yyyy");
-                    labelValidTo.Text = Convert.ToDateTime(objReceipt.ExpiryDate).ToString("dd MMM yyyy");
-                }
-                else if (objReceipt.PassPriceID.PassTypeID.PassTypeCode == "MP")
+                labelParkingLot.Text = objReceipt.LocationID.LocationName + "-" + objReceipt.PassPriceID.StationAccess;
+                labelValidFrom.Text = Convert.ToDateTime(objReceipt.StartDate).ToString("dd MMM yyyy");
+                labelValidTo.Text = Convert.ToDateTime(objReceipt.ExpiryDate).ToString("dd MMM yyyy");
+                
+                if (objReceipt.PassPriceID.PassTypeID.PassTypeCode == "MP")
                 {
                     if (objReceipt.PassPriceID.StationAccess == "Single Station")
                     {
@@ -120,7 +104,7 @@ namespace ParkHyderabadOperator
                 {
                     imageOperatorProfile.IsVisible = false;
                 }
-                labelGSTNumber.Text = "36AACFZ1015E1ZL";
+                labelGSTNumber.Text = objReceipt.GSTNumber;
 
                 try
                 {

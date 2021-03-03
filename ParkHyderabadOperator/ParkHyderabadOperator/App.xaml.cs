@@ -1,4 +1,7 @@
-﻿using System;
+﻿using ParkHyderabadOperator.Model;
+using Plugin.Connectivity;
+using System;
+using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -8,20 +11,28 @@ namespace ParkHyderabadOperator
 {
     public partial class App : Application
     {
+        static SQLiteHelper db;
+        public static SQLiteHelper SQLiteDb
+        {
+            get
+            {
+                if (db == null)
+                {
+                    db = new SQLiteHelper(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "XamarinSQLite.db4"));
+                }
+                return db;
+            }
+        }
         public App()
         {
             InitializeComponent();
             MainPage = new NavigationPage(new LoginPage());
         }
 
+
         protected override void OnStart()
         {
-            // Handle when your app starts
-        }
 
-        private Task DisplayAlert(string v1, string v2, string v3)
-        {
-            throw new NotImplementedException();
         }
 
         protected override void OnSleep()
@@ -32,6 +43,8 @@ namespace ParkHyderabadOperator
         protected override void OnResume()
         {
             // Handle when your app resumes
+            // Handle when your app starts
+           
         }
     }
 }

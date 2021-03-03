@@ -68,5 +68,7 @@ namespace ParkHyderabadOperator.Model.APIOutPutModel
         public int ViolationWarningCount { get; set; }
         public decimal VehicleImageLottitude { get; set; }
         public decimal VehicleImageLongitude { get; set; }
+
+        public string GSTNumber { get; set; }
     }
 }

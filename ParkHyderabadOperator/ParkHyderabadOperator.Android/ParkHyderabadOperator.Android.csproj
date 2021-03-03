@@ -36,7 +36,7 @@
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
     <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
     <AndroidSupportedAbis>armeabi-v7a;x86;x86_64;arm64-v8a</AndroidSupportedAbis>
-    <AndroidEnableMultiDex>true</AndroidEnableMultiDex>
+    <AndroidEnableMultiDex>false</AndroidEnableMultiDex>
     <AndroidCreatePackagePerAbi>false</AndroidCreatePackagePerAbi>
     <AndroidEnableSGenConcurrent>false</AndroidEnableSGenConcurrent>
     <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
@@ -85,6 +85,9 @@
     </PackageReference>
     <PackageReference Include="Rg.Plugins.Popup">
       <Version>1.2.0.223</Version>
+    </PackageReference>
+    <PackageReference Include="sqlite-net-pcl">
+      <Version>1.7.335</Version>
     </PackageReference>
     <PackageReference Include="Xam.Plugin.Connectivity">
       <Version>3.2.0</Version>
@@ -141,6 +144,26 @@
     <AndroidResource Include="Resources\drawable\RecentCheckOuts.png" />
     <AndroidResource Include="Resources\drawable\LotOccupancy.png" />
     <AndroidResource Include="Resources\drawable\Gallery.png" />
+    <AndroidResource Include="Resources\drawable\home.png" />
+    <AndroidResource Include="Resources\drawable\sync.png" />
+    <AndroidResource Include="Resources\drawable\trashsolid.png" />
+    <AndroidResource Include="Resources\drawable\Wifi_off.png" />
+    <AndroidResource Include="Resources\drawable\hv_red.png" />
+    <AndroidResource Include="Resources\drawable\hv_black.png" />
+    <AndroidResource Include="Resources\drawable\hv_blue.png" />
+    <AndroidResource Include="Resources\drawable\hv_green.png" />
+    <AndroidResource Include="Resources\drawable\hv_grey.png" />
+    <AndroidResource Include="Resources\drawable\hv_orange.png" />
+    <AndroidResource Include="Resources\drawable\bus.png" />
+    <AndroidResource Include="Resources\drawable\bus_active.png" />
+    <AndroidResource Include="Resources\drawable\ThreeW_red.png" />
+    <AndroidResource Include="Resources\drawable\ThreeW.png" />
+    <AndroidResource Include="Resources\drawable\ThreeW_active.png" />
+    <AndroidResource Include="Resources\drawable\ThreeW_black.png" />
+    <AndroidResource Include="Resources\drawable\ThreeW_blue.png" />
+    <AndroidResource Include="Resources\drawable\ThreeW_green.png" />
+    <AndroidResource Include="Resources\drawable\ThreeW_grey.png" />
+    <AndroidResource Include="Resources\drawable\ThreeW_orange.png" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml">

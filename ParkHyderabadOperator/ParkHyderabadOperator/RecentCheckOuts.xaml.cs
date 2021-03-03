@@ -49,10 +49,8 @@ namespace ParkHyderabadOperator
                 if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                 {
                     DALHome dal_Home = new DALHome();
-                    User objLoginUser = (User)App.Current.Properties["LoginUser"];
-                    objLoginUser.LocationParkingLotID.LocationParkingLotID = 0;
+                    var objLoginUser = (User)App.Current.Properties["LoginUser"];
                     lstlots = dal_Home.GetUserAllocatedLocationAndLots(Convert.ToString(App.Current.Properties["apitoken"]), objLoginUser);
-
                     if (lstlots.Count > 0)
                     {
                         pickerLocationLot.ItemsSource = lstlots;
@@ -164,7 +162,7 @@ namespace ParkHyderabadOperator
                         pickerOperator.ItemsSource = lstOperators;
                         pickerOperator.SelectedIndex = 1;
                     }
-                    
+
                 }
 
             }
@@ -200,7 +198,7 @@ namespace ParkHyderabadOperator
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "RecentCheckOuts.xamls.cs", "", "LoadLoginUserLocationLots");
             }
         }
-        private  void PickerDay_SelectedIndexChanged(object sender, EventArgs e)
+        private void PickerDay_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
@@ -211,10 +209,10 @@ namespace ParkHyderabadOperator
                         objFilter.Outs = true;
                         btnOuts.Style = (Style)App.Current.Resources["ButtonSubmitStyle"];
                     }
-                    
-                    
-                        GetRecentCheckOuts();
-                   
+
+
+                    GetRecentCheckOuts();
+
                 }
 
             }
@@ -241,13 +239,13 @@ namespace ParkHyderabadOperator
                         if (pickerLocationLot.SelectedItem != null && pickerDay.SelectedItem != null && pickerOperator.SelectedItem != null)
                         {
                             var objSelectedLocation = (VMLocationLots)pickerLocationLot.SelectedItem;
-                            
+
                             var objselectedOperator = (User)pickerOperator.SelectedItem;
                             var objRecentCheckOutDays = (RecentCheckOutDays)pickerDay.SelectedItem;
                             objFilter.LocationID = objSelectedLocation.LocationID;
                             objFilter.LocationParkingLotID = objSelectedLocation.LocationParkingLotID;
                             objFilter.UserID = objselectedOperator.UserID;
-                           
+
                             if (objRecentCheckOutDays.Day == "Today")
                             {
                                 objFilter.SelectedDay = DateTime.Now;
@@ -262,7 +260,7 @@ namespace ParkHyderabadOperator
                             }
                             await Task.Run(() =>
                             {
-                              
+
                                 if (objFilter != null)
                                 {
                                     DALReport dal_Report = new DALReport();
@@ -293,9 +291,9 @@ namespace ParkHyderabadOperator
                                         }
                                     }
 
-                                   
+
                                 }
-                                
+
                             }
                         }
                     }
@@ -306,7 +304,7 @@ namespace ParkHyderabadOperator
             {
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "RecentCheckOuts.xamls.cs", "", "GetRecentCheckOuts");
                 ShowLoading(false);
-               
+
             }
         }
         private async void BtnTwoWheeler_Clicked(object sender, EventArgs e)
@@ -318,6 +316,8 @@ namespace ParkHyderabadOperator
                     objFilter.VehicleTypeCode = "2W";
                     btnTwoWheeler.Style = (Style)App.Current.Resources["ButtonSubmitStyle"];
                     btnFourWheeler.Style = (Style)App.Current.Resources["ButtonRegularMercuryStyle"];
+                    btnThreeWheeler.Style = (Style)App.Current.Resources["ButtonRegularMercuryStyle"];
+                    btnHeavyWheeler.Style = (Style)App.Current.Resources["ButtonRegularMercuryStyle"];
                     GetRecentCheckOuts();
 
                 }
@@ -340,6 +340,57 @@ namespace ParkHyderabadOperator
                     objFilter.VehicleTypeCode = "4W";
                     btnFourWheeler.Style = (Style)App.Current.Resources["ButtonSubmitStyle"];
                     btnTwoWheeler.Style = (Style)App.Current.Resources["ButtonRegularMercuryStyle"];
+                    btnThreeWheeler.Style = (Style)App.Current.Resources["ButtonRegularMercuryStyle"];
+                    btnHeavyWheeler.Style = (Style)App.Current.Resources["ButtonRegularMercuryStyle"];
+                    GetRecentCheckOuts();
+
+                }
+                else
+                {
+                    await DisplayAlert("Alert", "Please select Day", "Ok");
+                }
+            }
+            catch (Exception ex)
+            {
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "RecentCheckOuts.xamls.cs", "", "BtnFourWheeler_Clicked");
+            }
+        }
+        private async void btnThreeWheeler_Clicked(object sender, EventArgs e)
+        {
+            try
+            {
+                if (pickerDay.SelectedItem != null)
+                {
+                    objFilter.VehicleTypeCode = "3W";
+                    btnThreeWheeler.Style = (Style)App.Current.Resources["ButtonSubmitStyle"];
+                    btnTwoWheeler.Style = (Style)App.Current.Resources["ButtonRegularMercuryStyle"];
+                    btnFourWheeler.Style = (Style)App.Current.Resources["ButtonRegularMercuryStyle"];
+                    btnHeavyWheeler.Style = (Style)App.Current.Resources["ButtonRegularMercuryStyle"];
+                    GetRecentCheckOuts();
+
+                }
+                else
+                {
+                    await DisplayAlert("Alert", "Please select Day", "Ok");
+                }
+            }
+            catch (Exception ex)
+            {
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "RecentCheckOuts.xamls.cs", "", "BtnFourWheeler_Clicked");
+            }
+        }
+
+        private async void btnHeavyWheeler_Clicked(object sender, EventArgs e)
+        {
+            try
+            {
+                if (pickerDay.SelectedItem != null)
+                {
+                    objFilter.VehicleTypeCode = "HW";
+                    btnHeavyWheeler.Style = (Style)App.Current.Resources["ButtonSubmitStyle"];
+                    btnTwoWheeler.Style = (Style)App.Current.Resources["ButtonRegularMercuryStyle"];
+                    btnThreeWheeler.Style = (Style)App.Current.Resources["ButtonRegularMercuryStyle"];
+                    btnFourWheeler.Style = (Style)App.Current.Resources["ButtonRegularMercuryStyle"];
                     GetRecentCheckOuts();
 
                 }
@@ -532,5 +583,7 @@ namespace ParkHyderabadOperator
                 absLayoutRecentCheckOutPage.Opacity = 1;
             }
         }
+
+
     }
 }

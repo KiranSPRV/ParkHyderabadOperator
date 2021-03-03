@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ParkHyderabadOperator.DynamicVehiclePage">
+    
+    <ContentPage.Content>
+        <AbsoluteLayout VerticalOptions="FillAndExpand" x:Name="absLayoutTimeSheetpage">
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,0.2"  AbsoluteLayout.LayoutFlags="All"   >
+                <StackLayout HorizontalOptions="FillAndExpand" Margin="5"  BackgroundColor="#F4F4F4">
+                    <CollectionView x:Name="collstviewVehicleTye"    SelectionMode="Single" 
+                                SelectionChanged="collstviewVehicleTye_SelectionChanged"  WidthRequest="300"
+                                    VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"
+                                    FlowDirection="RightToLeft">
+                        <CollectionView.ItemsLayout>
+                            <GridItemsLayout  Orientation="Horizontal" HorizontalItemSpacing="15"/>
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame BackgroundColor="#FFFFFF"  CornerRadius="5" Padding="8" Margin="5" VerticalOptions="Center" HorizontalOptions="CenterAndExpand">
+                                        <StackLayout VerticalOptions="CenterAndExpand"     x:Name="slTwoWheelerImage">
+                                        <Image x:Name="imgTwoWheeler" HeightRequest="50"     HorizontalOptions="FillAndExpand"    BackgroundColor="Transparent" 
+                                               Source="{Binding VehicleDisplayImage}" />
+                                        <Label Text="{Binding VehicleTypeName}" HorizontalOptions="CenterAndExpand" Style="{StaticResource LabelPlaceHolderStyle}"/>
+                                        </StackLayout>
+                                    </Frame>
+
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </StackLayout>
+            </StackLayout>
+            <StackLayout AbsoluteLayout.LayoutBounds="0,0.75,1,0.72"  AbsoluteLayout.LayoutFlags="All"  >
+                <StackLayout>
+                    <Image x:Name="imgByte" HeightRequest="50" Source="{Binding VehicleInActiveImage,  Converter={StaticResource ByteArrayToImage}}" />
+                    <Button HorizontalOptions="CenterAndExpand" Text="Load" Clicked="Button_Clicked" WidthRequest="100" HeightRequest="50" />
+                </StackLayout>
+            </StackLayout>
+            <StackLayout AbsoluteLayout.LayoutBounds="0,1,1,0.05"  AbsoluteLayout.LayoutFlags="All" >
+
+            </StackLayout>
+            <ContentView x:Name="StklauoutactivityIndicator" BackgroundColor="Transparent"  IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                <StackLayout Orientation="Vertical" HeightRequest="150" WidthRequest="100" BackgroundColor="Transparent" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="0">
+                    <ActivityIndicator  x:Name="activity" IsEnabled="True" IsVisible="False" IsRunning="False"   HeightRequest="80" Color="#010101"  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></ActivityIndicator>
+                    <Label x:Name="LabelLodaingMsg" Text="Loading..."  Style="{StaticResource LabelProximaBoldStyle}" FontSize="18" TextColor="#010101"   VerticalOptions="StartAndExpand" HorizontalOptions="CenterAndExpand"></Label>
+                </StackLayout>
+
+            </ContentView>
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>

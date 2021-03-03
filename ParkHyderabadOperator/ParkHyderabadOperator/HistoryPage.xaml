@@ -287,7 +287,7 @@
                                     <ViewCell>
                                         <Frame CornerRadius="5" BackgroundColor="#FFFFFF" Padding="5" Margin="5">
                                             <StackLayout Orientation="Horizontal">
-                                                <Image HeightRequest="20" Source="{Binding VehicleTypeID.VehicleImage}"/>
+                                                <Image HeightRequest="20"  Source="{Binding VehicleTypeID.VehicleIcon}"/>
                                                 <Label Text="{Binding RegistrationNumber}" Style="{StaticResource LabelRegularEndBoldStyle}" />
                                             </StackLayout>
                                         </Frame>

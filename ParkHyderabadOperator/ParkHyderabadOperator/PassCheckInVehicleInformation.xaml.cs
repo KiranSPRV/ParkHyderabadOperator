@@ -76,10 +76,9 @@ namespace ParkHyderabadOperator
                             var parkhours = ((Math.Abs(parkingduration.Hours) == 0 || Math.Abs(parkingduration.Hours) == 1)) ? Convert.ToInt32(objresult.Duration) : Math.Abs(parkingduration.Hours);
                             labelParkingPaymentType.Text = "Paid for " + string.Format(parkhours + "hr") + " - By " + objresult.PaymentTypeID.PaymentTypeName;
                         }
-                        
                         labelVehicleDetails.Text = objresult.CustomerVehicleID.RegistrationNumber;
-                        imageVehicleImage.Source = (Convert.ToString(objresult.VehicleTypeID.VehicleTypeCode) == "2W" ? "bike_black.png" : (Convert.ToString(objresult.VehicleTypeID.VehicleTypeCode) == "4W") ? "car_black.png" : "bike_black.png");
-                        vehicleType = (Convert.ToString(objresult.VehicleTypeID.VehicleTypeCode) == "2W" ? "BIKE" : (Convert.ToString(objresult.VehicleTypeID.VehicleTypeCode) == "4W") ? "CAR" : "BIKE");
+                        imageVehicleImage.Source =objresult.CustomerVehicleID.VehicleTypeID.VehicleIcon;
+                        vehicleType = objresult.CustomerVehicleID.VehicleTypeID.VehicleTypeDisplayName;
 
                         User objloginuser = (User)App.Current.Properties["LoginUser"];
 
@@ -341,8 +340,7 @@ namespace ParkHyderabadOperator
         {
             try
             {
-                var checkIn = new CheckIn(objresult);
-                await Navigation.PushAsync(checkIn);
+                
             }
             catch (Exception ex)
             {

@@ -7,6 +7,7 @@ using ParkHyderabadOperator.ViewModel.VMPass;
 using Plugin.NFC;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -46,18 +47,9 @@ namespace ParkHyderabadOperator
             try
             {
                 objInputMonthlyPass = objmonthlyPass;
-
-                if (objInputMonthlyPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "2W")
-                {
-                    ImgVehicleType.Source = ImageSource.FromFile("bike_black.png");
-                }
-                else if (objInputMonthlyPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "4W")
-                {
-                    ImgVehicleType.Source = ImageSource.FromFile("car_black.png");
-                }
+                ImgVehicleType.Source = objInputMonthlyPass.CustomerVehicleID.VehicleTypeID.VehicleIcon;
                 labelVehicleRegNumber.Text = objInputMonthlyPass.CustomerVehicleID.RegistrationNumber;
                 labelParkingLocation.Text = objInputMonthlyPass.LocationID.LocationName + "-" + objInputMonthlyPass.PassPriceID.StationAccess;
-
                 if (objInputMonthlyPass.IssuedCard)
                 {
                     labelEpaymentAmount.Text = objInputMonthlyPass.TotalAmount.ToString("N2") + "/-";

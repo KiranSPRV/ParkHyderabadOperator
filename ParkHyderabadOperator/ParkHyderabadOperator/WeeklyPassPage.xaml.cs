@@ -1,10 +1,14 @@
 ﻿using ParkHyderabadOperator.DAL.DALCheckIn;
 using ParkHyderabadOperator.DAL.DALExceptionLog;
+using ParkHyderabadOperator.DAL.DALMenuBar;
 using ParkHyderabadOperator.DAL.DALPass;
 using ParkHyderabadOperator.Model.APIInputModel;
 using ParkHyderabadOperator.Model.APIOutPutModel;
 using ParkHyderabadOperator.Model.Pass;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -78,18 +82,17 @@ namespace ParkHyderabadOperator
                         }
                     }
                 }
-                labelPassAmount.Text = objResultVMPass.Price.ToString("N2");
+
+                labelPassType.Text = objResultVMPass.PassTypeID.PassTypeName.ToUpper();
+                labelPassStationAccess.Text = objResultVMPass.StationAccess.ToUpper();
+
+                labelPassAmount.Text = String.Format("{0:0.#}", objResultVMPass.Price);
+                
+
                 labelValidFrom.Text = Convert.ToDateTime(objResultVMPass.StartDate).ToString("dd MMM yyyy");
                 labelValidTo.Text = Convert.ToDateTime(objResultVMPass.EndDate).ToString("dd MMM yyyy");
-                if (objResultVMPass.VehicleTypeID.VehicleTypeCode == "2W")
-                {
-                    imgCustomerVehcileType.Source = ImageSource.FromFile("bike_black.png");
-                }
-                else if (objResultVMPass.VehicleTypeID.VehicleTypeCode == "4W")
-                {
-                    imgCustomerVehcileType.Source = ImageSource.FromFile("car_black.png");
-                }
-                if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
+                imgCustomerVehcileType.Source = objResultVMPass.VehicleTypeID.VehicleIcon;
+                if (App.Current.Properties.ContainsKey("LoginUser") )
                 {
                     User objloginuser = (User)App.Current.Properties["LoginUser"];
                     labelParkingLocation.Text = objloginuser.LocationParkingLotID.LocationID.LocationName + " Station Only";
@@ -123,6 +126,7 @@ namespace ParkHyderabadOperator
                                     {
 
                                         User objloginuser = (User)App.Current.Properties["LoginUser"];
+                                        objCustomerPass.CustomerVehicleID.VehicleTypeID = objResultVMPass.VehicleTypeID;
                                         objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode = objResultVMPass.VehicleTypeID.VehicleTypeCode;
                                         objCustomerPass.CustomerVehicleID.RegistrationNumber = entryRegistrationNumber.Text;
                                         objCustomerPass.CustomerVehicleID.CustomerID.Name = entryName.Text;
@@ -201,6 +205,7 @@ namespace ParkHyderabadOperator
                                     {
                                         User objloginuser = (User)App.Current.Properties["LoginUser"];
                                         CustomerVehiclePass objCustomerPass = new CustomerVehiclePass();
+                                        objCustomerPass.CustomerVehicleID.VehicleTypeID = objResultVMPass.VehicleTypeID;
                                         objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode = objResultVMPass.VehicleTypeID.VehicleTypeCode;
                                         objCustomerPass.CustomerVehicleID.RegistrationNumber = entryRegistrationNumber.Text;
                                         objCustomerPass.CustomerVehicleID.CustomerID.Name = entryName.Text;
@@ -309,7 +314,113 @@ namespace ParkHyderabadOperator
             }
             return alreadyCheckIn;
         }
+     
+        #region Vehicle Due Amount History ListView
+        public async void LoadVehicleDueHistory()
+        {
+            try
+            {
+                ShowLoading(true);
+                string vehicleType = string.Empty;
+                var dal_Menubar = new DALMenubar();
+                if (App.Current.Properties.ContainsKey("apitoken"))
+                {
+                    List<CustomerParkingSlot> lstVehicleHistory = null;
+                    CustomerVehicle objregistraionnumber = new CustomerVehicle();
+                    imagePopVehicleImage.Source = imgCustomerVehcileType.Source;
+                    labelPopVehicleDetails.Text = entryRegistrationNumber.Text;
+                    await Task.Run(() =>
+                    {
+                        lstVehicleHistory = dal_Menubar.GetVehicleDueAmountHistory(Convert.ToString(App.Current.Properties["apitoken"]), entryRegistrationNumber.Text, objResultVMPass.VehicleTypeID.VehicleTypeCode);
+                    });
+                    if (lstVehicleHistory.Count > 0)
+                    {
+                        lvVehicleDueAmount.ItemsSource = lstVehicleHistory;
+
+                    }
+                    popupDueAmount.IsVisible = true;
+                }
+                ShowLoading(false);
+            }
+            catch (Exception ex)
+            {
+                ShowLoading(false);
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ViolationVehicleInformation.xaml.cs", "", "LoadVehicleDueHistory");
+            }
+        }
+        private void lblPopCloseGesture_Tapped(object sender, EventArgs e)
+        {
+            try
+            {
+                ShowLoading(true);
+                popupDueAmount.IsVisible = false;
+                ShowLoading(false);
+            }
+            catch (Exception ex)
+            {
+                ShowLoading(false);
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ViolationVehicleInformation.xaml.cs", "", "lblPopCloseGesture_Tapped");
+            }
+        }
+        private void imgDueInfo_Clicked(object sender, EventArgs e)
+        {
+            try
+            {
+
+                LoadVehicleDueHistory();
+
+            }
+            catch (Exception ex)
+            {
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ViolationVehicleInformation.xaml.cs", "", "ImgClosePopUp_Clicked");
+            }
+        }
+        private void slDueAmountGesture_Tapped(object sender, EventArgs e)
+        {
+
+            try
+            {
+
+                LoadVehicleDueHistory();
+
+            }
+            catch (Exception ex)
+            {
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ViolationVehicleInformation.xaml.cs", "", "slDueAmountGesture_Tapped");
+            }
+        }
+        #endregion
+
+        public void ShowLoading(bool show)
+        {
+            StklauoutactivityIndicator.IsVisible = show;
+            activity.IsVisible = show;
+            activity.IsRunning = show;
 
 
+        }
+
+        private async void entryRegistrationNumber_Completed(object sender, EventArgs e)
+        {
+            try
+            {
+                var text = ((Entry)sender).Text;
+                var dal_Menubar = new DALMenubar();
+                imagePopVehicleImage.Source = imgCustomerVehcileType.Source;
+                labelPopVehicleDetails.Text = text;
+                decimal dueAmount = 0;
+                await Task.Run(() =>
+                {
+                    dueAmount = dal_Menubar.GetVehicleDueAmount(Convert.ToString(App.Current.Properties["apitoken"]), text, objResultVMPass.VehicleTypeID.VehicleTypeCode);
+                });
+                labelDueAmount.Text = String.Format("{0:0.#}", dueAmount);
+                labelTotalFee.Text = String.Format("{0:0.#}", dueAmount + objResultVMPass.Price);
+
+            }
+            catch (Exception ex)
+            {
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "DailyPass.xaml.cs", "", "DailyPass");
+            }
+        }
     }
 }

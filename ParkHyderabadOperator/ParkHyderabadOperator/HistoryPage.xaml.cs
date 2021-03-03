@@ -4,6 +4,7 @@ using ParkHyderabadOperator.Model;
 using ParkHyderabadOperator.Model.APIOutPutModel;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -105,17 +106,9 @@ namespace ParkHyderabadOperator
                 CustomerVehicle listsd = (CustomerVehicle)e.Item;
                 searchBar.Text = listsd.RegistrationNumber;
                 labelSelectedVehicleRegNumber.Text = listsd.RegistrationNumber;
-                if (listsd.VehicleTypeID.VehicleTypeCode.ToUpper() == "2W")
-                {
-                    ImgSelectedVehicle.Source = "bike_black.png";
-                }
-                else if (listsd.VehicleTypeID.VehicleTypeCode.ToUpper() == "4W")
-                {
-                    ImgSelectedVehicle.Source = "car_black.png";
-                }
+                ImgSelectedVehicle.Source = listsd.VehicleTypeID.VehicleIcon;
                 listViewVehicleRegistrationNumbers.IsVisible = false;
                 ((ListView)sender).SelectedItem = null;
-
                 LoadVehicleParkingHistory(listsd);
 
             }
@@ -149,7 +142,7 @@ namespace ParkHyderabadOperator
                         if (receiptlines != null && receiptlines.Length > 0)
                         {
 
-                            vehicleType = (Convert.ToString(objresult.VehicleTypeID.VehicleTypeCode) == "2W" ? "BIKE" : (Convert.ToString(objresult.VehicleTypeID.VehicleTypeCode) == "4W") ? "CAR" : "BIKE");
+                            vehicleType = Convert.ToString(objresult.VehicleTypeID.VehicleTypeDisplayName);
 
                             receiptlines[0] = "\x1B\x21\x08" + "          " + "HMRL PARKING" + "\x1B\x21\x00" + "\n";
                             receiptlines[1] = "\x1B\x21\x01" + "       " + objresult.LocationParkingLotID.LocationID.LocationName + "-" + objresult.LocationParkingLotID.LocationParkingLotName + "\x1B\x21\x00\n";
@@ -187,6 +180,7 @@ namespace ParkHyderabadOperator
         }
 
         #endregion
+
         private void SwitchViolation_Toggled(object sender, ToggledEventArgs e)
         {
             try
@@ -219,7 +213,6 @@ namespace ParkHyderabadOperator
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "HistoryPage.xaml.cs", "", "SwitchViolation_Toggled");
             }
         }
-
         private async void ImgbtnPrint_Clicked(object sender, EventArgs e)
         {
             try
@@ -263,7 +256,6 @@ namespace ParkHyderabadOperator
             }
 
         }
-
         public void ShowLoading(bool show)
         {
             StklauoutactivityIndicator.IsVisible = show;

@@ -8,10 +8,14 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Collections.Generic;
 using ParkHyderabadOperator.Model;
+using System.Linq;
+using System.Threading.Tasks;
+using ParkHyderabadOperator.DAL.DALExceptionLog;
+using ParkHyderabadOperator.ViewModel;
 
 namespace ParkHyderabadOperator.DAL.DALCheckIn
 {
-  public  class DALCheckIn
+    public class DALCheckIn
     {
         public List<string> GetParkingHours()
         {
@@ -61,6 +65,84 @@ namespace ParkHyderabadOperator.DAL.DALCheckIn
             }
             return lstParkingMinutes;
         }
+        public List<VehicleParkingFee> GetVehicleParkingFeesDetailsOffline(string vehicleTypeCode, int Hours)
+        {
+            List<VehicleParkingFee> lstVehicleParkingFee = new List<VehicleParkingFee>();
+            try
+            {
+                lstVehicleParkingFee =Task.Run(async()=> await App.SQLiteDb.GetLotVehiclesParkingFeesSQLLite()).Result;
+            }
+            catch (Exception ex)
+            {
+            }
+            if (!string.IsNullOrEmpty(vehicleTypeCode) && Hours != 0)
+            {
+                lstVehicleParkingFee = lstVehicleParkingFee.Where(i => i.VehicleTypeCode == vehicleTypeCode && i.Duration == Hours).ToList();
+                
+            }
+            return lstVehicleParkingFee;
+        }
+        public List<VehicleParkingFee> GetLotVehiclesParkingFeesDetailOnLogin(string accessToken, int LocationParkingLotID)
+        {
+            VehicleParkingFee objVehicleParkingFee = new VehicleParkingFee(); ;
+            List<VehicleParkingFee> lstParkingFeesDetails = new List<VehicleParkingFee>();
+            try
+            {
+                objVehicleParkingFee.LocationParkingLotID = LocationParkingLotID;
+                string baseUrl = Convert.ToString(App.Current.Properties["BaseURL"]);
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(baseUrl);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    // Add the Authorization header with the AccessToken.
+                    client.DefaultRequestHeaders.Add("Authorization", "bearer  " + accessToken);
+                    // create the URL string.
+                    string url = "api/InstaOperator/postOPAPPGetLocaitonParkingLotVehicleParkingFee";
+                    // make the request
+                    var json = JsonConvert.SerializeObject(objVehicleParkingFee);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+                    HttpResponseMessage response = client.PostAsync(url, content).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string jsonString = response.Content.ReadAsStringAsync().Result;
+                        if (jsonString != null)
+                        {
+                            APIResponse apiResult = JsonConvert.DeserializeObject<APIResponse>(jsonString);
+
+                            if (apiResult.Result)
+                            {
+                                lstParkingFeesDetails = JsonConvert.DeserializeObject<List<VehicleParkingFee>>(Convert.ToString(apiResult.Object));
+                            }
+
+                        }
+                    }
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return lstParkingFeesDetails;
+        }
+        public List<ParkingBay> GetLocationParkingBayOffline()
+        {
+            List<ParkingBay> lstParkingBay = new List<ParkingBay>();
+
+            try
+            {
+                lstParkingBay.Add(new ParkingBay() { ParkingBayID = 1, ParkingBayRange = "A1-A10", ParkingBayName = "A1-A10", IsActive = true });
+                lstParkingBay.Add(new ParkingBay() { ParkingBayID = 2, ParkingBayRange = "A11-A20", ParkingBayName = "A11-A20", IsActive = true });
+
+            }
+            catch (Exception ex)
+            {
+            }
+            return lstParkingBay;
+        }
+
+
         public List<ParkingBay> GetLocationParkingBay(string accessToken, LocationParkingLot LocationParkingLotID)
         {
             List<ParkingBay> lstParkingBay = new List<ParkingBay>();
@@ -106,7 +188,7 @@ namespace ParkHyderabadOperator.DAL.DALCheckIn
             }
             return lstParkingBay;
         }
-        public VehicleParkingFee GetVehicleParkingFees(string accessToken, string VehicleTypeCode,int ParkingHours,int LocationParkingLotID,string parkingStartTime)
+        public VehicleParkingFee GetVehicleParkingFees(string accessToken, string VehicleTypeCode, int ParkingHours, int LocationParkingLotID, string parkingStartTime)
         {
             VehicleParkingFee objVehicleParkingFee = new VehicleParkingFee(); ;
 
@@ -154,7 +236,7 @@ namespace ParkHyderabadOperator.DAL.DALCheckIn
             }
             return objVehicleParkingFee;
         }
-        public List<VehicleParkingFee> GetLocationParkingLotVehicleParkingFees(string accessToken, string VehicleTypeCode, int ParkingHours, int LocationParkingLotID,decimal paidParkingFees)
+        public List<VehicleParkingFee> GetLocationParkingLotVehicleParkingFees(string accessToken, string VehicleTypeCode, int ParkingHours, int LocationParkingLotID, decimal paidParkingFees)
         {
             VehicleParkingFee objVehicleParkingFee = new VehicleParkingFee(); ;
             List<VehicleParkingFee> lstParkingFeesDetails = new List<VehicleParkingFee>();
@@ -201,10 +283,10 @@ namespace ParkHyderabadOperator.DAL.DALCheckIn
             }
             return lstParkingFeesDetails;
         }
-        public CustomerVehiclePass GetVerifyVehicleHasPass(string accessToken, string RegistrationNumber,int LocationID,int LocationParkingLotID, int UserID,string NFCCardNumber)
+        public CustomerVehiclePass GetVerifyVehicleHasPass(string accessToken, string RegistrationNumber, int LocationID, int LocationParkingLotID, int UserID, string NFCCardNumber)
         {
             CheckInVehiclePass objVehiclePass = new CheckInVehiclePass();
-            CustomerVehiclePass objCustomerVehiclePass=new CustomerVehiclePass();
+            CustomerVehiclePass objCustomerVehiclePass = new CustomerVehiclePass();
             try
             {
 
@@ -254,7 +336,58 @@ namespace ParkHyderabadOperator.DAL.DALCheckIn
             return objCustomerVehiclePass;
 
         }
-        public string SavePassVehicleCheckIn(string accessToken,VehicleCheckIn objcheckin)
+
+        public VMVehiclePassWithDueAmount GetVerifyVehicleHasPassWithDueAmount(string accessToken, string RegistrationNumber,string VehicleTypeCode, int LocationID, int LocationParkingLotID, int UserID, string NFCCardNumber)
+        {
+            CheckInVehiclePass objVehiclePass = new CheckInVehiclePass();
+            VMVehiclePassWithDueAmount objCustomerVehiclePass = new VMVehiclePassWithDueAmount();
+            try
+            {
+
+                objVehiclePass.RegistrationNumber = RegistrationNumber;
+                objVehiclePass.VehicleTypeCode = VehicleTypeCode;
+                objVehiclePass.LocationID = LocationID;
+                objVehiclePass.UserID = UserID;
+                objVehiclePass.LocationParkingLotID = LocationParkingLotID;
+                objVehiclePass.NFCCardNumber = NFCCardNumber;
+                
+                string baseUrl = Convert.ToString(App.Current.Properties["BaseURL"]);
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(baseUrl);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    // Add the Authorization header with the AccessToken.
+                    client.DefaultRequestHeaders.Add("Authorization", "bearer  " + accessToken);
+                    // create the URL string.
+                    string url = "api/InstaOperator/postOPAPPVehicleCheckInVerifyVehicleHasPass";
+                    // make the request
+
+                    var json = JsonConvert.SerializeObject(objVehiclePass);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+                    HttpResponseMessage response = client.PostAsync(url, content).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string jsonString = response.Content.ReadAsStringAsync().Result;
+                        if (jsonString != null)
+                        {
+                            APIResponse apiResult = JsonConvert.DeserializeObject<APIResponse>(jsonString);
+
+                            if (apiResult.Result)
+                            {
+                                objCustomerVehiclePass = JsonConvert.DeserializeObject<VMVehiclePassWithDueAmount>(Convert.ToString(apiResult.Object));
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return objCustomerVehiclePass;
+
+        }
+        public string SavePassVehicleCheckIn(string accessToken, VehicleCheckIn objcheckin)
         {
             string apirespone = string.Empty;
 
@@ -446,7 +579,7 @@ namespace ParkHyderabadOperator.DAL.DALCheckIn
                         if (jsonString != null)
                         {
                             APIResponse apiResult = JsonConvert.DeserializeObject<APIResponse>(jsonString);
-                            if(apiResult.Result)
+                            if (apiResult.Result)
                             {
                                 objResultCustomerParkingSlot = JsonConvert.DeserializeObject<CustomerParkingSlot>(Convert.ToString(apiResult.Object));
                             }
@@ -460,6 +593,102 @@ namespace ParkHyderabadOperator.DAL.DALCheckIn
             return objResultCustomerParkingSlot;
         }
 
+        #region Offline-Sync
+        public async Task<string> CheckInOfflineSync(string apitoken, User loguser)
+        {
+            int totalCounts = 0;
+            StringBuilder sbUnMoved = new StringBuilder();
+            DALExceptionManagment dal_Exceptionlog = new DALExceptionManagment();
+            try
+            {
+                var lstchekIns = await App.SQLiteDb.GetAllVehicleAsync();
+                if (lstchekIns != null)
+                {
+                    if (lstchekIns.Count > 0)
+                    {
+                        foreach (var items in lstchekIns)
+                        {
+                            if (DeviceInternet.InternetConnected())
+                            {
+                                var objexlog = new OfflineSyncLog();
+                                try
+                                {
+                                    var resultCustomerID = SaveVehicleNewCheckIn(apitoken, items);
+                                    objexlog.RegistrationNumber = items.RegistrationNumber;
+                                    objexlog.CustomerParkingSlotID = resultCustomerID.CustomerParkingSlotID;
+                                    objexlog.LocationParkingLotName = loguser.LocationParkingLotID.LocationParkingLotName;
+                                    objexlog.LocationParkingLotID = loguser.LocationParkingLotID.LocationParkingLotID;
+                                    objexlog.ExpectedStartTime = Convert.ToDateTime(items.ParkingStartTime);
+                                    objexlog.ExpectedEndTime = Convert.ToDateTime(items.ParkingEndTime);
+                                    objexlog.CreatedBy = loguser.UserID;
 
+                                    if (resultCustomerID != null && resultCustomerID.CustomerParkingSlotID != 0)
+                                    {
+                                        objexlog.ExceptionMessage = "Success";
+                                        objexlog.IsSync = true;
+                                        dal_Exceptionlog.InsertOfflineSynchException(Convert.ToString(App.Current.Properties["apitoken"]), objexlog);
+
+                                    }
+                                    else
+                                    {
+                                        objexlog.ExceptionMessage = "Failed";
+                                        objexlog.IsSync = false;
+                                        if (sbUnMoved.Length == 0)
+                                        {
+                                            sbUnMoved.AppendLine(items.RegistrationNumber);
+                                        }
+                                        else
+                                        {
+                                            sbUnMoved.AppendLine(", " + items.RegistrationNumber);
+                                        }
+                                        DeSyncVehicleCheckIn objdesync = new DeSyncVehicleCheckIn();
+                                        objdesync.VehicleTypeCode = items.VehicleTypeCode;
+                                        objdesync.BayRange = items.BayRange;
+                                        objdesync.RegistrationNumber = items.RegistrationNumber;
+                                        objdesync.LocationParkingLotName = items.LocationParkingLotName;
+                                        App.SQLiteDb.SaveDeSyncCheckInAsync(objdesync).Wait();
+                                        dal_Exceptionlog.InsertOfflineSynchException(Convert.ToString(App.Current.Properties["apitoken"]), objexlog);
+                                    }
+                                    Task<int> resultdel = App.SQLiteDb.DeleteItemAsync(items);
+                                    if (resultdel.Result > 0)
+                                    {
+                                        totalCounts = totalCounts - 1;
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    if (sbUnMoved.Length == 0)
+                                    {
+                                        sbUnMoved.AppendLine(items.RegistrationNumber);
+                                    }
+                                    else
+                                    {
+                                        sbUnMoved.AppendLine(", " + items.RegistrationNumber);
+                                    }
+                                    dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "CheckInPage.xaml.cs", "", "frmOnlineSynchGesutre_Tapped");
+                                    dal_Exceptionlog.InsertOfflineSynchException(Convert.ToString(App.Current.Properties["apitoken"]), objexlog);
+                                }
+                            }
+                            else
+                            {
+                                if (sbUnMoved.Length == 0)
+                                {
+                                    sbUnMoved.AppendLine(items.RegistrationNumber);
+                                }
+                                else
+                                {
+                                    sbUnMoved.AppendLine(", " + items.RegistrationNumber);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return sbUnMoved.ToString();
+        }
+        #endregion
     }
 }

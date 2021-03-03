@@ -50,6 +50,8 @@ namespace ParkHyderabadOperator.DAL.DALLogin
                             if (apiResult.Result)
                             {
                                 resultObj = JsonConvert.DeserializeObject<User>(Convert.ToString(apiResult.Object));
+
+                               
                             }
                         }
                     }

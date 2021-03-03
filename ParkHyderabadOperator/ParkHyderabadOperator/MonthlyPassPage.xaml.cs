@@ -7,6 +7,10 @@ using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using ParkHyderabadOperator.Model.APIInputModel;
+using System.IO;
+using System.Collections.Generic;
+using ParkHyderabadOperator.DAL.DALMenuBar;
+using System.Threading.Tasks;
 
 namespace ParkHyderabadOperator
 {
@@ -50,7 +54,7 @@ namespace ParkHyderabadOperator
             else if (NewOrReNew == "ReNew Pass")
             {
                 labelGeneratePassPageTitle.Text = "RENEW PASS";
-                labelInclude.Text = "(Including Card)";
+              
                 slADDNFC.IsVisible = false;
                 //Get ReNew Customer Details From APP Properties
                 if (App.Current.Properties.ContainsKey("ReNewPassCustomerVehicle"))
@@ -63,21 +67,23 @@ namespace ParkHyderabadOperator
                     entryRegistrationNumber.Text = objReNewVehicle.CustomerVehicleID.RegistrationNumber;
                     entryPhoneNumber.Text = objReNewVehicle.CustomerVehicleID.CustomerID.PhoneNumber;
                     entryName.Text = objReNewVehicle.CustomerVehicleID.CustomerID.Name;
-
                     entryRegistrationNumber.IsReadOnly = true;
                     entryPhoneNumber.IsReadOnly = true;
                     entryName.IsReadOnly = true;
+
+                    labelDueAmount.Text = String.Format("{0:0.#}", objResultVMPass.Price);
                     if (objReNewVehicle.IssuedCard)
                     {
                         checkAddNFCCard.IsChecked = true;
                         labelInclude.Text = "(Including Tag)";
-                        labelPassAmount.Text = (objReNewVehicle.PassPriceID.Price + objReNewVehicle.PassPriceID.NFCCardPrice).ToString("N2");
+                        labelPassAmount.Text = String.Format("{0:0.#}", (objReNewVehicle.PassPriceID.Price + objReNewVehicle.PassPriceID.NFCCardPrice));
 
                     }
                     else
                     {
                         labelInclude.Text = "";
                         labelPassAmount.Text = (objReNewVehicle.PassPriceID.Price).ToString("N2");
+
                     }
                     int daystoexpire = (Convert.ToDateTime(objReNewVehicle.ExpiryDate).Date - DateTime.Now.Date).Days;
                     if (daystoexpire >= 0)
@@ -90,6 +96,7 @@ namespace ParkHyderabadOperator
                     {
                         objResultVMPass.EndDate = Convert.ToDateTime(objResultVMPass.StartDate).AddDays(passduration);
                     }
+                    GetVehiceDueAmont(objReNewVehicle.CustomerVehicleID.RegistrationNumber, objResultVMPass.VehicleTypeID.VehicleTypeCode);
                 }
             }
             FillPassDetails();
@@ -103,24 +110,26 @@ namespace ParkHyderabadOperator
                 if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                 {
                     objloginuser = (User)App.Current.Properties["LoginUser"];
-
+                    labelInclude.Text = "Pass";
                     labelNFCCharge.Text = objResultVMPass.NFCCardPrice == null || objResultVMPass.NFCCardPrice == 0 ? "0.00" + " Extra )" : objResultVMPass.NFCCardPrice.ToString("N2") + " Extra )";
                     slAllStationMessage.IsVisible = false;
                     labelMontlyPassStationTypes.Text = objResultVMPass.StationAccess.ToUpper();
+                    labelPassType.Text = objResultVMPass.PassTypeID.PassTypeName.ToUpper();
 
                     if (objCustomerPass.IssuedCard)
                     {
-                        labelInclude.Text = "(Including Tag)";
-                        labelPassAmount.Text = (objResultVMPass.Price + objResultVMPass.NFCCardPrice).ToString("N2");
+                        labelInclude.Text = labelInclude.Text + "Pass (Including Tag)";
+                        labelPassAmount.Text = String.Format("{0:0.#}", (objResultVMPass.Price + objResultVMPass.NFCCardPrice));
+                        labelTotalFee.Text = String.Format("{0:0.#}",    objResultVMPass.Price + objResultVMPass.NFCCardPrice);
                     }
                     else
                     {
-                        labelPassAmount.Text = objResultVMPass.Price.ToString("N2");
+                        labelPassAmount.Text = String.Format("{0:0.#}", objResultVMPass.Price);
+                        labelTotalFee.Text = String.Format("{0:0.#}",  objResultVMPass.Price);
                     }
 
                     labelValidFrom.Text = Convert.ToDateTime(objResultVMPass.StartDate).ToString("dd MMM yyyy");
                     labelValidTo.Text = Convert.ToDateTime(objResultVMPass.EndDate).ToString("dd MMM yyyy");
-
 
                     //Verify Station Type
                     if (objResultVMPass.StationAccess.ToUpper() == "Single Station")
@@ -141,15 +150,7 @@ namespace ParkHyderabadOperator
                         slAllStationMessage.IsVisible = true;
                     }
                     // Verify Customer Vehicle Type
-                    if (objResultVMPass.VehicleTypeID.VehicleTypeCode == "2W")
-                    {
-                        imgCustomerVehcileType.Source = ImageSource.FromFile("bike_black.png");
-                    }
-                    else if (objResultVMPass.VehicleTypeID.VehicleTypeCode == "4W")
-                    {
-                        imgCustomerVehcileType.Source = ImageSource.FromFile("car_black.png");
-                    }
-
+                    imgCustomerVehcileType.Source = objResultVMPass.VehicleTypeID.VehicleIcon;
                 }
 
 
@@ -183,6 +184,7 @@ namespace ParkHyderabadOperator
                                         if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                                         {
                                             User objloginuser = (User)App.Current.Properties["LoginUser"];
+                                            objCustomerPass.CustomerVehicleID.VehicleTypeID = objResultVMPass.VehicleTypeID;
                                             objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode = objResultVMPass.VehicleTypeID.VehicleTypeCode;
                                             objCustomerPass.CustomerVehicleID.RegistrationNumber = entryRegistrationNumber.Text;
                                             objCustomerPass.CustomerVehicleID.CustomerID.Name = entryName.Text;
@@ -286,6 +288,7 @@ namespace ParkHyderabadOperator
                                         {
 
                                             User objloginuser = (User)App.Current.Properties["LoginUser"];
+                                            objCustomerPass.CustomerVehicleID.VehicleTypeID = objResultVMPass.VehicleTypeID;
                                             objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode = objResultVMPass.VehicleTypeID.VehicleTypeCode;
                                             objCustomerPass.CustomerVehicleID.RegistrationNumber = entryRegistrationNumber.Text;
                                             objCustomerPass.CustomerVehicleID.CustomerID.Name = entryName.Text;
@@ -299,8 +302,6 @@ namespace ParkHyderabadOperator
                                             {
                                                 objCustomerPass.IsMultiLot = false;
                                             }
-
-
                                             if (checkAddNFCCard.IsChecked)
                                             {
                                                 objCustomerPass.IssuedCard = true;
@@ -313,7 +314,6 @@ namespace ParkHyderabadOperator
                                                 objCustomerPass.CardAmount = 0;
                                                 objCustomerPass.TotalAmount = objResultVMPass.Price;
                                             }
-
                                             objCustomerPass.PassPriceID.PassPriceID = objResultVMPass.PassPriceID;
                                             objCustomerPass.PassPriceID.PassTypeID.PassTypeID = objResultVMPass.PassTypeID.PassTypeID;
                                             objCustomerPass.PassPriceID.PassTypeID.PassTypeName = objResultVMPass.PassTypeID.PassTypeName;
@@ -375,15 +375,15 @@ namespace ParkHyderabadOperator
                 if (checkAddNFCCard.IsChecked)
                 {
                     objResultVMPass.NFCApplicable = true;
-                    labelInclude.Text = "(Including Tag)";
-                    labelPassAmount.Text = (objResultVMPass.Price + objResultVMPass.NFCCardPrice).ToString("N2");
+                    labelInclude.Text = "Pass (Including Tag)";
+                    labelPassAmount.Text =String.Format("{0:0.#}", (objResultVMPass.Price + objResultVMPass.NFCCardPrice));
 
                 }
                 else
                 {
                     objResultVMPass.NFCApplicable = false;
-                    labelInclude.Text = "";
-                    labelPassAmount.Text = (objResultVMPass.Price).ToString("N2");
+                    labelInclude.Text = "Pass";
+                    labelPassAmount.Text  = String.Format("{0:0.#}", (objResultVMPass.Price));
                 }
             }
             catch (Exception ex)
@@ -442,6 +442,120 @@ namespace ParkHyderabadOperator
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ReNewPassPage.xaml.cs", "", "VerifyPassVehicleCheckInStatus");
             }
             return alreadyCheckIn;
+        }
+
+        #region Vehicle Due Amount History ListView
+        public async void LoadVehicleDueHistory()
+        {
+            try
+            {
+                ShowLoading(true);
+                string vehicleType = string.Empty;
+                var dal_Menubar = new DALMenubar();
+                if (App.Current.Properties.ContainsKey("apitoken"))
+                {
+                    List<CustomerParkingSlot> lstVehicleHistory = null;
+                    CustomerVehicle objregistraionnumber = new CustomerVehicle();
+
+                    imagePopVehicleImage.Source = imgCustomerVehcileType.Source;
+                    labelPopVehicleDetails.Text = entryRegistrationNumber.Text;
+                    await Task.Run(() =>
+                    {
+                        lstVehicleHistory = dal_Menubar.GetVehicleDueAmountHistory(Convert.ToString(App.Current.Properties["apitoken"]), entryRegistrationNumber.Text, objResultVMPass.VehicleTypeID.VehicleTypeCode);
+                    });
+                    if (lstVehicleHistory.Count > 0)
+                    {
+                        lvVehicleDueAmount.ItemsSource = lstVehicleHistory;
+
+                    }
+                    popupDueAmount.IsVisible = true;
+                }
+                ShowLoading(false);
+            }
+            catch (Exception ex)
+            {
+                ShowLoading(false);
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ViolationVehicleInformation.xaml.cs", "", "LoadVehicleDueHistory");
+            }
+        }
+        private void lblPopCloseGesture_Tapped(object sender, EventArgs e)
+        {
+            try
+            {
+                ShowLoading(true);
+                popupDueAmount.IsVisible = false;
+                ShowLoading(false);
+            }
+            catch (Exception ex)
+            {
+                ShowLoading(false);
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ViolationVehicleInformation.xaml.cs", "", "lblPopCloseGesture_Tapped");
+            }
+        }
+        private void imgDueInfo_Clicked(object sender, EventArgs e)
+        {
+            try
+            {
+
+                LoadVehicleDueHistory();
+
+            }
+            catch (Exception ex)
+            {
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ViolationVehicleInformation.xaml.cs", "", "ImgClosePopUp_Clicked");
+            }
+        }
+        private void slDueAmountGesture_Tapped(object sender, EventArgs e)
+        {
+
+            try
+            {
+
+                LoadVehicleDueHistory();
+
+            }
+            catch (Exception ex)
+            {
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ViolationVehicleInformation.xaml.cs", "", "slDueAmountGesture_Tapped");
+            }
+        }
+        #endregion
+
+        public void ShowLoading(bool show)
+        {
+            StklauoutactivityIndicator.IsVisible = show;
+            activity.IsVisible = show;
+            activity.IsRunning = show;
+
+
+        }
+
+        private  void entryRegistrationNumber_Completed(object sender, EventArgs e)
+        {
+            var text = ((Entry)sender).Text;
+            GetVehiceDueAmont(text, objResultVMPass.VehicleTypeID.VehicleTypeCode);
+        }
+        public async void GetVehiceDueAmont(string RegistrationNumber,string VehicleTypeCode)
+        {
+            try
+            {
+                
+                var dal_Menubar = new DALMenubar();
+                imagePopVehicleImage.Source = imgCustomerVehcileType.Source;
+                labelPopVehicleDetails.Text = RegistrationNumber;
+                decimal dueAmount = 0;
+                await Task.Run(() =>
+                {
+                    dueAmount = dal_Menubar.GetVehicleDueAmount(Convert.ToString(App.Current.Properties["apitoken"]), RegistrationNumber, VehicleTypeCode);
+                });
+                labelDueAmount.Text = String.Format("{0:0.#}", dueAmount);
+                labelTotalFee.Text = String.Format("{0:0.#}", dueAmount + objResultVMPass.Price);
+
+            }
+            catch (Exception ex)
+            {
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "DailyPass.xaml.cs", "", "DailyPass");
+            }
         }
 
     }

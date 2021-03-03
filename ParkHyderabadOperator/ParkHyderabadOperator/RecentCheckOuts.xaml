@@ -21,19 +21,21 @@
                     </Frame>
                 </StackLayout>
                 <StackLayout   BackgroundColor="#FFFFFF">
-                    <StackLayout Margin="15,3,15,3">
+                    <StackLayout Margin="13,3,0,3">
                         <StackLayout Orientation="Horizontal" >
-                            <StackLayout x:Name="slVehicleTypes" Orientation="Horizontal" Spacing="5">
+                            <StackLayout x:Name="slVehicleTypes" Orientation="Horizontal" Spacing="1">
                                 <Button x:Name="btnTwoWheeler" Text="2W"  VerticalOptions="StartAndExpand"  Style="{StaticResource ButtonRegularMercuryStyle}" HeightRequest="33" WidthRequest="46" Clicked="BtnTwoWheeler_Clicked"/>
+                                <Button x:Name="btnThreeWheeler" Text="3W"  VerticalOptions="StartAndExpand"  Style="{StaticResource ButtonRegularMercuryStyle}"  HeightRequest="33" WidthRequest="46" Clicked="btnThreeWheeler_Clicked"/>
                                 <Button x:Name="btnFourWheeler" Text="4W"  VerticalOptions="StartAndExpand"  Style="{StaticResource ButtonRegularMercuryStyle}"  HeightRequest="33" WidthRequest="46" Clicked="BtnFourWheeler_Clicked"/>
+                                <Button x:Name="btnHeavyWheeler" Text="HW"  VerticalOptions="StartAndExpand"  Style="{StaticResource ButtonRegularMercuryStyle}"  HeightRequest="33" WidthRequest="47" Clicked="btnHeavyWheeler_Clicked"/>
                             </StackLayout>
-                            <StackLayout x:Name="slInOut" Orientation="Horizontal" Spacing="5">
+                            <StackLayout x:Name="slInOut" Orientation="Horizontal" Spacing="0">
                                 <Button x:Name="btnIns" IsVisible="false" Text="INs" VerticalOptions="StartAndExpand" Style="{StaticResource ButtonRegularMercuryStyle}"  HeightRequest="33" WidthRequest="62" Clicked="BtnIns_Clicked"/>
                                 <Button x:Name="btnOuts" Text="OUTs" VerticalOptions="StartAndExpand" Style="{StaticResource ButtonRegularMercuryStyle}"  HeightRequest="33" WidthRequest="62" Clicked="BtnOuts_Clicked"/>
                             </StackLayout>
-                            <StackLayout Orientation="Horizontal"  VerticalOptions="EndAndExpand">
-                                <Label Text="FOC" Style="{StaticResource LabelRegularRedStyle}" VerticalOptions="CenterAndExpand"/>
-                                <Switch IsToggled="False" x:Name="switchViolation" Toggled="SwitchViolation_Toggled"/>
+                            <StackLayout Orientation="Horizontal"  VerticalOptions="CenterAndExpand">
+                                <Label Text="FOC" Style="{StaticResource LabelRegularRedStyle}" FontSize="13" VerticalOptions="CenterAndExpand"/>
+                                <Switch IsToggled="False" x:Name="switchViolation" Toggled="SwitchViolation_Toggled" HorizontalOptions="EndAndExpand"/>
                             </StackLayout>
                         </StackLayout>
                     </StackLayout>

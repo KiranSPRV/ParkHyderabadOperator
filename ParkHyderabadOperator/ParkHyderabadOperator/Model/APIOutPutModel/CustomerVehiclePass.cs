@@ -61,6 +61,9 @@ namespace ParkHyderabadOperator.Model.APIOutPutModel
         public DateTime NFCCardActivateDate { get; set; }
         public User NFCCardActivatedByID { get; set; }
         public LocationParkingLot NFCSoldLotID { get; set; }
+        public string GSTNumber { get; set; }
+
+       
 
     }
 }

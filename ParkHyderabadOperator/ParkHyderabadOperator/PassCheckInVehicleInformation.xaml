@@ -49,7 +49,7 @@
                                                 </StackLayout>
                                                 <StackLayout >
                                                     <StackLayout Orientation="Horizontal">
-                                                        <Image x:Name="imageVehicleImage"  HeightRequest="20"  ></Image>
+                                                        <Image x:Name="imageVehicleImage"  HeightRequest="18"  ></Image>
                                                         <Label  x:Name="labelVehicleDetails"     Style="{StaticResource LabelProximaBoldStyle}" VerticalOptions="CenterAndExpand"></Label>
                                                         <Label x:Name="lblWarningCount" Style="{StaticResource LabelProximaRegRedStyle}"  HorizontalOptions="EndAndExpand" VerticalOptions="CenterAndExpand"/>
                                                     </StackLayout>

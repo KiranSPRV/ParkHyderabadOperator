@@ -57,6 +57,44 @@ namespace ParkHyderabadOperator.DAL.DALExceptionLog
             }
 
         }
+        public void InsertOfflineSynchException(string accessToken, OfflineSyncLog objexlog)
+        {
+            try
+            {
+
+
+               
+
+                string baseUrl = Convert.ToString(App.Current.Properties["BaseURL"]);
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(baseUrl);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    // Add the Authorization header with the AccessToken.
+                    client.DefaultRequestHeaders.Add("Authorization", "bearer  " + accessToken);
+                    // create the URL string.
+                    string url = "api/InstaOperator/postOPAPPOfflineSyncExceptionLog";
+                    // make the request
+
+                    var json = JsonConvert.SerializeObject(objexlog);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+                    HttpResponseMessage response = client.PostAsync(url, content).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string jsonString = response.Content.ReadAsStringAsync().Result;
+                        if (jsonString != null)
+                        {
+                            APIResponse apiResult = JsonConvert.DeserializeObject<APIResponse>(jsonString);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+        }
     }
 }
 

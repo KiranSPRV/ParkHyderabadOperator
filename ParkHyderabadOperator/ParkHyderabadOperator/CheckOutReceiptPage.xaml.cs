@@ -3,6 +3,7 @@ using ParkHyderabadOperator.Model;
 using ParkHyderabadOperator.Model.APIOutPutModel;
 using ParkHyderabadOperator.ViewModel;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -15,19 +16,20 @@ namespace ParkHyderabadOperator
         BlueToothDevicePrinting ObjblueToothDevicePrinting;
         string[] receiptlines = new string[17]; // Receipt Lines
         string VehicleInformation = string.Empty;
+
         public CheckOutReceiptPage()
         {
             InitializeComponent();
 
             ObjblueToothDevicePrinting = new BlueToothDevicePrinting();
-            LoadParkingVehicleDetails(null, null, VehicleInformation);
+            
         }
         public CheckOutReceiptPage(string vehicleInformation)
         {
             InitializeComponent();
             VehicleInformation = vehicleInformation;
             ObjblueToothDevicePrinting = new BlueToothDevicePrinting();
-            LoadParkingVehicleDetails(null, null, VehicleInformation);
+           
         }
         public CheckOutReceiptPage(string vehicleInformation, CustomerParkingSlot objInput)
         {
@@ -44,16 +46,8 @@ namespace ParkHyderabadOperator
                 labelParkingLocation.Text = objCheckOutReceipt.LocationParkingLotID.LocationID.LocationName + " " + objCheckOutReceipt.LocationParkingLotID.LocationParkingLotName + " " + objCheckOutReceipt.LocationParkingLotID.ParkingBayID.ParkingBayName + " " + objCheckOutReceipt.LocationParkingLotID.ParkingBayID.ParkingBayRange;
                 labelValidFrom.Text = objCheckOutReceipt.ActualStartTime == null ? "" : Convert.ToDateTime(objCheckOutReceipt.ActualStartTime).ToString("dd MMM yyyy,hh:mm tt");
                 labelValidTo.Text = objCheckOutReceipt.ActualEndTime == null ? "" : Convert.ToDateTime(objCheckOutReceipt.ActualEndTime).ToString("dd MMM yyyy,hh:mm tt");
-                if (objCheckOutReceipt.VehicleTypeID.VehicleTypeCode == "2W")
-                {
-                    vehicleType = "BIKE";
-                    imageVehicleImage.Source = ImageSource.FromFile("bike_black.jpg");
-                }
-                else if (objCheckOutReceipt.VehicleTypeID.VehicleTypeCode == "4W")
-                {
-                    vehicleType = "CAR";
-                    imageVehicleImage.Source = ImageSource.FromFile("car_black.jpg");
-                }
+                vehicleType = objCheckOutReceipt.VehicleTypeID.VehicleTypeDisplayName;
+                imageVehicleImage.Source = objCheckOutReceipt.VehicleTypeID.VehicleIcon;
                 labelVehicleDetails.Text = objCheckOutReceipt.CustomerVehicleID.RegistrationNumber;
                 imageParkingFeeImage.Source = "rupee_black.png";
                 labelParkingFeesDetails.Text = (objCheckOutReceipt.ExtendAmount + objCheckOutReceipt.ViolationFees + objCheckOutReceipt.ClampFees).ToString("N2") + "/-"; //objCheckOutReceipt.PaidAmount.ToString("N2") + "/-";
@@ -85,14 +79,14 @@ namespace ParkHyderabadOperator
                         receiptlines[3] = "\x1B\x21\x08" + vehicleType + ":" + objCheckOutReceipt.CustomerVehicleID.RegistrationNumber + "\x1B\x21\x00\n";
                         receiptlines[4] = "\x1B\x21\x01" + "In :" + (objCheckOutReceipt.ActualStartTime == null ? "" : Convert.ToDateTime(objCheckOutReceipt.ActualStartTime).ToString("dd MMM yyyy,hh:mm tt")) + "\x1B\x21\x00" + "\n";
                         receiptlines[5] = "\x1B\x21\x01" + "Out:" + (objCheckOutReceipt.ActualEndTime == null ? "" : Convert.ToDateTime(objCheckOutReceipt.ActualEndTime).ToString("dd MMM yyyy,hh:mm tt")) + "\x1B\x21\x00" + "\n";
-                        receiptlines[6] = "\x1B\x21\x01" + "Paid Amount: Rs" + (objCheckOutReceipt.PaidAmount).ToString("N2") + "\x1B\x21\x01" + "\n";
+                        receiptlines[6] = "\x1B\x21\x01" + "Paid Amount: Rs" + ((objCheckOutReceipt.ExtendAmount + objCheckOutReceipt.ViolationFees + objCheckOutReceipt.ClampFees)).ToString("N2") + "\x1B\x21\x01" + "\n";
                         receiptlines[7] = "\x1B\x21\x01" + "(Includes Violation)" + "\x1B\x21\x01" + "\n";
                         receiptlines[8] = "\x1B\x21\x01" + "Violation Fee:" + "Rs" + (objCheckOutReceipt.ClampFees).ToString("N2") + "\x1B\x21\x01" + "\n";
                         receiptlines[9] = "\x1B\x21\x06" + "Operator Id:" + objCheckOutReceipt.UserCode + "\x1B\x21\x00\n";
                         receiptlines[10] = "\x1B\x21\x01" + "(Supervisor Mobile:" + objCheckOutReceipt.SuperVisorID.PhoneNumber + ")" + "\x1B\x21\x00\n";
                         receiptlines[11] = "\x1B\x21\x06" + "Security available " + objCheckOutReceipt.LocationParkingLotID.LotOpenTime + "-" + objCheckOutReceipt.LocationParkingLotID.LotCloseTime + "\x1B\x21\x00\n";
                         receiptlines[12] = "\x1B\x21\x01" + "We are not responsible for your valuable items like laptop,       wallet,helmet etc." + "\x1B\x21\x00\n";
-                        receiptlines[13] = "\x1B\x21\x06" + "GST Number 36AACFZ1015E1ZL" + "\x1B\x21\x00\n";
+                        receiptlines[13] = "\x1B\x21\x06" + "GST Number"+ objCheckOutReceipt.GSTNumber + "\x1B\x21\x00\n";
                         receiptlines[14] = "\x1B\x21\x06" + "Amount includes 18% GST" + "\x1B\x21\x00\n";
                         receiptlines[15] = "" + "\n";
                         receiptlines[16] = "" + "\n";
@@ -186,47 +180,7 @@ namespace ParkHyderabadOperator
             }
 
         }
-        private void LoadParkingVehicleDetails(string Vehicle, string CheckInID, string VehicleInformation)
-        {
-            try
-            {
-                ParkingVechiles objParkingVechiles = new ParkingVechiles();
-                VMVehicleParking objVMVehicleParking = objParkingVechiles.GetParkingVehicleDetails(null, null);
-                labelParkingLocation.Text = objVMVehicleParking.Location + ", " + objVMVehicleParking.BayNumber;
-                labelValidFrom.Text = objVMVehicleParking.ParkingFromTime;
-                labelValidTo.Text = objVMVehicleParking.ParkingToTime;
-
-                imageVehicleImage.Source = objVMVehicleParking.VehicleImage;
-                labelVehicleDetails.Text = objVMVehicleParking.VehicleNumber;
-                if (objVMVehicleParking.PaymentType == "Cash")
-                {
-                    imageParkingFeeImage.Source = "rupee_black.png";
-                }
-                labelParkingFeesDetails.Text = objVMVehicleParking.ParkingFees + "/-";
-
-
-                if (VehicleInformation == "ViolationVehicleInformation")
-                {
-                    labelParkingPaymentType.Text = "Paid for 13hr - " + "By " + objVMVehicleParking.PaymentType;
-                    labelCheckOutFeesDetails.Text = "(Parking" + " ₹" + "40" + " + " + "Clamp" + " ₹" + "50)";
-                }
-                else if (VehicleInformation == "OverstayVehicleInformation")
-                {
-                    labelParkingPaymentType.Text = "Paid for 3hr - " + "By " + objVMVehicleParking.PaymentType;
-                    labelCheckOutFeesDetails.Text = "";
-                    labelCheckOutFeesDetails.IsVisible = false;
-                }
-
-                imageOperatorProfile.Source = "operator.png";
-                labelOperatorName.Text = "Rambabu";
-                labelOperatorID.Text = " - #123456";
-            }
-            catch (Exception ex)
-            {
-
-            }
-        }
-
+      
 
     }
 }

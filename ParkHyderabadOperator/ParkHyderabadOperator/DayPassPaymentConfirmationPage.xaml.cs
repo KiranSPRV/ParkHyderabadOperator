@@ -6,7 +6,7 @@ using System;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-
+using System.IO;
 
 namespace ParkHyderabadOperator
 {
@@ -43,15 +43,7 @@ namespace ParkHyderabadOperator
             {
                 stLayoutDailyPassGeneratePassReceipt.IsVisible = false;
                 objCustomerDayPass = objCustomerPass;
-
-                if (objCustomerDayPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "2W")
-                {
-                    ImgVehicleType.Source = ImageSource.FromFile("bike_black.png");
-                }
-                else if (objCustomerDayPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "4W")
-                {
-                    ImgVehicleType.Source = ImageSource.FromFile("car_black.png");
-                }
+                ImgVehicleType.Source =objCustomerDayPass.CustomerVehicleID.VehicleTypeID.VehicleIcon;
                 labelPassType.Text = "( "+objCustomerDayPass.PassPriceID.PassTypeID.PassTypeName+" )";
                 labelVehicleRegNumber.Text = objCustomerDayPass.CustomerVehicleID.RegistrationNumber;
                 labelParkingLocation.Text = objCustomerDayPass.LocationID.LocationName + "-" + objCustomerDayPass.PassPriceID.StationAccess;

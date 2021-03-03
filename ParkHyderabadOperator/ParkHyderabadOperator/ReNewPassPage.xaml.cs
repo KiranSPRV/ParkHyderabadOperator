@@ -5,6 +5,7 @@ using ParkHyderabadOperator.Model.APIInputModel;
 using ParkHyderabadOperator.Model.APIOutPutModel;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -74,15 +75,9 @@ namespace ParkHyderabadOperator
                             entryRegistrationNumber.Text = objResultCustomerVehiclePass.CustomerVehicleID.RegistrationNumber;
                             labelNFCCardAmount.Text = objResultCustomerVehiclePass.PassPriceID.NFCCardPrice == 0 ? "0.00" : " ( ₹ " + objResultCustomerVehiclePass.PassPriceID.NFCCardPrice.ToString("N2") + " EXTRA )";
                             BtnChoosePass.IsEnabled = true;
+                           
                             // Verify Customer Vehicle Type
-                            if (objResultCustomerVehiclePass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "2W")
-                            {
-                                imgCustomerVehcileType.Source = ImageSource.FromFile("bike_black.png");
-                            }
-                            else if (objResultCustomerVehiclePass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "4W")
-                            {
-                                imgCustomerVehcileType.Source = ImageSource.FromFile("car_black.png");
-                            }
+                            imgCustomerVehcileType.Source =objResultCustomerVehiclePass.CustomerVehicleID.VehicleTypeID.VehicleIcon;
                             if (objResultCustomerVehiclePass.PassPriceID.PassTypeID.PassTypeCode.ToUpper() == "WP")
                             {
                                 slNFC.IsVisible = false;
@@ -91,6 +86,9 @@ namespace ParkHyderabadOperator
                             {
                                 slNFC.IsVisible = true;
                             }
+
+
+
                         }
                         else
                         {

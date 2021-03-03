@@ -14,5 +14,9 @@ namespace ParkHyderabadOperator.ViewModel.VMHome
         public bool IsActive { get; set; }
         public string LotOpenTime { get; set; }
         public string LotCloseTime { get; set; }
+        
+        public string[] LotVehicleAvailabilityName { get; set; }
+
+
     }
 }

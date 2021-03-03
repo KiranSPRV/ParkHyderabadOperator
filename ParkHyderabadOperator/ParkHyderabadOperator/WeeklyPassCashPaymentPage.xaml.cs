@@ -33,15 +33,7 @@ namespace ParkHyderabadOperator
             {
                 stLayoutDailyPassGeneratePassReceipt.IsVisible = false;
                 objCustomerweeklyPass = objCustomerPass;
-                if (objCustomerweeklyPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "2W")
-                {
-                    ImgVehicleType.Source = ImageSource.FromFile("bike_black.png");
-                }
-                else if (objCustomerweeklyPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "4W")
-                {
-                    ImgVehicleType.Source = ImageSource.FromFile("car_black.png");
-                }
-
+                ImgVehicleType.Source = objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleIcon;
                 labelVehicleRegNumber.Text = objCustomerweeklyPass.CustomerVehicleID.RegistrationNumber;
                 labelParkingLocation.Text = objCustomerweeklyPass.LocationID.LocationName + "-" + "Single Station";
                 labelPassAmount.Text = objCustomerweeklyPass.Amount.ToString("N2") + "/-";

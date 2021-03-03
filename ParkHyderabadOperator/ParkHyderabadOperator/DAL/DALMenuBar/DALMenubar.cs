@@ -213,7 +213,6 @@ namespace ParkHyderabadOperator.DAL.DALMenuBar
             }
             return resultmsg;
         }
-
         public List<RecentCheckOutDays> GetRecentCheckOutDays()
         {
             List<RecentCheckOutDays> lstRecentCheckOutDays = new List<RecentCheckOutDays>();
@@ -265,5 +264,88 @@ namespace ParkHyderabadOperator.DAL.DALMenuBar
             }
             return lstCustomerParkingSlot;
         }
+
+
+        #region Customer Vehicle Due Amount History
+        public List<CustomerParkingSlot> GetVehicleDueAmountHistory(string accessToken, string RegistrationNumber, string VehicleTypeCode)
+        {
+            List<CustomerParkingSlot> lstDueAmounthistory = new List<CustomerParkingSlot>();
+            try
+            {
+                string baseUrl = Convert.ToString(App.Current.Properties["BaseURL"]);
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(baseUrl);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    // Add the Authorization header with the AccessToken.
+                    client.DefaultRequestHeaders.Add("Authorization", "bearer  " + accessToken);
+                    // create the URL string.
+                    string url = "api/InstaOperator/getVehicleDueAmountHistory?RegistrationNumber=" + Convert.ToString(RegistrationNumber)+"&VehicleTypeCode=" + Convert.ToString(VehicleTypeCode);
+                    // make the request
+                    
+                    HttpResponseMessage response = client.GetAsync(url).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string jsonString = response.Content.ReadAsStringAsync().Result;
+                        if (jsonString != null)
+                        {
+                            APIResponse apiResult = JsonConvert.DeserializeObject<APIResponse>(jsonString);
+                            if (apiResult.Result)
+                            {
+                                lstDueAmounthistory = JsonConvert.DeserializeObject<List<CustomerParkingSlot>>(Convert.ToString(apiResult.Object));
+
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return lstDueAmounthistory;
+        }
+        public decimal GetVehicleDueAmount(string accessToken, string RegistrationNumber, string VehicleTypeCode)
+        {
+            decimal DueAmount = 0;
+            try
+            {
+                string baseUrl = Convert.ToString(App.Current.Properties["BaseURL"]);
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(baseUrl);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    // Add the Authorization header with the AccessToken.
+                    client.DefaultRequestHeaders.Add("Authorization", "bearer  " + accessToken);
+                    // create the URL string.
+                    string url = "api/InstaOperator/getVehicleDueAmount?RegistrationNumber=" + Convert.ToString(RegistrationNumber) + "&VehicleTypeCode=" + Convert.ToString(VehicleTypeCode);
+                    // make the request
+
+                    HttpResponseMessage response = client.GetAsync(url).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string jsonString = response.Content.ReadAsStringAsync().Result;
+                        if (jsonString != null)
+                        {
+                            APIResponse apiResult = JsonConvert.DeserializeObject<APIResponse>(jsonString);
+                            if (apiResult.Result)
+                            {
+
+                                DueAmount = apiResult.Object==null?0:Convert.ToDecimal( apiResult.Object);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return DueAmount;
+        }
+
+        #endregion
+
+
     }
 }

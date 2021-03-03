@@ -472,5 +472,49 @@ namespace ParkHyderabadOperator.DAL.DALPass
             }
             return nfccardVehicle;
         }
+
+        public List<VehicleType> GetAllVehicleTypes(string accessToken)
+        {
+            dal_DALExceptionManagment = new DALExceptionManagment();
+            List<VehicleType> lstVehicleType = new List<VehicleType>();
+            try
+            {
+                string baseUrl = Convert.ToString(App.Current.Properties["BaseURL"]);
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(baseUrl);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    // Add the Authorization header with the AccessToken.
+                    client.DefaultRequestHeaders.Add("Authorization", "bearer  " + accessToken);
+                    // create the URL string.
+                    string url = "api/InstaOperator/getAllVehicleTypes";
+                    // make the request
+                    
+                   
+                    HttpResponseMessage response = client.GetAsync(url).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string jsonString = response.Content.ReadAsStringAsync().Result;
+                        if (jsonString != null)
+                        {
+                            APIResponse apiResult = JsonConvert.DeserializeObject<APIResponse>(jsonString);
+
+                            if (apiResult.Result)
+                            {
+                                lstVehicleType = JsonConvert.DeserializeObject<List<VehicleType>>(Convert.ToString(apiResult.Object));
+                               
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                dal_DALExceptionManagment.InsertException(accessToken, "OperatarAPP", ex.Message, "DALPass", "", "GetAllVehicleTypes");
+            }
+            return lstVehicleType;
+        }
+
     }
 }

@@ -13,6 +13,8 @@ namespace ParkHyderabadOperator.Model.APIOutPutModel
         public Location LocationID { get; set; }
         public int ParkingTypeID { get; set; }
         public int VehicleTypeID { get; set; }
+        public string[] LotVehicleAvailabilityName { get; set; }
+        
         public ParkingBay ParkingBayID { get; set; }
         public int ParentLocationParkingLotID { get; set; }
         public string LocationParkingLotCode { get; set; }

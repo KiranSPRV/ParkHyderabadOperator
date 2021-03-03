@@ -4,6 +4,7 @@ using ParkHyderabadOperator.Model;
 using ParkHyderabadOperator.Model.APIOutPutModel;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -32,7 +33,7 @@ namespace ParkHyderabadOperator
         }
 
         #region Searh Box Related Code
-        public async void GetAllPassedVehicles()
+        public  void GetAllPassedVehicles()
         {
             try
             {
@@ -50,7 +51,7 @@ namespace ParkHyderabadOperator
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ValidatePassPage.xaml.cs", "", "GetAllPassedVehicles");
             }
         }
-        public async Task GetSelectedVehicleDetails(CustomerVehicle selectedVehicle)
+        public  void GetSelectedVehicleDetails(CustomerVehicle selectedVehicle)
         {
             string Locations = string.Empty;
             string vehicleType = string.Empty;
@@ -82,7 +83,7 @@ namespace ParkHyderabadOperator
                         }
                         else
                         {
-                           
+
                             Locations = objResultCustomerVehiclePass.LocationID.LocationName;
                         }
 
@@ -90,16 +91,8 @@ namespace ParkHyderabadOperator
                         labelParkingLot.Text = Locations + "-" + objResultCustomerVehiclePass.PassPriceID.StationAccess;
                         labelValidFrom.Text = Convert.ToDateTime(objResultCustomerVehiclePass.StartDate).ToString("dd MMM yyyy");
                         labelValidTo.Text = Convert.ToDateTime(objResultCustomerVehiclePass.ExpiryDate).ToString("dd MMM yyyy ");
-                        if (objResultCustomerVehiclePass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "2W")
-                        {
-                            vehicleType = "BIKE";
-                            imageVehicleImage.Source = "bike_black.png";
-                        }
-                        if (objResultCustomerVehiclePass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "4W")
-                        {
-                            vehicleType = "CAR";
-                            imageVehicleImage.Source = "car_black.png";
-                        }
+                        vehicleType = objResultCustomerVehiclePass.CustomerVehicleID.VehicleTypeID.VehicleTypeDisplayName;
+                        imageVehicleImage.Source =objResultCustomerVehiclePass.CustomerVehicleID.VehicleTypeID.VehicleIcon;
 
                         labelCustomerName.Text = objResultCustomerVehiclePass.CustomerVehicleID.CustomerID.Name;
                         labelVehicleDetails.Text = objResultCustomerVehiclePass.CustomerVehicleID.RegistrationNumber;
@@ -117,7 +110,7 @@ namespace ParkHyderabadOperator
                         {
                             imageOperatorProfile.IsVisible = true;
                             labelOperatorName.Text = objResultCustomerVehiclePass.CreatedBy.UserName;
-                            labelOperatorID.Text ="- #"+Convert.ToString(objResultCustomerVehiclePass.CreatedBy.UserCode);
+                            labelOperatorID.Text = "- #" + Convert.ToString(objResultCustomerVehiclePass.CreatedBy.UserCode);
                         }
                         else
                         {
@@ -192,7 +185,7 @@ namespace ParkHyderabadOperator
             listViewVehicleRegistrationNumbers.EndRefresh();
 
         }
-        private async void listViewVehicleRegistrationNumbers_OnItemTapped(Object sender, ItemTappedEventArgs e)
+        private  void listViewVehicleRegistrationNumbers_OnItemTapped(Object sender, ItemTappedEventArgs e)
         {
             try
             {
@@ -217,8 +210,14 @@ namespace ParkHyderabadOperator
         {
             try
             {
-                var masterPage = new MasterHomePage();
-                await Navigation.PushAsync(masterPage);
+                ShowLoading(true);
+                MasterHomePage masterHomePage = null;
+                await Task.Run(() =>
+                {
+                    masterHomePage = new MasterHomePage();
+                });
+                await Navigation.PushAsync(masterHomePage);
+                ShowLoading(false);
             }
             catch (Exception ex)
             {
@@ -229,7 +228,7 @@ namespace ParkHyderabadOperator
         {
             try
             {
-                
+
                 string printerName = string.Empty;
                 printerName = ObjblueToothDevicePrinting.GetBlueToothDevices();
                 if (printerName != string.Empty && printerName != "")
@@ -257,6 +256,20 @@ namespace ParkHyderabadOperator
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ValidatePassPage.xaml.cs", "", "BtnPrint_Clicked");
                 await DisplayAlert("Alert", "Unable to Print,Please contact Admin", "Ok");
             }
+        }
+        public void ShowLoading(bool show)
+        {
+            StklauoutactivityIndicator.IsVisible = show;
+
+            if (show)
+            {
+                absLayoutValidatePasspage.Opacity = 0.5;
+            }
+            else
+            {
+                absLayoutValidatePasspage.Opacity = 1;
+            }
+
         }
     }
 }

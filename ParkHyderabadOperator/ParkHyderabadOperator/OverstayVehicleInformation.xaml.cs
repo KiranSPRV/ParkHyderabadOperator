@@ -6,6 +6,7 @@ using ParkHyderabadOperator.Model.APIInputModel;
 using ParkHyderabadOperator.Model.APIOutPutModel;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -45,10 +46,6 @@ namespace ParkHyderabadOperator
             lstReasons = new List<ViolationReason>();
             LoadGetViolationReasons();
             LoadParkingVehicleDetails(CustomerParkingSlotID);
-
-
-
-
         }
 
         private void LoadParkingVehicleDetails(int customerParkingSlotID)
@@ -66,23 +63,13 @@ namespace ParkHyderabadOperator
                         labelCheckInBy.Text = objresult.CreatedByName + " #" + objresult.UserCode;
                         labelOverstayFrom.Text = objresult.ExpectedStartTime == null ? null : Convert.ToDateTime(objresult.ExpectedStartTime).ToString("dd MMM yyyy, hh:mm tt");
                         labelOverstayTo.Text = objresult.ActualEndTime == null ? DateTime.Now.ToString("dd MMM yyyy, hh:mm tt") : Convert.ToDateTime(objresult.ActualEndTime).ToString("dd MMM yyyy, hh:mm tt");
-
                         User objloginuser = (User)App.Current.Properties["LoginUser"];
                         if (objloginuser.UserTypeID.UserTypeName.ToUpper() != "Operator".ToUpper())
                         {
                             slFOC.IsVisible = true;
                         }
-
-                        if (Convert.ToString(objresult.VehicleTypeID.VehicleTypeCode) == "2W")
-                        {
-                            imageVehicleImage.Source = "bike_black.png";
-                            labelVehicleDetails.Text = objresult.CustomerVehicleID.RegistrationNumber;
-                        }
-                        else if (Convert.ToString(objresult.VehicleTypeID.VehicleTypeCode) == "4W")
-                        {
-                            imageVehicleImage.Source = "car_black.png";
-                            labelVehicleDetails.Text = objresult.CustomerVehicleID.RegistrationNumber;
-                        }
+                        imageVehicleImage.Source = objresult.CustomerVehicleID.VehicleTypeID.VehicleIcon;
+                        labelVehicleDetails.Text = objresult.CustomerVehicleID.RegistrationNumber;
                         imageParkingFeeImage.Source = "rupee_black.png";
                         labelParkingFeesDetails.Text = (objresult.PaidAmount).ToString("N2") + "/-"; //(objresult.Amount+objresult.ExtendAmount).ToString("N2") + "/-";
 
@@ -98,7 +85,6 @@ namespace ParkHyderabadOperator
                         {
                             labelParkingPaymentType.Text = "Paid for " + string.Format(((Math.Abs(parkingduration.Hours) == 0 || Math.Abs(parkingduration.Hours) == 1) ? Convert.ToInt32(objresult.Duration) : parkingduration.Hours) + "hr") + "- By " + objresult.PaymentTypeID.PaymentTypeName;
                         }
-
                         DateTime? actualendime = objresult.ActualEndTime == null ? DateTime.Now : Convert.ToDateTime(objresult.ActualEndTime);
                         if (actualendime != null)
                         {

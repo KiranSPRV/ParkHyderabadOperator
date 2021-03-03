@@ -4,6 +4,7 @@ using ParkHyderabadOperator.Model.APIOutPutModel;
 using Plugin.NFC;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -49,6 +50,7 @@ namespace ParkHyderabadOperator
         }
 
         #region Searh Box Related Code
+       
         public void GetAllPassedVehicles()
         {
             try
@@ -85,15 +87,9 @@ namespace ParkHyderabadOperator
                         entryCustomerName.Text = objResultCustomerVehiclePass.CustomerVehicleID.CustomerID.Name;
                         entryPhoneNumber.Text = objResultCustomerVehiclePass.CustomerVehicleID.CustomerID.PhoneNumber;
                         entryRegistrationNumber.Text = objResultCustomerVehiclePass.CustomerVehicleID.RegistrationNumber;
+
                         // Verify Customer Vehicle Type
-                        if (objResultCustomerVehiclePass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "2W")
-                        {
-                            imgCustomerVehcileType.Source = ImageSource.FromFile("bike_black.png");
-                        }
-                        else if (objResultCustomerVehiclePass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "4W")
-                        {
-                            imgCustomerVehcileType.Source = ImageSource.FromFile("car_black.png");
-                        }
+                        imgCustomerVehcileType.Source = objResultCustomerVehiclePass.CustomerVehicleID.VehicleTypeID.VehicleIcon;
                         if (objResultCustomerVehiclePass.PassPriceID.PassTypeID.PassTypeCode.ToUpper() == "WP")
                         {
                             await DisplayAlert("Alert", "NFC card not valid  for this Pass type.", "Ok");
@@ -151,6 +147,8 @@ namespace ParkHyderabadOperator
             listViewVehicleRegistrationNumbers.IsVisible = false;
             ((ListView)sender).SelectedItem = null;
         }
+     
+        
         #endregion
 
         private async void BtnContinue_Clicked(object sender, EventArgs e)

@@ -5,6 +5,7 @@ using ParkHyderabadOperator.Model.APIOutPutModel;
 using ParkHyderabadOperator.ViewModel.VMPass;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -49,27 +50,10 @@ namespace ParkHyderabadOperator
                 string stations = string.Empty;
                 labelParkingReceiptTitle.Text = "InstaParking-" + objReceipt.PassPriceID.PassTypeID.PassTypeName;
 
-                if (objReceipt.PassPriceID.PassTypeID.PassTypeCode == "DP")
-                {
-                    labelParkingLot.Text = objReceipt.LocationID.LocationName + "-" + objReceipt.PassPriceID.StationAccess;
-                    labelValidFrom.Text = Convert.ToDateTime(objReceipt.StartDate).ToString("dd MMM yyyy hh:mm tt");
-                    labelValidTo.Text = Convert.ToDateTime(objReceipt.ExpiryDate).ToString("dd MMM yyyy hh:mm tt");
-
-                }
-                else if (objReceipt.PassPriceID.PassTypeID.PassTypeCode == "EP")
-                {
-                    labelParkingLot.Text = objReceipt.LocationID.LocationName + "-" + objReceipt.PassPriceID.StationAccess;
-                    labelValidFrom.Text = Convert.ToDateTime(objReceipt.StartDate).ToString("dd MMM yyyy");
-                    labelValidTo.Text = Convert.ToDateTime(objReceipt.ExpiryDate).ToString("dd MMM yyyy");
-
-                }
-                else if (objReceipt.PassPriceID.PassTypeID.PassTypeCode == "WP")
-                {
-                    labelParkingLot.Text = objReceipt.LocationID.LocationName + "-" + objReceipt.PassPriceID.StationAccess;
-                    labelValidFrom.Text = Convert.ToDateTime(objReceipt.StartDate).ToString("dd MMM yyyy");
-                    labelValidTo.Text = Convert.ToDateTime(objReceipt.ExpiryDate).ToString("dd MMM yyyy");
-                }
-                else if (objReceipt.PassPriceID.PassTypeID.PassTypeCode == "MP")
+                labelParkingLot.Text = objReceipt.LocationID.LocationName + "-" + objReceipt.PassPriceID.StationAccess;
+                labelValidFrom.Text = Convert.ToDateTime(objReceipt.StartDate).ToString("dd MMM yyyy");
+                labelValidTo.Text = Convert.ToDateTime(objReceipt.ExpiryDate).ToString("dd MMM yyyy");
+                if (objReceipt.PassPriceID.PassTypeID.PassTypeCode == "MP")
                 {
                     if (objReceipt.PassPriceID.StationAccess == "Single Station")
                     {
@@ -98,19 +82,9 @@ namespace ParkHyderabadOperator
                     }
                     labelValidFrom.Text = Convert.ToDateTime(objReceipt.StartDate).ToString("dd MMM yyyy");
                     labelValidTo.Text = Convert.ToDateTime(objReceipt.ExpiryDate).ToString("dd MMM yyyy");
-
                 }
-                if (objReceipt.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "2W")
-                {
-                    vehicleType = "BIKE";
-                    imageVehicleImage.Source = "bike_black.png";
-                }
-                if (objReceipt.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "4W")
-                {
-                    vehicleType = "CAR";
-                    imageVehicleImage.Source = "car_black.png";
-                }
-
+                vehicleType = objReceipt.CustomerVehicleID.VehicleTypeID.VehicleTypeDisplayName;
+                imageVehicleImage.Source = objReceipt.CustomerVehicleID.VehicleTypeID.VehicleIcon;
                 labelCustomerName.Text = objReceipt.CustomerVehicleID.CustomerID.Name;
                 labelVehicleDetails.Text = objReceipt.CustomerVehicleID.RegistrationNumber;
 
@@ -125,7 +99,6 @@ namespace ParkHyderabadOperator
                     labelParkingPaymentType.Text = "Paid - By " + objReceipt.PaymentTypeID.PaymentTypeName;
 
                 }
-
                 if (objReceipt.CreatedBy.UserName != "")
                 {
                     labelOperatorName.Text = objReceipt.CreatedBy.UserName;
@@ -137,8 +110,7 @@ namespace ParkHyderabadOperator
                 {
                     imageOperatorProfile.IsVisible = false;
                 }
-                labelGSTNumber.Text = "36AACFZ1015E1ZL";
-
+                labelGSTNumber.Text = objReceipt.GSTNumber;
                 try
                 {
                     if (receiptlines != null && receiptlines.Length > 0)
@@ -218,6 +190,7 @@ namespace ParkHyderabadOperator
             try
             {
                 string printerName = string.Empty;
+                MasterHomePage masterPage = null;
                 ShowLoading(true);
                 if (App.Current.Properties.ContainsKey("MultiSelectionLocations"))
                 {
@@ -238,14 +211,17 @@ namespace ParkHyderabadOperator
                                     ObjblueToothDevicePrinting.PrintCommand(printerName, printtext);
                                 }
                             }
-                            var masterPage = new MasterHomePage();
-                            await Navigation.PushAsync(masterPage);
-
+                            
+                            await Task.Run(() =>
+                            {
+                                masterPage = new MasterHomePage();
+                            });
                         }
+                        await Navigation.PushAsync(masterPage);
                     }
                     else
                     {
-                        var masterPage = new MasterHomePage();
+                       
                         await DisplayAlert("Alert", "Unable to find Bluetooth device", "Ok");
                         await Navigation.PushAsync(masterPage);
                     }

@@ -5,37 +5,37 @@
              xmlns:local="clr-namespace:ParkHyderabadOperator.Behaviors"
              NavigationPage.HasBackButton="True" >
     <NavigationPage.TitleView>
+        
         <Label Text="VIOLATION"  Style="{StaticResource LabelRegularPageTitlesStyle}" Padding="0,0,70,0"/>
     </NavigationPage.TitleView>
     <ContentPage.Content>
         <AbsoluteLayout VerticalOptions="FillAndExpand"  x:Name="absLayoutViolationpage">
             <StackLayout   AbsoluteLayout.LayoutBounds="0,0,1,0.9"  AbsoluteLayout.LayoutFlags="All" Orientation="Vertical"  >
-                <StackLayout Margin="15,0,15,0">
-                    <StackLayout Orientation="Horizontal"  Spacing="20" VerticalOptions="Center" HorizontalOptions="Center">
-                        <StackLayout Orientation="Vertical" Spacing="10">
-                            <StackLayout.GestureRecognizers >
-                                <TapGestureRecognizer x:Name="slTwoWheeler" Tapped="SlTwoWheeler_Tapped"/>
-                            </StackLayout.GestureRecognizers>
-                            <Image x:Name="imgBtnTwoWheeler" HeightRequest="50"  BackgroundColor="Transparent" Aspect="AspectFit"  Source="Twowheeler_circle.png" >
-                                <Image.GestureRecognizers>
-                                    <TapGestureRecognizer   Tapped="SlTwoWheeler_Tapped"  />
-                                </Image.GestureRecognizers>
-                            </Image>
-                            <Label Text="Two Wheeler" HorizontalOptions="Center" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
-                        </StackLayout>
-                        <StackLayout Orientation="Vertical" Spacing="10">
-                            <StackLayout.GestureRecognizers>
-                                <TapGestureRecognizer x:Name="slFourWheeler" Tapped="SlFourWheeler_Tapped"/>
-                            </StackLayout.GestureRecognizers>
-                            <Image x:Name="imgBtnFourWheeler" BackgroundColor="Transparent" HeightRequest="50"   Source="Fourwheeler_circle.png" >
-                                <Image.GestureRecognizers>
-                                    <TapGestureRecognizer   Tapped="SlFourWheeler_Tapped"  />
-                                </Image.GestureRecognizers>
-                            </Image>
-                            <Label Text="Four Wheeler" HorizontalOptions="Center" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
-                        </StackLayout>
+                <StackLayout Margin="15,0,15,0" Spacing="0">
+                    <StackLayout   BackgroundColor="#f4f4f4" x:Name="slPassTypePageHeadingImages" Spacing="0">
+                        <CollectionView x:Name="collstviewVehicleTye"    SelectionMode="Single"   Margin="5"
+                                SelectionChanged="collstviewVehicleTye_SelectionChanged"   HeightRequest="150"
+                                    VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"
+                                    FlowDirection="RightToLeft"
+                                    BackgroundColor="#f4f4f4" 
+                                    EmptyView="No items to display">
+                                <CollectionView.ItemsLayout>
+                                    <GridItemsLayout  Orientation="Horizontal" HorizontalItemSpacing="15"/>
+                                </CollectionView.ItemsLayout>
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                    <Frame BackgroundColor="#FFFFFF"  CornerRadius="5" Padding="0"  VerticalOptions="Center" HorizontalOptions="CenterAndExpand" >
+                                            <StackLayout VerticalOptions="CenterAndExpand"     x:Name="slTwoWheelerImage" Margin="5" Spacing="0">
+                                                <Image HeightRequest="40"   HorizontalOptions="FillAndExpand"      BackgroundColor="Transparent"  
+                                                        Source="{Binding VehicleDisplayImage}" />
+                                                <Label Text="{Binding VehicleTypeName}" HorizontalOptions="CenterAndExpand" Style="{StaticResource LabelPlaceHolderStyle}"/>
+                                            </StackLayout>
+                                        </Frame>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
                     </StackLayout>
-                    <StackLayout Margin="0,15,0,15"   Orientation="Vertical">
+                    <StackLayout Margin="0,10,0,15"   Orientation="Vertical" >
                         <StackLayout Spacing="15">
                             <StackLayout Orientation="Vertical"  Spacing="0">
                                 <Label Text="Registration Number" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
@@ -72,7 +72,7 @@
                 </StackLayout>
             </StackLayout>
             <Frame CornerRadius="5" Padding="8"   BorderColor="#efefef"   AbsoluteLayout.LayoutBounds="0,1,1,0.1"  AbsoluteLayout.LayoutFlags="All"  BackgroundColor="#FFFFFF">
-                <StackLayout  Orientation="Vertical"  VerticalOptions="CenterAndExpand" Spacing="5">
+                <StackLayout  Orientation="Vertical"  VerticalOptions="CenterAndExpand" Spacing="5" Margin="10,0,10,0">
                     <Button Text="VIOLATION" x:Name="BtnViolation" Style="{StaticResource ButtonRegularRedStyle}" Clicked="BtnViolation_Clicked"></Button>
                     <Button x:Name="btnCheckIn" Style="{StaticResource ButtonRegularShamrockStyle}" Text="CHECK IN" TextColor="#FFFFFF" Clicked="BtnCheckIn_Clicked"/>
                 </StackLayout>

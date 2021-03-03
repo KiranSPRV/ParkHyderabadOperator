@@ -3,6 +3,7 @@ using ParkHyderabadOperator.DAL.DALPass;
 using ParkHyderabadOperator.Model;
 using ParkHyderabadOperator.Model.APIOutPutModel;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -29,14 +30,7 @@ namespace ParkHyderabadOperator
             try
             {
                 objCustomerPassNewNFC = objNewNFC;
-                if (objCustomerPassNewNFC.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "2W")
-                {
-                    ImgVehicleType.Source = ImageSource.FromFile("bike_black.png");
-                }
-                else if (objCustomerPassNewNFC.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "4W")
-                {
-                    ImgVehicleType.Source = ImageSource.FromFile("car_black.png");
-                }
+                ImgVehicleType.Source = objCustomerPassNewNFC.CustomerVehicleID.VehicleTypeID.VehicleIcon;
                 labelVehicleRegNumber.Text = objCustomerPassNewNFC.CustomerVehicleID.RegistrationNumber;
                 labelParkingLocation.Text = objCustomerPassNewNFC.CreatedBy.LocationParkingLotID.LocationID.LocationName + "-" + objCustomerPassNewNFC.PassPriceID.StationAccess;
                 labelEpaymentAmount.Text = objCustomerPassNewNFC.PassPriceID.NFCCardPrice.ToString("N2");

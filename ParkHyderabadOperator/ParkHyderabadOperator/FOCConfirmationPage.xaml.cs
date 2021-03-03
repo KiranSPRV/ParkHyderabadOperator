@@ -3,6 +3,7 @@ using ParkHyderabadOperator.DAL.DALViolation;
 using ParkHyderabadOperator.Model;
 using ParkHyderabadOperator.Model.APIOutPutModel;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -42,14 +43,7 @@ namespace ParkHyderabadOperator
             try
             {
                 objFOCVehicle = objfocvehicle;
-                if (objfocvehicle.VehicleTypeID.VehicleTypeCode == "2W")
-                {
-                    ImgVehicleType.Source = "bike_black.png";
-                }
-                else if (objfocvehicle.VehicleTypeID.VehicleTypeCode == "4W")
-                {
-                    ImgVehicleType.Source = "car_black.png";
-                }
+                ImgVehicleType.Source = objfocvehicle.CustomerVehicleID.VehicleTypeID.VehicleIcon;
                 labelVehicleRegNumber.Text = objfocvehicle.CustomerVehicleID.RegistrationNumber;
                 labelParkingLocation.Text = objfocvehicle.LocationParkingLotID.LocationID.LocationName + "-" + objfocvehicle.LocationParkingLotID.LocationParkingLotName + "," + objfocvehicle.LocationParkingLotID.ParkingBayID.ParkingBayName + " " + objfocvehicle.LocationParkingLotID.ParkingBayID.ParkingBayRange;
 
@@ -127,8 +121,6 @@ namespace ParkHyderabadOperator
                             {
                                 await DisplayAlert("Alert", "FOC Failed,Please contact Admin.", "Ok");
                             }
-
-
                         }
                         else
                         {

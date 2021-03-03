@@ -8,23 +8,34 @@
         <Label Text="FILTERS"  Style="{StaticResource LabelRegularPageTitlesStyle}" Padding="0,0,70,0"/>
     </NavigationPage.TitleView>
     <ContentPage.Content>
-        <AbsoluteLayout VerticalOptions="FillAndExpand"  >
-            <StackLayout    AbsoluteLayout.LayoutBounds="0,0,1,0.12"  AbsoluteLayout.LayoutFlags="All" Orientation="Vertical" >
-                <StackLayout Margin="15,5,15,5">
-                    <StackLayout Orientation="Horizontal"  Spacing="30" VerticalOptions="Center" HorizontalOptions="Center">
-                        <StackLayout Orientation="Vertical" Spacing="10">
-                            <ImageButton x:Name="imgBtnTwoWheeler" HeightRequest="50"  BackgroundColor="Transparent"  Source="Twowheeler_circle.png" Clicked="ImgBtnTwoWheeler_Clicked"></ImageButton>
-                            <Label Text="Two Wheeler" HorizontalOptions="Center" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
-                        </StackLayout>
-                        <StackLayout Orientation="Vertical" Spacing="10">
-                            <ImageButton x:Name="imgBtnFourWheeler" BackgroundColor="Transparent" HeightRequest="50"   Source="Fourwheeler_circle.png" Clicked="ImgBtnFourWheeler_Clicked" ></ImageButton>
-                            <Label Text="Four Wheeler" HorizontalOptions="Center" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
-                        </StackLayout>
-                    </StackLayout>
-
+        <AbsoluteLayout VerticalOptions="FillAndExpand"  x:Name="absFilterPage">
+            <StackLayout    AbsoluteLayout.LayoutBounds="0,0,1,0.15"  AbsoluteLayout.LayoutFlags="All" Orientation="Vertical" >
+                <StackLayout Margin="5,0,5,0" BackgroundColor="#F4F4F4">
+                        <CollectionView x:Name="collstviewVehicleTye"    SelectionMode="Single" 
+                                SelectionChanged="collstviewVehicleTye_SelectionChanged"  WidthRequest="300" Margin="5"
+                                   VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"
+                                    FlowDirection="RightToLeft"
+                                    BackgroundColor="#f4f4f4" 
+                                    EmptyView="No items to display">
+                            <CollectionView.ItemsLayout>
+                                <GridItemsLayout  Orientation="Horizontal" HorizontalItemSpacing="15"/>
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame BackgroundColor="#FFFFFF"  CornerRadius="5" Padding="0"  VerticalOptions="Center" HorizontalOptions="CenterAndExpand" >
+                                    <StackLayout VerticalOptions="CenterAndExpand"     x:Name="slTwoWheelerImage" Margin="5" Spacing="0">
+                                        <Image HeightRequest="40"   HorizontalOptions="FillAndExpand"      BackgroundColor="Transparent"  
+                                                        Source="{Binding VehicleDisplayImage}" />
+                                        <Label Text="{Binding VehicleTypeName}" HorizontalOptions="CenterAndExpand" Style="{StaticResource LabelPlaceHolderStyle}"/>
+                                    </StackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                        </CollectionView>
+                   
                 </StackLayout>
             </StackLayout>
-            <StackLayout   AbsoluteLayout.LayoutBounds="0,0.45,1,0.7"   AbsoluteLayout.LayoutFlags="All" Orientation="Vertical" >
+            <StackLayout   AbsoluteLayout.LayoutBounds="0,0.55,1,0.7"   AbsoluteLayout.LayoutFlags="All" Orientation="Vertical" >
                 <StackLayout Margin="30,5,30,5" Spacing="10">
                     <ListView x:Name="LstApplicationTypes"    RowHeight="50" SeparatorVisibility="None" >
                         <ListView.ItemTemplate>
@@ -90,11 +101,15 @@
                 </StackLayout>
 
             </StackLayout>
-
-            <StackLayout    AbsoluteLayout.LayoutBounds="0,1,1,0.13"  Padding="5" AbsoluteLayout.LayoutFlags="All"  BackgroundColor="#FFFFFF">
+            <StackLayout    AbsoluteLayout.LayoutBounds="0,1,1,0.1"  Padding="5" AbsoluteLayout.LayoutFlags="All"  BackgroundColor="#FFFFFF">
                 <Button x:Name="btnApply"  Style="{StaticResource ButtonRegularDodgerBlueStyle}" VerticalOptions="CenterAndExpand"  Text="APPLY" Clicked="BtnApply_Clicked" Margin="15,0,15,0" />
             </StackLayout>
-
+            <ContentView x:Name="StklauoutactivityIndicator" BackgroundColor="Transparent"  IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                <StackLayout Orientation="Vertical" HeightRequest="150" WidthRequest="100" BackgroundColor="Transparent" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="0">
+                    <ActivityIndicator  x:Name="activity" IsEnabled="True" IsVisible="False" IsRunning="False"   HeightRequest="80" Color="#010101"  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></ActivityIndicator>
+                    <Label x:Name="LabelLodaingMsg" Text="Loading..."  Style="{StaticResource LabelProximaBoldStyle}" FontSize="18" TextColor="#010101"   VerticalOptions="StartAndExpand" HorizontalOptions="CenterAndExpand"></Label>
+                </StackLayout>
+            </ContentView>
         </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>
