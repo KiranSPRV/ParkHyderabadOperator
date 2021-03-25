@@ -72,7 +72,7 @@ namespace ParkHyderabadOperator
                         labelVehicleDetails.Text = objresult.CustomerVehicleID.RegistrationNumber;
                         imageParkingFeeImage.Source = "rupee_black.png";
                         labelParkingFeesDetails.Text = (objresult.PaidAmount).ToString("N2") + "/-"; //(objresult.Amount+objresult.ExtendAmount).ToString("N2") + "/-";
-
+                        labelPaidDueAmountDetails.Text = "( Parking Amount:" +Math.Abs(objresult.Amount- objresult.PaidDueAmount).ToString("N2") + "/-  " + "Paid Due Amount: " + objresult.PaidDueAmount.ToString("N2") + "/- )";
                         TimeSpan parkingduration = Convert.ToDateTime(objresult.ActualEndTime) - Convert.ToDateTime(objresult.ExpectedStartTime);
                         objresult.Duration = (objresult.Duration == "" || objresult.Duration == string.Empty ? "0" : objresult.Duration);
                         if (objresult.ApplicationTypeID.ApplicationTypeCode == "P")

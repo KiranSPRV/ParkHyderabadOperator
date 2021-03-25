@@ -200,7 +200,7 @@ namespace ParkHyderabadOperator
                             if (DeviceInternet.InternetConnected())
                             {
                                 await App.SQLiteDb.SaveVehiclesParkingFeesDetailOnLogin(Convert.ToString(App.Current.Properties["apitoken"]), objVMLocations.LocationParkingLotID);
-                                await App.SQLiteDb.SaveAllVehicleTypesInSQLLite(Convert.ToString(App.Current.Properties["apitoken"]));
+                                await App.SQLiteDb.SaveAllVehicleTypesInSQLLite(Convert.ToString(App.Current.Properties["apitoken"]), objVMLocations.LocationID);
                             }
                         }
                     }

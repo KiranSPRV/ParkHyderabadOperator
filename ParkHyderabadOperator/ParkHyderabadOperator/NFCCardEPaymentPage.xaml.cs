@@ -33,7 +33,7 @@ namespace ParkHyderabadOperator
                 ImgVehicleType.Source = objCustomerPassNewNFC.CustomerVehicleID.VehicleTypeID.VehicleIcon;
                 labelVehicleRegNumber.Text = objCustomerPassNewNFC.CustomerVehicleID.RegistrationNumber;
                 labelParkingLocation.Text = objCustomerPassNewNFC.CreatedBy.LocationParkingLotID.LocationID.LocationName + "-" + objCustomerPassNewNFC.PassPriceID.StationAccess;
-                labelEpaymentAmount.Text = objCustomerPassNewNFC.PassPriceID.NFCCardPrice.ToString("N2");
+                labelEpaymentAmount.Text = objCustomerPassNewNFC.PassPriceID.CardPrice.ToString("N2");
             }
             catch (Exception ex)
             {
@@ -85,14 +85,14 @@ namespace ParkHyderabadOperator
                         });
                         if (resultPass != null && resultPass.CustomerVehiclePassID != 0)
                         {
-                            await DisplayAlert("Alert", "Vehicle Pass created successfully", "Ok");
+                            await DisplayAlert("Alert", "Vehicle Tag created successfully", "Ok");
                             await Navigation.PushAsync(PassPaymentReceiptPage);
                             ShowLoading(false);
                         }
                         else
                         {
                             ShowLoading(false);
-                            await DisplayAlert("Alert", "NFC Card creation failed,Please contact Admin", "Ok");
+                            await DisplayAlert("Alert", "Tag creation failed,Please contact Admin", "Ok");
                         }
 
 

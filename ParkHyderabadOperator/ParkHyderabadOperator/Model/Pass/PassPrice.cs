@@ -11,9 +11,14 @@ namespace ParkHyderabadOperator.Model.Pass
         {
             PassTypeID = new PassTypes();
             VehicleTypeID = new VehicleType();
+            LocationPassMapperID = new LocationPassMapper();
+            CardTypeID = new CardType();
+             
         }
         public int PassPriceID { get; set; }
         public PassTypes PassTypeID { get; set; }
+        public LocationPassMapper LocationPassMapperID { get; set; }
+        public CardType CardTypeID { get; set; }
         public string PassCode { get; set; }
         public string PassName { get; set; }
         public string StationAccess { get; set; }
@@ -21,7 +26,7 @@ namespace ParkHyderabadOperator.Model.Pass
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public bool NFCApplicable { get; set; }
-        public decimal NFCCardPrice { get; set; }
+        public decimal CardPrice { get; set; }
         public VehicleType VehicleTypeID { get; set; }
         public decimal Price { get; set; }
         public string PassDescription { get; set; }

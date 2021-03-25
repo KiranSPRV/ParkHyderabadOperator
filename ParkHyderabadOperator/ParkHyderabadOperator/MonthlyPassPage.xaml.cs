@@ -54,7 +54,7 @@ namespace ParkHyderabadOperator
             else if (NewOrReNew == "ReNew Pass")
             {
                 labelGeneratePassPageTitle.Text = "RENEW PASS";
-              
+
                 slADDNFC.IsVisible = false;
                 //Get ReNew Customer Details From APP Properties
                 if (App.Current.Properties.ContainsKey("ReNewPassCustomerVehicle"))
@@ -70,13 +70,13 @@ namespace ParkHyderabadOperator
                     entryRegistrationNumber.IsReadOnly = true;
                     entryPhoneNumber.IsReadOnly = true;
                     entryName.IsReadOnly = true;
-
-                    labelDueAmount.Text = String.Format("{0:0.#}", objResultVMPass.Price);
+                    lblCardType.Text = "ADD  TAG"; //+ objResultVMPass.CardTypeID.CardTypeName;
+                   
                     if (objReNewVehicle.IssuedCard)
                     {
                         checkAddNFCCard.IsChecked = true;
                         labelInclude.Text = "(Including Tag)";
-                        labelPassAmount.Text = String.Format("{0:0.#}", (objReNewVehicle.PassPriceID.Price + objReNewVehicle.PassPriceID.NFCCardPrice));
+                        labelPassAmount.Text = String.Format("{0:0.#}", (objReNewVehicle.PassPriceID.Price + objReNewVehicle.PassPriceID.CardPrice));
 
                     }
                     else
@@ -111,21 +111,21 @@ namespace ParkHyderabadOperator
                 {
                     objloginuser = (User)App.Current.Properties["LoginUser"];
                     labelInclude.Text = "Pass";
-                    labelNFCCharge.Text = objResultVMPass.NFCCardPrice == null || objResultVMPass.NFCCardPrice == 0 ? "0.00" + " Extra )" : objResultVMPass.NFCCardPrice.ToString("N2") + " Extra )";
+                    labelNFCCharge.Text = objResultVMPass.CardPrice == null || objResultVMPass.CardPrice == 0 ? "0.00" + " Extra )" : objResultVMPass.CardPrice.ToString("N2") + " Extra )";
                     slAllStationMessage.IsVisible = false;
                     labelMontlyPassStationTypes.Text = objResultVMPass.StationAccess.ToUpper();
                     labelPassType.Text = objResultVMPass.PassTypeID.PassTypeName.ToUpper();
-
+                    lblCardType.Text = "ADD " + objResultVMPass.CardTypeID.CardTypeName;
                     if (objCustomerPass.IssuedCard)
                     {
                         labelInclude.Text = labelInclude.Text + "Pass (Including Tag)";
-                        labelPassAmount.Text = String.Format("{0:0.#}", (objResultVMPass.Price + objResultVMPass.NFCCardPrice));
-                        labelTotalFee.Text = String.Format("{0:0.#}",    objResultVMPass.Price + objResultVMPass.NFCCardPrice);
+                        labelPassAmount.Text = String.Format("{0:0.#}", (objResultVMPass.Price + objResultVMPass.CardPrice));
+                        labelTotalFee.Text = String.Format("{0:0.#}", objResultVMPass.Price + objResultVMPass.CardPrice);
                     }
                     else
                     {
                         labelPassAmount.Text = String.Format("{0:0.#}", objResultVMPass.Price);
-                        labelTotalFee.Text = String.Format("{0:0.#}",  objResultVMPass.Price);
+                        labelTotalFee.Text = String.Format("{0:0.#}", objResultVMPass.Price);
                     }
 
                     labelValidFrom.Text = Convert.ToDateTime(objResultVMPass.StartDate).ToString("dd MMM yyyy");
@@ -151,6 +151,10 @@ namespace ParkHyderabadOperator
                     }
                     // Verify Customer Vehicle Type
                     imgCustomerVehcileType.Source = objResultVMPass.VehicleTypeID.VehicleIcon;
+                    if (!string.IsNullOrEmpty(objloginuser.LocationParkingLotID.LotCloseTime))
+                    {
+                        objResultVMPass.EndDate = Convert.ToDateTime((Convert.ToDateTime(objResultVMPass.EndDate).ToString("dd MMM yyyy")) + " " + objloginuser.LocationParkingLotID.LotCloseTime);
+                    }
                 }
 
 
@@ -201,8 +205,10 @@ namespace ParkHyderabadOperator
                                             if (checkAddNFCCard.IsChecked)
                                             {
                                                 objCustomerPass.IssuedCard = true;
-                                                objCustomerPass.CardAmount = objResultVMPass.NFCCardPrice;
-                                                objCustomerPass.TotalAmount = objResultVMPass.Price + objResultVMPass.NFCCardPrice;
+                                                objCustomerPass.CardAmount = objResultVMPass.CardPrice;
+                                                objCustomerPass.TotalAmount = objResultVMPass.Price + objResultVMPass.CardPrice;
+                                                objCustomerPass.CardTypeID.CardTypeID = objResultVMPass.CardTypeID.CardTypeID;
+                                                objCustomerPass.CardTypeID.CardTypeName = objResultVMPass.CardTypeID.CardTypeName;
                                             }
                                             else
                                             {
@@ -214,6 +220,7 @@ namespace ParkHyderabadOperator
                                             objCustomerPass.PassPriceID.PassTypeID.PassTypeID = objResultVMPass.PassTypeID.PassTypeID;
                                             objCustomerPass.PassPriceID.PassTypeID.PassTypeName = objResultVMPass.PassTypeID.PassTypeName;
                                             objCustomerPass.Amount = objResultVMPass.Price;
+                                            objCustomerPass.DueAmount = string.IsNullOrEmpty(labelDueAmount.Text) ? 0 : Convert.ToDecimal(labelDueAmount.Text);
                                             objCustomerPass.PassPriceID.StationAccess = objResultVMPass.StationAccess;
                                             objCustomerPass.PrimaryLocationParkingLotID.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
                                             objCustomerPass.PrimaryLocationParkingLotID.LocationParkingLotName = objloginuser.LocationParkingLotID.LocationParkingLotName;
@@ -305,8 +312,10 @@ namespace ParkHyderabadOperator
                                             if (checkAddNFCCard.IsChecked)
                                             {
                                                 objCustomerPass.IssuedCard = true;
-                                                objCustomerPass.CardAmount = objResultVMPass.NFCCardPrice;
-                                                objCustomerPass.TotalAmount = objResultVMPass.Price + objResultVMPass.NFCCardPrice;
+                                                objCustomerPass.CardAmount = objResultVMPass.CardPrice;
+                                                objCustomerPass.TotalAmount = objResultVMPass.Price + objResultVMPass.CardPrice;
+                                                objCustomerPass.CardTypeID.CardTypeID = objResultVMPass.CardTypeID.CardTypeID;
+                                                objCustomerPass.CardTypeID.CardTypeName = objResultVMPass.CardTypeID.CardTypeName;
                                             }
                                             else
                                             {
@@ -318,6 +327,7 @@ namespace ParkHyderabadOperator
                                             objCustomerPass.PassPriceID.PassTypeID.PassTypeID = objResultVMPass.PassTypeID.PassTypeID;
                                             objCustomerPass.PassPriceID.PassTypeID.PassTypeName = objResultVMPass.PassTypeID.PassTypeName;
                                             objCustomerPass.Amount = objResultVMPass.Price;
+                                            objCustomerPass.DueAmount = string.IsNullOrEmpty(labelDueAmount.Text) ? 0 : Convert.ToDecimal(labelDueAmount.Text);
                                             objCustomerPass.PassPriceID.StationAccess = objResultVMPass.StationAccess;
                                             objCustomerPass.PrimaryLocationParkingLotID.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
                                             objCustomerPass.PrimaryLocationParkingLotID.LocationParkingLotName = objloginuser.LocationParkingLotID.LocationParkingLotName;
@@ -376,14 +386,15 @@ namespace ParkHyderabadOperator
                 {
                     objResultVMPass.NFCApplicable = true;
                     labelInclude.Text = "Pass (Including Tag)";
-                    labelPassAmount.Text =String.Format("{0:0.#}", (objResultVMPass.Price + objResultVMPass.NFCCardPrice));
-
+                    labelPassAmount.Text = String.Format("{0:0.#}", (objResultVMPass.Price + objResultVMPass.CardPrice));
+                    labelTotalFee.Text = String.Format("{0:0.#}", (objResultVMPass.Price + objResultVMPass.CardPrice) + (string.IsNullOrEmpty(labelDueAmount.Text) ? 0 : Convert.ToDecimal(labelDueAmount.Text)));
                 }
                 else
                 {
                     objResultVMPass.NFCApplicable = false;
                     labelInclude.Text = "Pass";
-                    labelPassAmount.Text  = String.Format("{0:0.#}", (objResultVMPass.Price));
+                    labelPassAmount.Text = String.Format("{0:0.#}", (objResultVMPass.Price));
+                    labelTotalFee.Text = String.Format("{0:0.#}", (objResultVMPass.Price) + (string.IsNullOrEmpty(labelDueAmount.Text) ? 0 : Convert.ToDecimal(labelDueAmount.Text)));
                 }
             }
             catch (Exception ex)
@@ -530,16 +541,16 @@ namespace ParkHyderabadOperator
 
         }
 
-        private  void entryRegistrationNumber_Completed(object sender, EventArgs e)
+        private void entryRegistrationNumber_Completed(object sender, EventArgs e)
         {
             var text = ((Entry)sender).Text;
             GetVehiceDueAmont(text, objResultVMPass.VehicleTypeID.VehicleTypeCode);
         }
-        public async void GetVehiceDueAmont(string RegistrationNumber,string VehicleTypeCode)
+        public async void GetVehiceDueAmont(string RegistrationNumber, string VehicleTypeCode)
         {
             try
             {
-                
+                ShowLoading(true);
                 var dal_Menubar = new DALMenubar();
                 imagePopVehicleImage.Source = imgCustomerVehcileType.Source;
                 labelPopVehicleDetails.Text = RegistrationNumber;
@@ -549,11 +560,20 @@ namespace ParkHyderabadOperator
                     dueAmount = dal_Menubar.GetVehicleDueAmount(Convert.ToString(App.Current.Properties["apitoken"]), RegistrationNumber, VehicleTypeCode);
                 });
                 labelDueAmount.Text = String.Format("{0:0.#}", dueAmount);
-                labelTotalFee.Text = String.Format("{0:0.#}", dueAmount + objResultVMPass.Price);
 
+                if (checkAddNFCCard.IsChecked)
+                {
+                    labelTotalFee.Text = String.Format("{0:0.#}", (dueAmount + objResultVMPass.Price + objResultVMPass.CardPrice));
+                }
+                else
+                {
+                    labelTotalFee.Text = String.Format("{0:0.#}", (dueAmount + objResultVMPass.Price));
+                }
+                ShowLoading(false);
             }
             catch (Exception ex)
             {
+                ShowLoading(false);
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "DailyPass.xaml.cs", "", "DailyPass");
             }
         }

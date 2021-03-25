@@ -26,6 +26,7 @@ namespace ParkHyderabadOperator.Model.APIOutPutModel
             NFCCardPaymentID = new PaymentType();
             NFCCardActivatedByID = new User();
             NFCSoldLotID = new LocationParkingLot();
+            CardTypeID = new CardType();
         }
         public int CustomerVehiclePassID { get; set; }
         public CustomerVehicle CustomerVehicleID { get; set; }
@@ -34,6 +35,7 @@ namespace ParkHyderabadOperator.Model.APIOutPutModel
         public PassPrice PassPriceID { get; set; }
         public Location LocationID { get; set; }
         public LocationParkingLot PassPurchaseLocationID { get; set; }
+        public CardType CardTypeID { get; set; }
         public bool IsMultiLot { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? ExpiryDate { get; set; }
@@ -43,6 +45,8 @@ namespace ParkHyderabadOperator.Model.APIOutPutModel
         public decimal Amount { get; set; }
         public decimal CardAmount { get; set; }
         public decimal TotalAmount { get; set; }
+
+        public decimal DueAmount { get; set; }
         public string TransactionID { get; set; }
         public PaymentType PaymentTypeID { get; set; }
         public PassType PassTypeID { get; set; }

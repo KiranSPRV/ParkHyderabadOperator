@@ -108,7 +108,7 @@ namespace ParkHyderabadOperator.Model
         #endregion
 
         #region Load VehicleTypes on Login
-        public Task<int> SaveAllVehicleTypesInSQLLite(string apitoken)
+        public Task<int> SaveAllVehicleTypesInSQLLite(string apitoken,int LocationID)
         {
 
             Task<int> output = null;
@@ -121,7 +121,7 @@ namespace ParkHyderabadOperator.Model
                     db.CreateTableAsync<VehicleType>();
                 }
                 Task<int> deleted = db.ExecuteAsync("DELETE FROM VehicleType");
-                var lstVehicleType = objDALPass.GetAllVehicleTypes(apitoken);
+                var lstVehicleType = objDALPass.GetAllVehicleTypes(apitoken, LocationID);
                 for (var item = 0; item < lstVehicleType.Count; item++)
                 {
                     output = db.InsertAsync(lstVehicleType[item]);
@@ -139,6 +139,9 @@ namespace ParkHyderabadOperator.Model
             return db.Table<VehicleType>().ToListAsync();
 
         }
+
+
+
         #endregion
 
         #region Vehicle Parking Fees On Login

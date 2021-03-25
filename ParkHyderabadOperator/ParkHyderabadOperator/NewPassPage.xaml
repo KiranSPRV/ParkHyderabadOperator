@@ -12,7 +12,7 @@
         <ResourceDictionary>
             <DataTemplate x:Key="evenTemplate">
                 <ViewCell>
-                    <StackLayout VerticalOptions="CenterAndExpand"  BackgroundColor="Transparent" Margin="0,10,0,10">
+                    <StackLayout VerticalOptions="FillAndExpand"  BackgroundColor="Transparent" Margin="0,10,0,10">
                         <Frame CornerRadius="5" Padding="1"  BorderColor="#efefef" >
                             <AbsoluteLayout >
                                 <StackLayout  BackgroundColor="#FFFFFF"  AbsoluteLayout.LayoutBounds="0,0,1,1"  AbsoluteLayout.LayoutFlags="All">
@@ -27,7 +27,7 @@
                                     <StackLayout  Orientation="Vertical"    VerticalOptions="Center">
                                         <Label Text="{Binding PassTypeID.PassTypeName}"  Style="{StaticResource LabelProximaRegBoldWhiteStyle}" HorizontalOptions="Center"   VerticalOptions="Center"/>
                                         <Label Text="{Binding StationAccess}" Style="{StaticResource LabelProximaRegBoldWhiteStyle}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
-
+                                        <Label Text="{Binding PassName}"  Style="{StaticResource LabelProximaRegBoldWhiteStyle}" HorizontalOptions="CenterAndExpand"   VerticalOptions="CenterAndExpand"/>
                                     </StackLayout>
                                 </Frame>
 
@@ -40,7 +40,7 @@
             </DataTemplate>
             <DataTemplate x:Key="unevenTemplate" >
                 <ViewCell >
-                    <StackLayout VerticalOptions="CenterAndExpand" BackgroundColor="Transparent"  Margin="0,10,0,10">
+                    <StackLayout VerticalOptions="FillAndExpand" BackgroundColor="Transparent"  Margin="0,10,0,10">
                         <Frame CornerRadius="5" Padding="1"  BorderColor="#efefef" >
                             <AbsoluteLayout >
                                 <StackLayout BackgroundColor="#FFFFFF"  AbsoluteLayout.LayoutBounds="0,0,1,1"  AbsoluteLayout.LayoutFlags="All">
@@ -51,9 +51,10 @@
                                     </StackLayout>
                                 </StackLayout>
                                 <Frame CornerRadius="5" Padding="10"  BorderColor="#f6f6f7" BackgroundColor="#FFFFFF"  AbsoluteLayout.LayoutBounds="0,0,0.7,1"  AbsoluteLayout.LayoutFlags="All" >
-                                    <StackLayout  Orientation="Vertical"    VerticalOptions="Center">
+                                    <StackLayout  Orientation="Vertical"    VerticalOptions="Center" Spacing="5">
                                         <Label Text="{Binding PassTypeID.PassTypeName}"  Style="{StaticResource LabelRegularBlackColorStyle}"  VerticalOptions="Center" HorizontalOptions="Center"/>
                                         <Label Text="{Binding StationAccess}" Style="{StaticResource LabelRegularBlackColorStyle}"    HorizontalOptions="CenterAndExpand"/>
+                                        <Label Text="{Binding PassName}"  Style="{StaticResource LabelRegularBlackColorStyle}" HorizontalOptions="CenterAndExpand"   VerticalOptions="Center"/>
                                     </StackLayout>
                                 </Frame>
                             </AbsoluteLayout>

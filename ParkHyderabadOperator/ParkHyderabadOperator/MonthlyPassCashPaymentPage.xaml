@@ -10,7 +10,6 @@
     <ContentPage.Content>
         <AbsoluteLayout VerticalOptions="FillAndExpand" x:Name="absLayoutMonthlyPassCashPaymentPage">
             <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,1"  AbsoluteLayout.LayoutFlags="All"  HorizontalOptions="FillAndExpand" >
-               
                 <StackLayout Spacing="5" Margin="15,10,15,10">
                    
                     <Frame CornerRadius="1" Padding="10"  BorderColor="#f6f6f7" BackgroundColor="#FFFFFF" >
@@ -65,7 +64,7 @@
 
                     </Grid>
 
-                    <StackLayout Margin="0,5,0,0" Spacing="2">
+                    <StackLayout Margin="0,5,0,0" Spacing="2" x:Name="slCardTypes">
 
                         <StackLayout Orientation="Horizontal"   x:Name="slNFCCard" >
                             <StackLayout Orientation="Vertical" Spacing="2" HorizontalOptions="FillAndExpand">
@@ -75,14 +74,14 @@
                                 </StackLayout>
                                 <Label x:Name="labelNFCSuccessMsg" Style="{StaticResource EntryProximaBlackStyle}" TextColor="#2ECC71"/>
                             </StackLayout>
-                            <ImageButton Source="NFC_Card_New.png" HeightRequest="25"  x:Name="imgBtnNFCCard" Clicked="ImgBtnNFCCard_Clicked"  VerticalOptions="Center" BackgroundColor="Transparent"/>
+                            <ImageButton Source="NFC_Card_New.png" HeightRequest="25"  x:Name="imgBtnNFCCard"   VerticalOptions="Center" BackgroundColor="Transparent"/>
                         </StackLayout>
                         <StackLayout Orientation="Horizontal"  x:Name="slBARCode">
                             <StackLayout    x:Name="slBARCodeReader"  BackgroundColor="#f4f4f4" HorizontalOptions="FillAndExpand"  Spacing="0">
                                 <Label Text="BARCode" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
                                 <Entry x:Name="labelBARCode" Style="{StaticResource EntryProximaBlackStyle}" HorizontalOptions="FillAndExpand" IsReadOnly="True"></Entry>
                             </StackLayout>
-                            <ImageButton x:Name="imgbtnScanBarCode" Source="QR_White.png" HeightRequest="25"     VerticalOptions="Center" BackgroundColor="Transparent" Clicked="ImgbtnScanBarCode_Clicked"/>
+                            <ImageButton x:Name="imgbtnScanBarCode" Source="QR_White.png" HeightRequest="30"     VerticalOptions="Center" BackgroundColor="Transparent" Clicked="ImgbtnScanBarCode_Clicked"/>
                         </StackLayout>
 
                     </StackLayout>

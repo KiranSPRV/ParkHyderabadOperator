@@ -33,7 +33,7 @@ namespace ParkHyderabadOperator
         }
 
         #region Searh Box Related Code
-        public  void GetAllPassedVehicles()
+        public void GetAllPassedVehicles()
         {
             try
             {
@@ -51,7 +51,7 @@ namespace ParkHyderabadOperator
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ValidatePassPage.xaml.cs", "", "GetAllPassedVehicles");
             }
         }
-        public  void GetSelectedVehicleDetails(CustomerVehicle selectedVehicle)
+        public void GetSelectedVehicleDetails(CustomerVehicle selectedVehicle)
         {
             string Locations = string.Empty;
             string vehicleType = string.Empty;
@@ -76,6 +76,7 @@ namespace ParkHyderabadOperator
                                 }
                                 else
                                 {
+
                                     Locations = Locations + "," + lstResultPasses[i].LocationID.LocationName;
                                 }
 
@@ -92,14 +93,13 @@ namespace ParkHyderabadOperator
                         labelValidFrom.Text = Convert.ToDateTime(objResultCustomerVehiclePass.StartDate).ToString("dd MMM yyyy");
                         labelValidTo.Text = Convert.ToDateTime(objResultCustomerVehiclePass.ExpiryDate).ToString("dd MMM yyyy ");
                         vehicleType = objResultCustomerVehiclePass.CustomerVehicleID.VehicleTypeID.VehicleTypeDisplayName;
-                        imageVehicleImage.Source =objResultCustomerVehiclePass.CustomerVehicleID.VehicleTypeID.VehicleIcon;
-
+                        imageVehicleImage.Source = objResultCustomerVehiclePass.CustomerVehicleID.VehicleTypeID.VehicleIcon;
                         labelCustomerName.Text = objResultCustomerVehiclePass.CustomerVehicleID.CustomerID.Name;
                         labelVehicleDetails.Text = objResultCustomerVehiclePass.CustomerVehicleID.RegistrationNumber;
                         labelParkingFeesDetails.Text = objResultCustomerVehiclePass.TotalAmount.ToString("N2") + "/-";
                         if (objResultCustomerVehiclePass.IssuedCard)
                         {
-                            labelParkingPaymentType.Text = "Paid (Including NFC) - By " + objResultCustomerVehiclePass.PaymentTypeID.PaymentTypeName;
+                            labelParkingPaymentType.Text = "Paid (Including " + objResultCustomerVehiclePass.CardTypeID.CardTypeName + ") - By " + objResultCustomerVehiclePass.PaymentTypeID.PaymentTypeName;
                         }
                         else
                         {
@@ -119,6 +119,7 @@ namespace ParkHyderabadOperator
 
                         if (objResultCustomerVehiclePass.PassPriceID.PassTypeID.PassTypeCode == "MP")
                         {
+                            lableCardType.Text = "TAG: ";
                             labelNFCCard.Text = objResultCustomerVehiclePass.CardNumber;
                         }
                         try
@@ -139,7 +140,7 @@ namespace ParkHyderabadOperator
                                 receiptlines[6] = "\x1B\x21\x01" + "Valid Till:" + Convert.ToDateTime(objResultCustomerVehiclePass.ExpiryDate).ToString("dd MMM yyyy") + "\x1B\x21\x00" + "\n";
                                 receiptlines[7] = "\x1B\x21\x01" + "(Pass Type :" + objResultCustomerVehiclePass.PassPriceID.PassTypeID.PassTypeName + ")" + "\x1B\x21\x00\n";
                                 receiptlines[8] = "\x1B\x21\x01" + "Station(s):" + Locations + "\x1B\x21\x01" + "\n";
-                                receiptlines[9] = "\x1B\x21\x01" + "Paid: Rs" + (objResultCustomerVehiclePass.IssuedCard ? objResultCustomerVehiclePass.TotalAmount.ToString("N2") + "(NFC Rs" + objResultCustomerVehiclePass.PassPriceID.NFCCardPrice.ToString("N2") + ")" : objResultCustomerVehiclePass.Amount.ToString("N2")) + "\x1B\x21\x01" + "\n";
+                                receiptlines[9] = "\x1B\x21\x01" + "Paid: Rs" + (objResultCustomerVehiclePass.IssuedCard ? objResultCustomerVehiclePass.TotalAmount.ToString("N2") + "(TAG Rs" + objResultCustomerVehiclePass.PassPriceID.CardPrice.ToString("N2") + ")" : objResultCustomerVehiclePass.Amount.ToString("N2")) + "\x1B\x21\x01" + "\n";
                                 receiptlines[10] = "\x1B\x21\x06" + "Operator Id:" + objResultCustomerVehiclePass.CreatedBy.UserCode + "\x1B\x21\x00\n";
                                 receiptlines[11] = "\x1B\x21\x01" + "(Supervisor Mobile:" + objResultCustomerVehiclePass.SuperVisorID.PhoneNumber + ")" + "\x1B\x21\x00\n";
                                 receiptlines[12] = "\x1B\x21\x01" + "We are not responsible for your valuable items like laptop,       wallet,helmet etc." + "\x1B\x21\x00\n";
@@ -171,10 +172,14 @@ namespace ParkHyderabadOperator
                 listViewVehicleRegistrationNumbers.BeginRefresh();
                 var dataEmpty = lstCustomerVehicle.Where(i => i.RegistrationNumber.ToLower().Contains(e.NewTextValue.ToLower()));
                 if (string.IsNullOrWhiteSpace(e.NewTextValue))
+                {
                     listViewVehicleRegistrationNumbers.IsVisible = false;
+                    ClearFields();
+                }
                 else
-
+                {
                     listViewVehicleRegistrationNumbers.ItemsSource = lstCustomerVehicle.Where(i => i.RegistrationNumber.ToLower().Contains(e.NewTextValue.ToLower()));
+                }
             }
             catch (Exception ex)
             {
@@ -185,7 +190,7 @@ namespace ParkHyderabadOperator
             listViewVehicleRegistrationNumbers.EndRefresh();
 
         }
-        private  void listViewVehicleRegistrationNumbers_OnItemTapped(Object sender, ItemTappedEventArgs e)
+        private void listViewVehicleRegistrationNumbers_OnItemTapped(Object sender, ItemTappedEventArgs e)
         {
             try
             {
@@ -270,6 +275,33 @@ namespace ParkHyderabadOperator
                 absLayoutValidatePasspage.Opacity = 1;
             }
 
+        }
+        public void ClearFields()
+        {
+
+            try
+            {
+
+                labelParkingReceiptTitle.Text = string.Empty;
+                labelParkingLot.Text = string.Empty;
+                labelValidFrom.Text = string.Empty;
+                labelValidTo.Text = string.Empty;
+                imageVehicleImage.Source = null;
+                labelCustomerName.Text = string.Empty;
+                labelVehicleDetails.Text = string.Empty;
+                labelParkingFeesDetails.Text = string.Empty;
+                labelParkingPaymentType.Text = string.Empty;
+                labelOperatorName.Text = string.Empty;
+                labelOperatorID.Text = string.Empty;
+                lableCardType.Text = string.Empty;
+                labelNFCCard.Text = string.Empty;
+                imageOperatorProfile.IsVisible = false;
+                slValidateReceipt.IsVisible = false;
+            }
+            catch (Exception ex)
+            {
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ValidatePassPage.xaml.cs", "", "ClearFields");
+            }
         }
     }
 }

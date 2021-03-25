@@ -27,10 +27,10 @@
                                     <Label Text="AMOUNT"  Style="{StaticResource LabelExtraLargeProximaBoldStyle}"    />
                                     <StackLayout Orientation="Horizontal" Spacing="2">
                                         <Image Source="rupee_icon.png" HeightRequest="20"/>
-                                        <Label x:Name="lableAmount"   Style="{StaticResource LabelProximaRegBoldDodgerBlueStyle}"  FontSize="22" />
+                                        <Label x:Name="lableAmount"   Style="{StaticResource LabelProximaRegBoldDodgerBlueStyle}" HorizontalOptions="CenterAndExpand"  FontSize="22" />
                                     </StackLayout>
                                 </StackLayout>
-                                <Label x:Name="labelChekInAmount"  Style="{StaticResource LabelBoldPlaceHolderStyle}"  VerticalOptions="CenterAndExpand"   HorizontalOptions="CenterAndExpand"/>
+                                <Label x:Name="labelChekInAmount"  Style="{StaticResource LabelBoldPlaceHolderStyle}"  VerticalOptions="CenterAndExpand"   HorizontalOptions="FillAndExpand"/>
                             </StackLayout>
                         </StackLayout>
 

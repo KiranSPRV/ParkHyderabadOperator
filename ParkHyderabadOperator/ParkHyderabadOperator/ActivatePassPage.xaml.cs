@@ -29,6 +29,7 @@ namespace ParkHyderabadOperator
         public bool NfcIsEnabled { get; set; }
         public bool NfcIsDisabled => !NfcIsEnabled;
         #endregion
+       
         public ActivatePassPage()
         {
             InitializeComponent();
@@ -50,7 +51,6 @@ namespace ParkHyderabadOperator
         }
 
         #region Searh Box Related Code
-       
         public void GetAllPassedVehicles()
         {
             try
@@ -92,6 +92,8 @@ namespace ParkHyderabadOperator
                         imgCustomerVehcileType.Source = objResultCustomerVehiclePass.CustomerVehicleID.VehicleTypeID.VehicleIcon;
                         if (objResultCustomerVehiclePass.PassPriceID.PassTypeID.PassTypeCode.ToUpper() == "WP")
                         {
+                            slContinue.IsVisible = false;
+                            stlayoutNFCCardPayment.IsVisible = false;
                             await DisplayAlert("Alert", "NFC card not valid  for this Pass type.", "Ok");
                         }
                         if (objResultCustomerVehiclePass.CardNumber != null && objResultCustomerVehiclePass.CardNumber != "")
@@ -123,7 +125,10 @@ namespace ParkHyderabadOperator
             {
                 var dataEmpty = lstCustomerVehicle.Where(i => i.RegistrationNumber.ToLower().Contains(e.NewTextValue.ToLower()));
                 if (string.IsNullOrWhiteSpace(e.NewTextValue))
+                {
                     listViewVehicleRegistrationNumbers.IsVisible = false;
+                    ClearFileds();
+                }
                 else
                     listViewVehicleRegistrationNumbers.ItemsSource = lstCustomerVehicle.Where(i => i.RegistrationNumber.ToLower().Contains(e.NewTextValue.ToLower()));
             }
@@ -147,8 +152,7 @@ namespace ParkHyderabadOperator
             listViewVehicleRegistrationNumbers.IsVisible = false;
             ((ListView)sender).SelectedItem = null;
         }
-     
-        
+
         #endregion
 
         private async void BtnContinue_Clicked(object sender, EventArgs e)
@@ -156,16 +160,33 @@ namespace ParkHyderabadOperator
             try
             {
                 string existingnfcCardVehcile = string.Empty;
+                string cardNumber = string.Empty;
                 ActivatePassReciptPage passPaymentReceiptPage = null;
-                if (labelNFCCard.Text != null)
+                ShowLoading(true);
+                slContinue.IsVisible = false;
+                objResultCustomerVehiclePass.IssuedCard = true;
+                if (!string.IsNullOrEmpty(labelNFCCard.Text))
                 {
-                    ShowLoading(true);
-                    slContinue.IsVisible = false;
-                    objResultCustomerVehiclePass.IssuedCard = true;
-                    objResultCustomerVehiclePass.CardNumber = labelNFCCard.Text;
-                    objResultCustomerVehiclePass.TotalAmount = objResultCustomerVehiclePass.PassPriceID.Price + objResultCustomerVehiclePass.PassPriceID.NFCCardPrice;
-                    objResultCustomerVehiclePass.BarCode = labelBARCode.Text;
+                    cardNumber = labelNFCCard.Text;
+                }
+                if (!string.IsNullOrEmpty(labelBARCode.Text))
+                {
+                    if (labelBARCode.Text.Contains(":"))
+                    {
+                        cardNumber = labelBARCode.Text.Replace(":", "");
+                    }
+                    else
+                    {
+                        cardNumber = labelBARCode.Text.Replace(":", "");
+                    }
 
+                    objResultCustomerVehiclePass.BarCode = cardNumber;
+                }
+                if (!string.IsNullOrEmpty(cardNumber))
+                {
+                    objResultCustomerVehiclePass.CardNumber = cardNumber;
+                    objResultCustomerVehiclePass.TotalAmount = objResultCustomerVehiclePass.PassPriceID.Price + objResultCustomerVehiclePass.PassPriceID.CardPrice;
+                    objResultCustomerVehiclePass.BarCode = labelBARCode.Text;
                     if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                     {
                         existingnfcCardVehcile = dal_Pass.IsValidNFCCard(Convert.ToString(App.Current.Properties["apitoken"]), labelNFCCard.Text, entryRegistrationNumber.Text);
@@ -190,12 +211,11 @@ namespace ParkHyderabadOperator
 
                         }
                     }
-
                 }
                 else
                 {
                     ShowLoading(false);
-                    await DisplayAlert("Alert", "Please tap NFC card", "Ok");
+                    await DisplayAlert("Alert", "Please tap card", "Ok");
                 }
             }
             catch (Exception ex)
@@ -418,7 +438,13 @@ namespace ParkHyderabadOperator
                 scanner.UseCustomOverlay = true;
                 ZXing.Result result = await scanner.Scan();
                 if (result != null)
-                { labelBARCode.Text = result.Text; }
+                {
+                    labelBARCode.Text = result.Text;
+                    if (!string.IsNullOrEmpty(labelBARCode.Text) && labelBARCode.Text.Contains(":"))
+                    {
+                        labelBARCode.Text = labelBARCode.Text.Replace(":", "");
+                    }
+                }
                 else
                 {
                     labelBARCode.Text = string.Empty;
@@ -433,7 +459,7 @@ namespace ParkHyderabadOperator
             }
         }
 
-        #region New NFC Card Payment 
+        #region New  Card Payment 
         private async void ChkNewCard_CheckedChanged(object sender, CheckedChangedEventArgs e)
         {
             try
@@ -461,6 +487,17 @@ namespace ParkHyderabadOperator
                                 slContinue.IsVisible = false;
                                 stlayoutNFCCardPayment.IsVisible = true;
                                 slNFCBarCodeSection.IsVisible = true;
+                                if (objResultCustomerVehiclePass.LocationID.LocationCardTypeID.CardTypeName.ToUpper() == "NFC Card".ToUpper())
+                                {
+                                    slNFC.IsVisible = true;
+                                    slBARCodeReader.IsVisible = false;
+                                }
+                                if (objResultCustomerVehiclePass.LocationID.LocationCardTypeID.CardTypeName.ToUpper() == "BlueTooth".ToUpper())
+                                {
+                                    slNFC.IsVisible = false;
+                                    slBARCodeReader.IsVisible = true;
+                                }
+
                             }
                             else
                             {
@@ -477,6 +514,8 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
+                    slNFC.IsVisible = false;
+                    slBARCodeReader.IsVisible = false;
                     stlayoutNFCCardPayment.IsVisible = false;
                 }
 
@@ -499,6 +538,7 @@ namespace ParkHyderabadOperator
                     }
                     if (objResultCustomerVehiclePass != null && objResultCustomerVehiclePass.CustomerVehiclePassID != 0)
                     {
+
                         if (objResultCustomerVehiclePass.PassPriceID.PassTypeID.PassTypeCode.ToUpper() == "WP")
                         {
                             slContinue.IsVisible = false;
@@ -513,6 +553,17 @@ namespace ParkHyderabadOperator
                                 slContinue.IsVisible = true;
                                 stlayoutNFCCardPayment.IsVisible = false;
                                 slNFCBarCodeSection.IsVisible = true;
+                                if (objResultCustomerVehiclePass.LocationID.LocationCardTypeID.CardTypeName.ToUpper() == "NFC Card".ToUpper())
+                                {
+                                    slNFC.IsVisible = true;
+                                    slBARCodeReader.IsVisible = false;
+                                }
+                                if (objResultCustomerVehiclePass.LocationID.LocationCardTypeID.CardTypeName.ToUpper() == "BlueTooth".ToUpper())
+                                {
+                                    slNFC.IsVisible = false;
+                                    slBARCodeReader.IsVisible = true;
+                                }
+
                             }
                             else
                             {
@@ -530,6 +581,8 @@ namespace ParkHyderabadOperator
                 else
                 {
                     slContinue.IsVisible = false;
+                    slNFC.IsVisible = false;
+                    slBARCodeReader.IsVisible = false;
                 }
             }
             catch (Exception ex)
@@ -542,7 +595,25 @@ namespace ParkHyderabadOperator
             try
             {
                 string existingnfcCardVehcile = string.Empty;
-                if (labelNFCCard.Text != null)
+                string cardNumber = string.Empty;
+                if (!string.IsNullOrEmpty(labelNFCCard.Text))
+                {
+                    cardNumber = labelNFCCard.Text;
+                }
+                if (!string.IsNullOrEmpty(labelBARCode.Text))
+                {
+                    if (labelBARCode.Text.Contains(":"))
+                    {
+                        cardNumber = labelBARCode.Text.Replace(":", "");
+                    }
+                    else
+                    {
+                        cardNumber = labelBARCode.Text.Replace(":", "");
+                    }
+
+                    objResultCustomerVehiclePass.BarCode = cardNumber;
+                }
+                if (!string.IsNullOrEmpty(cardNumber))
                 {
                     ShowLoading(true);
                     NFCCardCashPaymentPage nfccashPage = null;
@@ -553,17 +624,15 @@ namespace ParkHyderabadOperator
                         {
                             await Task.Run(() =>
                             {
-
                                 User objloginuser = (User)App.Current.Properties["LoginUser"];
-                                objResultCustomerVehiclePass.CardNumber = labelNFCCard.Text;
-                                objResultCustomerVehiclePass.BarCode = labelBARCode.Text;
+                                objResultCustomerVehiclePass.CardNumber = cardNumber;
                                 objResultCustomerVehiclePass.NFCCardPaymentID.PaymentTypeCode = "Cash";
                                 objResultCustomerVehiclePass.NFCCardSoldByID.UserID = objloginuser.UserID;
                                 objResultCustomerVehiclePass.NFCSoldLotID.LocationID.LocationID = objloginuser.LocationParkingLotID.LocationID.LocationID;
                                 objResultCustomerVehiclePass.NFCSoldLotID.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
                                 objResultCustomerVehiclePass.CreatedBy.LocationParkingLotID.LocationID.LocationName = objloginuser.LocationParkingLotID.LocationID.LocationName;
+                                objResultCustomerVehiclePass.CardTypeID = objResultCustomerVehiclePass.LocationID.LocationCardTypeID;
                                 nfccashPage = new NFCCardCashPaymentPage(objResultCustomerVehiclePass);
-
 
                             });
                             await Navigation.PushAsync(nfccashPage);
@@ -572,16 +641,14 @@ namespace ParkHyderabadOperator
                         else
                         {
                             ShowLoading(false);
-                            await DisplayAlert("Alert", "NFC Card already assigned to " + existingnfcCardVehcile + "", "Ok");
+                            await DisplayAlert("Alert", "Card already assigned to " + existingnfcCardVehcile + "", "Ok");
 
                         }
                     }
-                    else
-                    {
-                        await DisplayAlert("Alert", "Please tap NFC card", "Ok");
-                    }
-
-
+                }
+                else
+                {
+                    await DisplayAlert("Alert", "Please tap card", "Ok");
                 }
             }
             catch (Exception ex)
@@ -596,7 +663,25 @@ namespace ParkHyderabadOperator
             {
                 NFCCardEPaymentPage nfcEpayPage = null;
                 string existingnfcCardVehcile = string.Empty;
-                if (labelNFCCard.Text != null)
+                string cardNumber = string.Empty;
+                if (!string.IsNullOrEmpty(labelNFCCard.Text))
+                {
+                    cardNumber = labelNFCCard.Text;
+                }
+                if (!string.IsNullOrEmpty(labelBARCode.Text))
+                {
+                    if (labelBARCode.Text.Contains(":"))
+                    {
+                        cardNumber = labelBARCode.Text.Replace(":", "");
+                    }
+                    else
+                    {
+                        cardNumber = labelBARCode.Text.Replace(":", "");
+                    }
+
+                    objResultCustomerVehiclePass.BarCode = cardNumber;
+                }
+                if (!string.IsNullOrEmpty(cardNumber))
                 {
                     ShowLoading(true);
 
@@ -615,6 +700,7 @@ namespace ParkHyderabadOperator
                                 objResultCustomerVehiclePass.CreatedBy.LocationParkingLotID.LocationID.LocationName = objloginuser.LocationParkingLotID.LocationID.LocationName;
                                 objResultCustomerVehiclePass.NFCSoldLotID.LocationID.LocationID = objloginuser.LocationParkingLotID.LocationID.LocationID;
                                 objResultCustomerVehiclePass.NFCSoldLotID.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
+                                objResultCustomerVehiclePass.CardTypeID = objResultCustomerVehiclePass.LocationID.LocationCardTypeID;
                                 nfcEpayPage = new NFCCardEPaymentPage(objResultCustomerVehiclePass);
                             });
                             await Navigation.PushAsync(nfcEpayPage);
@@ -623,20 +709,20 @@ namespace ParkHyderabadOperator
                         else
                         {
                             ShowLoading(false);
-                            await DisplayAlert("Alert", "NFC Card already assigned to " + existingnfcCardVehcile + "", "Ok");
+                            await DisplayAlert("Alert", "Card already assigned to " + existingnfcCardVehcile + "", "Ok");
 
                         }
                     }
                     else
                     {
                         ShowLoading(false);
-                        await DisplayAlert("Alert", "NFC Card already assigned to " + existingnfcCardVehcile + "", "Ok");
+                        await DisplayAlert("Alert", "Card already assigned to " + existingnfcCardVehcile + "", "Ok");
 
                     }
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please tap NFC card", "Ok");
+                    await DisplayAlert("Alert", "Please tap card", "Ok");
                 }
 
             }
@@ -648,11 +734,34 @@ namespace ParkHyderabadOperator
         }
 
         #endregion
+
         public void ShowLoading(bool show)
         {
             StklauoutactivityIndicator.IsVisible = show;
             activity.IsVisible = show;
             activity.IsRunning = show;
+        }
+        private void ClearFileds()
+        {
+            try
+            {
+                ShowLoading(true);
+
+                entryCustomerName.Text = string.Empty;
+                entryPhoneNumber.Text = string.Empty;
+                entryRegistrationNumber.Text = string.Empty;
+                imgCustomerVehcileType.Source =null;
+                chkhasCard.IsChecked = false;
+                chkNewCard.IsChecked = false;
+                slContinue.IsVisible = false;
+                stlayoutNFCCardPayment.IsVisible = false;
+                ShowLoading(false);
+            }
+            catch (Exception ex)
+            {
+                ShowLoading(false);
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ActivatePassPage.xaml.cs", "", "ClearFileds)");
+            }
         }
     }
 }

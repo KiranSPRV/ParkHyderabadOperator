@@ -32,7 +32,7 @@ namespace ParkHyderabadOperator
                 ImgVehicleType.Source = objCustomerPassNewNFC.CustomerVehicleID.VehicleTypeID.VehicleIcon;
                 labelVehicleRegNumber.Text = objCustomerPassNewNFC.CustomerVehicleID.RegistrationNumber;
                 labelParkingLocation.Text = objCustomerPassNewNFC.CreatedBy.LocationParkingLotID.LocationID.LocationName + "-" + objCustomerPassNewNFC.PassPriceID.StationAccess;
-                labelNFCCardAmount.Text = objCustomerPassNewNFC.PassPriceID.NFCCardPrice.ToString("N2");
+                labelNFCCardAmount.Text = objCustomerPassNewNFC.PassPriceID.CardPrice.ToString("N2");
             }
             catch (Exception ex)
             {
@@ -43,7 +43,7 @@ namespace ParkHyderabadOperator
         {
             try
             {
-                decimal nfcAmount = (objCustomerPassNewNFC.PassPriceID.NFCCardPrice == null || objCustomerPassNewNFC.PassPriceID.NFCCardPrice == 0) ? 0 : objCustomerPassNewNFC.PassPriceID.NFCCardPrice;
+                decimal nfcAmount = (objCustomerPassNewNFC.PassPriceID.CardPrice == null || objCustomerPassNewNFC.PassPriceID.CardPrice == 0) ? 0 : objCustomerPassNewNFC.PassPriceID.CardPrice;
                 if (entryCashReceived.Text != null && entryCashReceived.Text != "0")
                 {
                     if (Convert.ToDecimal(entryCashReceived.Text) >= nfcAmount)
@@ -100,7 +100,7 @@ namespace ParkHyderabadOperator
                         });
                         if (resultPass != null && resultPass.CustomerVehiclePassID != 0)
                         {
-                            await DisplayAlert("Alert", "Vehicle Pass created successfully", "Ok");
+                            await DisplayAlert("Alert", "Vehicle Tag created successfully", "Ok");
                             await Navigation.PushAsync(PassPaymentReceiptPage);
                             ShowLoading(false);
                             btnGenerateNFCCard.IsVisible = true;
@@ -109,7 +109,7 @@ namespace ParkHyderabadOperator
                         {
                             ShowLoading(false);
                             btnGenerateNFCCard.IsVisible = true;
-                            await DisplayAlert("Alert", "NFC Card creation failed,Please contact Admin", "Ok");
+                            await DisplayAlert("Alert", "Tag creation failed,Please contact Admin", "Ok");
                         }
 
 
@@ -138,7 +138,7 @@ namespace ParkHyderabadOperator
             {
                 if (entryCashReceived.Text.Length > 0 && entryCashReceived.Text != null)
                 {
-                    decimal cardAmount = (objCustomerPassNewNFC.PassPriceID.NFCCardPrice);
+                    decimal cardAmount = (objCustomerPassNewNFC.PassPriceID.CardPrice);
                     decimal returnAmount = Math.Abs((Convert.ToDecimal(entryCashReceived.Text) - cardAmount));
                     entryCashReturn.Text = returnAmount.ToString("N2");
                 }

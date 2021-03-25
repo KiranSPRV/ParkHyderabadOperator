@@ -80,7 +80,10 @@ namespace ParkHyderabadOperator
         {
             try
             {
-
+                if (!DeviceInternet.InternetConnected())
+                {
+                    slGovernment.IsVisible = false;
+                }
                 GetAllVehicleType();
                 LoadOfflineCheckInsCount().Wait();
 
@@ -387,6 +390,8 @@ namespace ParkHyderabadOperator
                                             objPassVehicle.PhoneNumber = entryPhoneNumber.Text;
                                             objPassVehicle.ParkingHours = selectedhours;
                                             objPassVehicle.ParkingFees = Convert.ToDecimal(labelParkingFee.Text);
+                                            objPassVehicle.DueAmount =string.IsNullOrEmpty(labelDueAmount.Text)?0: Convert.ToDecimal(labelDueAmount.Text);
+                                            
                                             objPassVehicle.PaymentType = "Cash";
                                             if (objloginuser.LocationParkingLotID.LocationParkingLotID == 0)
                                             {
@@ -572,6 +577,7 @@ namespace ParkHyderabadOperator
                                             objPassVehicle.PhoneNumber = entryPhoneNumber.Text;
                                             objPassVehicle.ParkingHours = selectedhours;
                                             objPassVehicle.ParkingFees = Convert.ToDecimal(labelParkingFee.Text);
+                                            objPassVehicle.DueAmount = string.IsNullOrEmpty(labelDueAmount.Text) ? 0 : Convert.ToDecimal(labelDueAmount.Text);
                                             objPassVehicle.PaymentType = "EPay";
 
                                             if (objextendCustomerParkingSlot == null)
@@ -720,6 +726,7 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
+                    chkGovernment.IsChecked = false;
                     await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
 
                 }
@@ -1081,7 +1088,7 @@ namespace ParkHyderabadOperator
 
                                 labelDueAmount.Text = String.Format("{0:0.#}", objVMVehiclePassWithDueAmount.VehicleDueAmount);
                                 labelTotalFee.Text = String.Format("{0:0.#}", (string.IsNullOrEmpty(labelParkingFee.Text) ? 0 : Convert.ToDecimal(labelParkingFee.Text) + objVMVehiclePassWithDueAmount.VehicleDueAmount));
-                                if (objCustomerPass.CustomerVehiclePassID != 0 && Convert.ToDateTime(objCustomerPass.ExpiryDate).Date >= DateTime.Now.Date)
+                                if ((objCustomerPass.CustomerVehiclePassID != 0) && ((Convert.ToDateTime(objCustomerPass.StartDate).Date <= DateTime.Now.Date)&& (Convert.ToDateTime(objCustomerPass.ExpiryDate).Date >= DateTime.Now.Date)))
                                 {
                                     if (SelectedVehicle == objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode.ToUpper())
                                     {
@@ -1188,6 +1195,7 @@ namespace ParkHyderabadOperator
                     {
                         var objlotavilability = (User)App.Current.Properties["LoginUser"];
                         LotVehicleCapability = objlotavilability.LocationParkingLotID.LotVehicleAvailabilityName;
+                        lblcheckInLocation.Text = objlotavilability.LocationParkingLotID.LocationParkingLotName;
                         if (LotVehicleCapability != null && LotVehicleCapability.Length > 0)
                         {
                             var resultvehihcle = lstVehicleType.Where(v => LotVehicleCapability.Any(r => r.ToUpperInvariant().Contains(v.VehicleTypeCode))).ToList();

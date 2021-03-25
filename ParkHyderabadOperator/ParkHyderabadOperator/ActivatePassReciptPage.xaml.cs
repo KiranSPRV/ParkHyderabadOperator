@@ -94,8 +94,10 @@ namespace ParkHyderabadOperator
                 {
                     imageOperatorProfile.IsVisible = false;
                 }
+                lableCardType.Text = "TAG";
+                labelNFCCard.Text = objReceipt.CardNumber;
                 labelGSTNumber.Text = objReceipt.GSTNumber;
-
+              
                 try
                 {
                     if (receiptlines != null && receiptlines.Length > 0)

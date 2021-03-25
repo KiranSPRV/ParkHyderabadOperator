@@ -59,16 +59,16 @@ namespace ParkHyderabadOperator
                 ImgVehicleType.Source =objInputMonthlyPass.CustomerVehicleID.VehicleTypeID.VehicleIcon;
                 labelVehicleRegNumber.Text = objInputMonthlyPass.CustomerVehicleID.RegistrationNumber;
                 labelParkingLocation.Text = objInputMonthlyPass.LocationID.LocationName + "-" + objInputMonthlyPass.PassPriceID.StationAccess;
-                labelPassAmount.Text = objInputMonthlyPass.TotalAmount.ToString("N2") + "/-";
+                labelPassAmount.Text = (objInputMonthlyPass.TotalAmount + objInputMonthlyPass.DueAmount).ToString("N2") + "/-";
                 if (objInputMonthlyPass.IssuedCard)
                 {
 
-                    labelAmountDetails.Text = "( " + objInputMonthlyPass.Amount.ToString("N2") + " Rs Pass + " + objInputMonthlyPass.CardAmount.ToString("N2") + " Rs Card )";
+                    labelAmountDetails.Text = "( " + (objInputMonthlyPass.Amount).ToString("N2") + " Rs Pass + " + objInputMonthlyPass.CardAmount.ToString("N2") + " Rs Card +"+ objInputMonthlyPass.DueAmount.ToString("N2")+ "Rs Due Amount  )";
 
                 }
                 else
                 {
-                    labelAmountDetails.Text = "( " + objInputMonthlyPass.Amount.ToString("N2") + " Rs Pass )";
+                    labelAmountDetails.Text = "( " + (objInputMonthlyPass.Amount).ToString("N2") + " Rs Pass +" + objInputMonthlyPass.DueAmount.ToString("N2") + "Rs Due Amount )";
                 }
                 try
                 {
@@ -89,7 +89,7 @@ namespace ParkHyderabadOperator
         {
             try
             {
-                decimal passAmount = (objInputMonthlyPass.TotalAmount == null || objInputMonthlyPass.TotalAmount == 0) ? objInputMonthlyPass.Amount : objInputMonthlyPass.TotalAmount;
+                decimal passAmount = (objInputMonthlyPass.TotalAmount == null || objInputMonthlyPass.TotalAmount == 0) ? (objInputMonthlyPass.Amount + objInputMonthlyPass.DueAmount) : (objInputMonthlyPass.TotalAmount + objInputMonthlyPass.DueAmount);
                 if (Convert.ToDecimal(entryCashReceived.Text) >= passAmount)
                 {
                     stlayoutYESNO.IsVisible = false;
@@ -97,11 +97,22 @@ namespace ParkHyderabadOperator
                     slCashPaymentGeneratePass.IsVisible = true;
                     if (objInputMonthlyPass.IssuedCard)
                     {
-                        slNFCCard.IsVisible = true;
+                        slCardTypes.IsVisible = true;
+                        if (!string.IsNullOrEmpty(objInputMonthlyPass.CardTypeID.CardTypeName) && objInputMonthlyPass.CardTypeID.CardTypeName.ToUpper().Equals("NFC Card".ToUpper()))
+                        {
+                            slNFCCard.IsVisible = true;
+                            slBARCode.IsVisible = false;
+                        }
+                        else if (!string.IsNullOrEmpty(objInputMonthlyPass.CardTypeID.CardTypeName) && objInputMonthlyPass.CardTypeID.CardTypeName.ToUpper().Equals("BlueTooth".ToUpper()))
+                        {
+                            slNFCCard.IsVisible = false;
+                            slBARCode.IsVisible = true;
+                        }
+
                     }
                     else
                     {
-                        slNFCCard.IsVisible = false;
+                        slCardTypes.IsVisible = false;
                     }
                 }
                 else
@@ -130,18 +141,7 @@ namespace ParkHyderabadOperator
 
             }
         }
-        private void ImgBtnNFCCard_Clicked(object sender, EventArgs e)
-        {
-            try
-            {
-                labelNFCCard.Text = "#12345";
-                labelNFCSuccessMsg.Text = "NFC card added successfully";
-            }
-            catch (Exception ex)
-            {
-                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "MonthlyPassCashPaymentPage.xaml.cs", "", "EntryCashReceived_TextChanged");
-            }
-        }
+       
         private async void BtnGeneratePass_Clicked(object sender, EventArgs e)
         {
             try
@@ -152,7 +152,7 @@ namespace ParkHyderabadOperator
                 ShowLoading(true);
                 if (entryCashReceived.Text != null && entryCashReceived.Text != "0")
                 {
-                    decimal passAmount = (objInputMonthlyPass.TotalAmount == null || objInputMonthlyPass.TotalAmount == 0) ? objInputMonthlyPass.Amount : objInputMonthlyPass.TotalAmount;
+                    decimal passAmount = (objInputMonthlyPass.TotalAmount == null || objInputMonthlyPass.TotalAmount == 0) ? (objInputMonthlyPass.Amount + objInputMonthlyPass.DueAmount) : (objInputMonthlyPass.TotalAmount + objInputMonthlyPass.DueAmount);
                     if (Convert.ToDecimal(entryCashReceived.Text) >= passAmount)
                     {
                         if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
@@ -165,7 +165,16 @@ namespace ParkHyderabadOperator
                                 {
 
                                     List<Location> lstMultiLication = (List<Location>)App.Current.Properties["MultiSelectionLocations"];
-                                    objInputMonthlyPass.CardNumber = labelNFCCard.Text;
+                                    if(!string.IsNullOrEmpty(labelNFCCard.Text))
+                                    {
+                                        objInputMonthlyPass.CardNumber = labelNFCCard.Text;
+                                    }
+                                    else if (!string.IsNullOrEmpty(labelBARCode.Text))
+                                    {
+                                        objInputMonthlyPass.CardNumber = labelBARCode.Text;
+                                    }
+
+                                    objInputMonthlyPass.BarCode = labelBARCode.Text;
                                     objInputMonthlyPass.IsMultiLot = true;
                                     VMMultiStationCustomerVehiclePass objvmMultiStations = new VMMultiStationCustomerVehiclePass();
                                     objvmMultiStations.CustomerVehiclePassID = objInputMonthlyPass;
@@ -190,8 +199,17 @@ namespace ParkHyderabadOperator
                                 {
                                     await Task.Run(() =>
                                     {
-                                        objInputMonthlyPass.CardNumber = labelNFCCard.Text;
+                                       
                                         objInputMonthlyPass.BarCode = labelBARCode.Text;
+                                        if (!string.IsNullOrEmpty(labelNFCCard.Text))
+                                        {
+                                            objInputMonthlyPass.CardNumber = labelNFCCard.Text;
+                                        }
+                                        else if (!string.IsNullOrEmpty(labelBARCode.Text))
+                                        {
+                                            objInputMonthlyPass.CardNumber = labelBARCode.Text;
+                                        }
+
                                         resultPass = dal_CustomerPass.CreateCustomerPass(Convert.ToString(App.Current.Properties["apitoken"]), objInputMonthlyPass);
                                     });
                                     if (resultPass != null && resultPass.CustomerVehiclePassID != 0)
@@ -236,13 +254,13 @@ namespace ParkHyderabadOperator
         }
 
         #region Payment Calculation
-        private async void EntryCashReceived_TextChanged(object sender, TextChangedEventArgs e)
+        private  void EntryCashReceived_TextChanged(object sender, TextChangedEventArgs e)
         {
             try
             {
                 if (entryCashReceived.Text.Length > 0 && entryCashReceived.Text != null)
                 {
-                    decimal passAmount = (objInputMonthlyPass.TotalAmount == null || objInputMonthlyPass.TotalAmount == 0) ? objInputMonthlyPass.Amount : objInputMonthlyPass.TotalAmount;
+                    decimal passAmount = (objInputMonthlyPass.TotalAmount == null || objInputMonthlyPass.TotalAmount == 0) ? (objInputMonthlyPass.Amount + objInputMonthlyPass.DueAmount ): (objInputMonthlyPass.TotalAmount + objInputMonthlyPass.DueAmount);
                     decimal returnAmount = Math.Abs((Convert.ToDecimal(entryCashReceived.Text) - passAmount));
                     entryCashReturn.Text = returnAmount.ToString("N2");
                 }
@@ -464,6 +482,11 @@ namespace ParkHyderabadOperator
                 if (result == null)
                     return;
                 labelBARCode.Text = result.Text;
+                if(!string.IsNullOrEmpty(labelBARCode.Text) && labelBARCode.Text.Contains(":"))
+                {
+                    labelBARCode.Text= labelBARCode.Text.Replace(":", "");
+                }
+
             }
             catch (Exception ex)
             {

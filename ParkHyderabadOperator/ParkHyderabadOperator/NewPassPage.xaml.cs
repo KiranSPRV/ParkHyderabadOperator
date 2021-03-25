@@ -64,6 +64,7 @@ namespace ParkHyderabadOperator
                     DALPass dal_Pass = new DALPass();
                     VehicleLotPassPrice objVehicleLotPassPrice = new VehicleLotPassPrice();
                     objVehicleLotPassPrice.VehicleTypeCode = SelectedVehicle;
+                    objVehicleLotPassPrice.LocationID = objloginuser.LocationParkingLotID.LocationID.LocationID;
                     objVehicleLotPassPrice.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
                     List<PassPrice> lstVMPass = dal_Pass.GetPassPriceDetails(Convert.ToString(App.Current.Properties["apitoken"]), objVehicleLotPassPrice);
                     if (objReNewVehicle != null && objReNewVehicle.CustomerVehiclePassID != 0)
@@ -204,7 +205,7 @@ namespace ParkHyderabadOperator
                                     _vehicleType[item].VehicleDisplayImage = _vehicleType[item].VehicleActiveImage;
                                     _vehicleType[item] = _vehicleType[item];
                                 }
-                                collstviewVehicleTye.WidthRequest = 90;
+                                collstviewVehicleTye.WidthRequest = 110;
                                 collstviewVehicleTye.ItemsSource = _vehicleType;
                                 SelectedVehicle = _vehicleType[0].VehicleTypeCode;
                             }

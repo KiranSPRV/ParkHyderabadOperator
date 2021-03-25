@@ -144,25 +144,27 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <NavigationPage.TitleView >
-        <StackLayout Orientation="Horizontal"  VerticalOptions="CenterAndExpand">
-
-            <Label x:Name="lblPageHeading"    Text="CHECK IN"  Style="{StaticResource LabelRegularPageTitlesStyle}" VerticalOptions="CenterAndExpand"  HorizontalOptions="EndAndExpand" Margin="35,0,0,0" ></Label>
-            <StackLayout Orientation="Horizontal" Spacing="5"    HorizontalOptions="EndAndExpand">
-                <Frame CornerRadius="8" x:Name="frmOnlineSynch" BorderColor="#DFDFDFDF" Padding="6" HasShadow ="False"  BackgroundColor="#FFFFF" HorizontalOptions="StartAndExpand"  VerticalOptions="StartAndExpand" >
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer x:Name="frmOnlineSynchGesutre" Tapped="frmOnlineSynchGesutre_Tapped"  NumberOfTapsRequired="1" />
-                    </Frame.GestureRecognizers>
-                    <ImageButton x:Name="imgOnlineSync" HeightRequest="22"  Source="sync.png" BackgroundColor="Transparent" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"  Clicked="frmOnlineSynchGesutre_Tapped"  ></ImageButton>
-                </Frame>
-                <Label x:Name="lblOfflineRecCount"  Style="{StaticResource LabelProximaRegBoldRedStyle}" VerticalOptions="CenterAndExpand" HorizontalOptions="EndAndExpand"></Label>
+            <StackLayout Orientation="Horizontal"  VerticalOptions="CenterAndExpand">
+            <StackLayout Spacing="2" Margin="35,0,0,0" HorizontalOptions="EndAndExpand">
+                <Label x:Name="lblPageHeading"    Text="CHECK IN"  Style="{StaticResource LabelRegularPageTitlesStyle}" VerticalOptions="CenterAndExpand"  HorizontalOptions="EndAndExpand"  ></Label>
+                <Label x:Name="lblcheckInLocation"  Style="{StaticResource LabelRegularEndNormalFontBoldStyle}" VerticalOptions="EndAndExpand"  HorizontalOptions="CenterAndExpand"  FontSize="11"></Label>
             </StackLayout>
-            <Frame CornerRadius="8" x:Name="frmHome" BorderColor="#DFDFDFDF" Padding="6" HasShadow ="False"  BackgroundColor="#FFFFF" HorizontalOptions="EndAndExpand"  VerticalOptions="StartAndExpand" Margin="0,0,5,0" >
-                <Frame.GestureRecognizers>
-                    <TapGestureRecognizer x:Name="frmHomeGesture" Tapped="frmHomeGesture_Tapped"  NumberOfTapsRequired="1" />
-                </Frame.GestureRecognizers>
-                <ImageButton x:Name="imgHome"   Source="home.png" BackgroundColor="Transparent" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"  Clicked="imgHome_Clicked"  ></ImageButton>
-            </Frame>
-        </StackLayout>
+                <StackLayout Orientation="Horizontal" Spacing="5"    HorizontalOptions="EndAndExpand">
+                    <Frame CornerRadius="8" x:Name="frmOnlineSynch" BorderColor="#DFDFDFDF" Padding="6" HasShadow ="False"  BackgroundColor="#FFFFF" HorizontalOptions="StartAndExpand"  VerticalOptions="StartAndExpand" >
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer x:Name="frmOnlineSynchGesutre" Tapped="frmOnlineSynchGesutre_Tapped"  NumberOfTapsRequired="1" />
+                        </Frame.GestureRecognizers>
+                        <ImageButton x:Name="imgOnlineSync" HeightRequest="22"  Source="sync.png" BackgroundColor="Transparent" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"  Clicked="frmOnlineSynchGesutre_Tapped"  ></ImageButton>
+                    </Frame>
+                    <Label x:Name="lblOfflineRecCount"  Style="{StaticResource LabelProximaRegBoldRedStyle}" VerticalOptions="CenterAndExpand" HorizontalOptions="EndAndExpand"></Label>
+                </StackLayout>
+                <Frame CornerRadius="8" x:Name="frmHome" BorderColor="#DFDFDFDF" Padding="6" HasShadow ="False"  BackgroundColor="#FFFFF" HorizontalOptions="EndAndExpand"  VerticalOptions="StartAndExpand" Margin="0,0,8,0" >
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer x:Name="frmHomeGesture" Tapped="frmHomeGesture_Tapped"  NumberOfTapsRequired="1" />
+                    </Frame.GestureRecognizers>
+                    <ImageButton x:Name="imgHome"   Source="home.png" BackgroundColor="Transparent" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"  Clicked="imgHome_Clicked"  ></ImageButton>
+                </Frame>
+            </StackLayout>
     </NavigationPage.TitleView>
     <ContentPage.Content>
         <AbsoluteLayout VerticalOptions="FillAndExpand"  x:Name="absLayoutCheckInpage">
@@ -238,8 +240,8 @@
                             <ColumnDefinition Width="2.15*"></ColumnDefinition>
                             <ColumnDefinition Width="3.25*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        
-                        
+
+
                         <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"  Grid.Column="0" Grid.Row="0" Spacing="2">
                             <AbsoluteLayout VerticalOptions="FillAndExpand"  HorizontalOptions="FillAndExpand"  >
                                 <StackLayout AbsoluteLayout.LayoutBounds="0.55,1,0.9,0.8"  AbsoluteLayout.LayoutFlags="All"  BackgroundColor="Transparent">

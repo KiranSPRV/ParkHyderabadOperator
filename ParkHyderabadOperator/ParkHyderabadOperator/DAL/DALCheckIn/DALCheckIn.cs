@@ -141,8 +141,6 @@ namespace ParkHyderabadOperator.DAL.DALCheckIn
             }
             return lstParkingBay;
         }
-
-
         public List<ParkingBay> GetLocationParkingBay(string accessToken, LocationParkingLot LocationParkingLotID)
         {
             List<ParkingBay> lstParkingBay = new List<ParkingBay>();
@@ -690,5 +688,42 @@ namespace ParkHyderabadOperator.DAL.DALCheckIn
             return sbUnMoved.ToString();
         }
         #endregion
+
+        // Receipt SMS
+        public bool SendReceiptToMobile(string ReceiptMsg, string mobile)
+        {
+            bool IsOTPSended = false;
+            try
+            {
+                
+                string baseUrl = "https://www.smsstriker.com/";
+                using (var client = new HttpClient())
+                {
+
+                    client.BaseAddress = new Uri(baseUrl);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    // Add the Authorization header with the AccessToken.
+                    // create the URL string.
+
+                    string url = "API/sms.php?username=sprvtechnology&password=128391&from=INSPRK&to="+ mobile + " &msg= "+ ReceiptMsg + "&type=1";
+                    // make the request
+                    // make the request
+                    HttpResponseMessage response = client.GetAsync(url).Result;
+                    
+                    if (response.IsSuccessStatusCode)
+                    {
+                        IsOTPSended = true;
+
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return IsOTPSended;
+        }
     }
 }

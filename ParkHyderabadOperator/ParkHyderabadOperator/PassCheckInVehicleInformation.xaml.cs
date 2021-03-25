@@ -69,6 +69,7 @@ namespace ParkHyderabadOperator
 
                         decimal parkingAmount = objresult.PaidAmount;
                         labelParkingFeesDetails.Text = parkingAmount.ToString("N2") + "/-";
+                        labelPaidDueAmountDetails.Text ="( Parking Amount:"+ Math.Abs(objresult.Amount - objresult.PaidDueAmount).ToString("N2") + "/-, "+"Paid Due Amount:" + objresult.PaidDueAmount.ToString("N2") + "/- )";
 
                         TimeSpan parkingduration = Convert.ToDateTime(objresult.ActualEndTime) - Convert.ToDateTime(objresult.ExpectedStartTime);
                         if (objresult.Duration != "" && objresult.Duration != string.Empty)
@@ -96,6 +97,7 @@ namespace ParkHyderabadOperator
                             labelParkingFeesDetails.Text = "Pass Check-In";
                             labelParkingPaymentType.Text = "";
                             imageParkingFeeImage.Source = "";
+                            labelPaidDueAmountDetails.Text = "";
 
                         }
                         if (objresult.StatusID.StatusCode.ToUpper() == "G")
@@ -109,6 +111,7 @@ namespace ParkHyderabadOperator
                             slVehicleWarning.IsVisible = false;
                             labelParkingFeesDetails.Text = "Free of charge - Government Vehicle";
                             labelParkingPaymentType.Text = "";
+                            labelPaidDueAmountDetails.Text = "";
                             imgGovPhone.Source = "phone.png";
                             imgGovPhone.HeightRequest = 20;
                             labelPhoneNumber.Text = objresult.CustomerID.PhoneNumber;

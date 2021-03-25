@@ -63,6 +63,10 @@
                                         <Label   Text="GST Number" Style="{StaticResource LabelProximaRegStyle}" ></Label>
                                         <Label  x:Name="labelGSTNumber" Text="#12345"  Style="{StaticResource LabelProximaRegStyle}" ></Label>
                                     </StackLayout>
+                                    <StackLayout Orientation="Horizontal" Spacing="10">
+                                        <Label  x:Name="lableCardType"   Style="{StaticResource LabelProximaRegBoldStyle}"  TextColor="#3192F9"></Label>
+                                        <Label  x:Name="labelNFCCard"   Style="{StaticResource LabelProximaRegBoldStyle}"  TextColor="#3192F9"></Label>
+                                    </StackLayout>
                                 </StackLayout>
                                 <StackLayout Orientation="Horizontal"  HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
                                     <Button Text="DONE" x:Name="BtnDone"  Style="{StaticResource ButtonRegularShamrockStyle}"  Clicked="BtnDone_Clicked" />

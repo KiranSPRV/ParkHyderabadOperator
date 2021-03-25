@@ -187,7 +187,7 @@
                             <StackLayout Spacing="-6" x:Name="slADDNFC">
                                 <StackLayout Orientation="Horizontal" Spacing="5" HorizontalOptions="StartAndExpand">
                                     <CheckBox x:Name="checkAddNFCCard"  IsChecked="False"  Style="{StaticResource ChekBoxRegularBlueStyle}"  CheckedChanged="CheckAddNFCCard_CheckedChanged"/>
-                                    <Label Style="{StaticResource LabelProximaRegBoldStyle}" Text="ADD NFC TAG" VerticalOptions="Center" ></Label>
+                                    <Label Style="{StaticResource LabelProximaRegBoldStyle}"  VerticalOptions="Center" x:Name="lblCardType"></Label>
                                     <StackLayout Orientation="Horizontal"  Spacing="0" VerticalOptions="CenterAndExpand">
                                         <Label Text="( " Style="{StaticResource LabelProximaRegBoldStyle}"  VerticalOptions="Center" />
                                         <Image Source="rupee_black.png" HeightRequest="10"  VerticalOptions="Center" Margin="0,0,2,0"/>

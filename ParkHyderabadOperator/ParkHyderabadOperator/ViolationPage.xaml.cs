@@ -70,6 +70,7 @@ namespace ParkHyderabadOperator
                 if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                 {
                     User objloginuser = (User)App.Current.Properties["LoginUser"];
+                    lblcheckInLocation.Text = objloginuser.LocationParkingLotID.LocationParkingLotName;
                     lstparkingbay = dal_DALCheckIn.GetLocationParkingBay(Convert.ToString(App.Current.Properties["apitoken"]), objloginuser.LocationParkingLotID);
                 }
             }
@@ -95,7 +96,7 @@ namespace ParkHyderabadOperator
                     {
                         User objloginuser = (User)App.Current.Properties["LoginUser"];
                         objCustomerPass = dal_DALCheckIn.GetVerifyVehicleHasPass(Convert.ToString(App.Current.Properties["apitoken"]), entryRegistrationNumber.Text, objloginuser.LocationParkingLotID.LocationID.LocationID, objloginuser.LocationParkingLotID.LocationParkingLotID, objloginuser.UserID, "");
-                        if (objCustomerPass.CustomerVehiclePassID != 0 && Convert.ToDateTime(objCustomerPass.ExpiryDate).Date >= DateTime.Now.Date)
+                        if ((objCustomerPass.CustomerVehiclePassID != 0) && ((Convert.ToDateTime(objCustomerPass.StartDate).Date <= DateTime.Now.Date) && (Convert.ToDateTime(objCustomerPass.ExpiryDate).Date >= DateTime.Now.Date)) )
                         {
                             if (SelectedVehicle == objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode.ToUpper())
                             {
@@ -192,14 +193,11 @@ namespace ParkHyderabadOperator
                 {
                     var file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
                     {
-
                         PhotoSize = Plugin.Media.Abstractions.PhotoSize.Custom,
                         Directory = "Violation",
                         SaveToAlbum = false,
                         CustomPhotoSize = 20,//Resize to 90% of original
                         CompressionQuality = 92
-
-
                     });
                     if (file != null)
                     {
@@ -618,14 +616,14 @@ namespace ParkHyderabadOperator
                     var lstVehicleType = await App.SQLiteDb.GetAllVehicleTypesInSQLLite();
                     if (lstVehicleType.Count > 0)
                     {
-                        
-                        
-                        lstVehicleType= lstVehicleType.OrderBy(i => i.VehicleTypeID).ToList();
+
+
+                        lstVehicleType = lstVehicleType.OrderBy(i => i.VehicleTypeID).ToList();
                         obsvehicleType = new ObservableCollection<VehicleType>(lstVehicleType);
                         if (obsvehicleType.Count > 0)
                         {
                             collstviewVehicleTye.WidthRequest = 300;
-                            collstviewVehicleTye.ItemsSource = obsvehicleType.OrderBy(i=>i.VehicleTypeID);
+                            collstviewVehicleTye.ItemsSource = obsvehicleType.OrderBy(i => i.VehicleTypeID);
                             collstviewVehicleTye.SelectedItem = obsvehicleType[0];
 
                         }

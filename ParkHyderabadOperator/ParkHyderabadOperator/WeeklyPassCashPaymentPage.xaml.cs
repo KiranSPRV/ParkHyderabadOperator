@@ -36,7 +36,8 @@ namespace ParkHyderabadOperator
                 ImgVehicleType.Source = objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleIcon;
                 labelVehicleRegNumber.Text = objCustomerweeklyPass.CustomerVehicleID.RegistrationNumber;
                 labelParkingLocation.Text = objCustomerweeklyPass.LocationID.LocationName + "-" + "Single Station";
-                labelPassAmount.Text = objCustomerweeklyPass.Amount.ToString("N2") + "/-";
+                labelPassAmount.Text = (objCustomerweeklyPass.Amount + objCustomerweeklyPass.DueAmount).ToString("N2") + "/-";
+                labelAmountDetails.Text =(objCustomerweeklyPass.Amount).ToString("N2")+" Rs Pass +"+(objCustomerweeklyPass.DueAmount).ToString("N2")+" Rs Due Amount";
             }
             catch (Exception ex)
             {
@@ -47,8 +48,16 @@ namespace ParkHyderabadOperator
         {
             try
             {
-                stlayoutYESNO.IsVisible = false;
-                stLayoutDailyPassGeneratePassReceipt.IsVisible = true;
+                decimal passAmount = (objCustomerweeklyPass.TotalAmount == null || objCustomerweeklyPass.TotalAmount == 0) ? (objCustomerweeklyPass.Amount + objCustomerweeklyPass.DueAmount) : (objCustomerweeklyPass.TotalAmount + objCustomerweeklyPass.DueAmount);
+                if (Convert.ToDecimal(entryCashReceived.Text) >= passAmount)
+                {
+                    stlayoutYESNO.IsVisible = false;
+                    stLayoutDailyPassGeneratePassReceipt.IsVisible = true;
+                }
+                else
+                {
+                    await DisplayAlert("Alert", "Please enter valid pass amount.", "Ok");
+                }
             }
             catch (Exception ex) { }
 
@@ -80,7 +89,7 @@ namespace ParkHyderabadOperator
                 {
                     if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                     {
-                        decimal passAmount = (objCustomerweeklyPass.TotalAmount == null || objCustomerweeklyPass.TotalAmount == 0) ? objCustomerweeklyPass.Amount : objCustomerweeklyPass.TotalAmount;
+                        decimal passAmount = (objCustomerweeklyPass.TotalAmount == null || objCustomerweeklyPass.TotalAmount == 0) ? (objCustomerweeklyPass.Amount+ objCustomerweeklyPass.DueAmount) : (objCustomerweeklyPass.TotalAmount + objCustomerweeklyPass.DueAmount);
                         if (Convert.ToDecimal(entryCashReceived.Text) >= passAmount)
                         {
                             await Task.Run(() =>
@@ -125,13 +134,13 @@ namespace ParkHyderabadOperator
         }
 
         #region Payment Calculation
-        private async void EntryCashReceived_TextChanged(object sender, TextChangedEventArgs e)
+        private void EntryCashReceived_TextChanged(object sender, TextChangedEventArgs e)
         {
             try
             {
                 if (entryCashReceived.Text.Length > 0 && entryCashReceived.Text != null)
                 {
-                    decimal passAmount = (objCustomerweeklyPass.TotalAmount == null || objCustomerweeklyPass.TotalAmount == 0) ? objCustomerweeklyPass.Amount : objCustomerweeklyPass.TotalAmount;
+                    decimal passAmount = (objCustomerweeklyPass.Amount + objCustomerweeklyPass.DueAmount);
                     decimal returnAmount = Math.Abs((Convert.ToDecimal(entryCashReceived.Text) - passAmount));
                     entryCashReturn.Text = returnAmount.ToString("N2");
                 }

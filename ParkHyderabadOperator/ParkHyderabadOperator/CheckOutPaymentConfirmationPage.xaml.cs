@@ -34,14 +34,14 @@ namespace ParkHyderabadOperator
             PageCalledBy = redirectdFrom;
             objviolationVehicleChekOut = objInput;
             ImgVehicleType.Source = objInput.VehicleTypeID.VehicleIcon;
-            labelChekInAmount.Text = "("+objInput.VehicleTypeID.VehicleTypeName +" - For " + objInput.Duration + " Hours)";
+            labelChekInAmount.Text     = "("+objInput.VehicleTypeID.VehicleTypeName +" - For " + objInput.Duration + " Hours)";
             labelVehicleRegNumber.Text = objInput.CustomerVehicleID.RegistrationNumber;
-            labelParkingLocation.Text = objInput.LocationParkingLotID.LocationID.LocationName + "-" + objInput.LocationParkingLotID.LocationParkingLotName + "," + objInput.LocationParkingLotID.ParkingBayID.ParkingBayName + " " + objInput.LocationParkingLotID.ParkingBayID.ParkingBayRange;
+            labelParkingLocation.Text  = objInput.LocationParkingLotID.LocationID.LocationName + "-" + objInput.LocationParkingLotID.LocationParkingLotName + "," + objInput.LocationParkingLotID.ParkingBayID.ParkingBayName + " " + objInput.LocationParkingLotID.ParkingBayID.ParkingBayRange;
 
             if (redirectdFrom == "ViolationVehicleInformation")
             {
-                labelChekInAmount.Text = "(Parking ₹" + objInput.Amount.ToString("N2") + " Clamp ₹" + objInput.ClampFees.ToString("N2") + ")";
-                lableAmount.Text = (objInput.Amount + objInput.ClampFees).ToString("N2");
+                labelChekInAmount.Text = "(Parking ₹" + objInput.Amount.ToString("N2") + " Clamp ₹" + objInput.ClampFees.ToString("N2") + " Due Amount ₹" + objInput.DueAmount.ToString("N2") + ")";
+                lableAmount.Text = (objInput.Amount + objInput.ClampFees + objInput.DueAmount).ToString("N2");
             }
             else if (redirectdFrom == "PassCheckInVehicleInformation")
             {

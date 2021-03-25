@@ -91,7 +91,7 @@ namespace ParkHyderabadOperator
                                 lblWarningCount.Text = (objresult.ViolationWarningCount > 3) ? "" : Convert.ToString(objresult.ViolationWarningCount) + " Warning(s)";
                                 labelClampFee.Text = String.Format("{0:0.#}", (objresult.IsWarning ? 0 : objresult.ClampFees));
                                 labelDueAmount.Text = String.Format("{0:0.#}", objresult.DueAmount);
-                                labelTotalFee.Text = String.Format("{0:0.#}", (objresult.ViolationFees + objresult.ClampFees+ objresult.DueAmount));
+                                labelTotalFee.Text = String.Format("{0:0.#}", (objresult.ViolationFees + objresult.ClampFees + objresult.DueAmount));
                                 objresult.Duration = Convert.ToString(objInputs.TotalHours);
                                 labelParkingHours.Text = "Parked for " + string.Format(objInputs.TotalHours + "h:" + t.Minutes + "m");
 
@@ -124,6 +124,7 @@ namespace ParkHyderabadOperator
                 ShowLoading(true);
                 objresult.ActualEndTime = DateTime.Now;
                 objresult.ExpectedEndTime = DateTime.Now;
+                objresult.DueAmount = string.IsNullOrEmpty(labelDueAmount.Text) ? 0 : Convert.ToDecimal(labelDueAmount.Text);
                 objresult.PaymentTypeID.PaymentTypeName = "Cash";
                 await Navigation.PushAsync(new CheckOutPaymentConfirmationPage("ViolationVehicleInformation", objresult));
                 ShowLoading(false);
@@ -139,6 +140,8 @@ namespace ParkHyderabadOperator
             try
             {
                 objresult.ActualEndTime = DateTime.Now;
+                objresult.ExpectedEndTime = DateTime.Now;
+                objresult.DueAmount = string.IsNullOrEmpty(labelDueAmount.Text) ? 0 : Convert.ToDecimal(labelDueAmount.Text);
                 objresult.PaymentTypeID.PaymentTypeName = "EPay";
                 var checkOutPaymentConfirmationPage = new CheckOutPaymentConfirmationPage("ViolationVehicleInformation", objresult);
                 await Navigation.PushAsync(checkOutPaymentConfirmationPage);
@@ -153,6 +156,7 @@ namespace ParkHyderabadOperator
             try
             {
                 objresult.ActualEndTime = DateTime.Now;
+                objresult.DueAmount = string.IsNullOrEmpty(labelDueAmount.Text) ? 0 : Convert.ToDecimal(labelDueAmount.Text);
                 var fOCConfirmationPage = new FOCConfirmationPage(objresult, "ViolationVehicleInformation");
                 await Navigation.PushAsync(fOCConfirmationPage);
             }
@@ -219,7 +223,7 @@ namespace ParkHyderabadOperator
                     if (lstHistory.Count > 0)
                     {
                         lvVehicleDueAmount.ItemsSource = lstHistory;
-                        
+
                     }
                     popupDueAmount.IsVisible = true;
                 }

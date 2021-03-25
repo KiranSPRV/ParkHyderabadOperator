@@ -39,7 +39,8 @@ namespace ParkHyderabadOperator
                 ImgVehicleType.Source = objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleIcon;
                 labelVehicleRegNumber.Text = objCustomerweeklyPass.CustomerVehicleID.RegistrationNumber;
                 labelParkingLocation.Text = objCustomerweeklyPass.LocationID.LocationName + "-" + "Single Station";
-                labelPassAmount.Text = objCustomerweeklyPass.Amount.ToString("N2") + "/-";
+                labelPassAmount.Text = (objCustomerweeklyPass.Amount+ objCustomerweeklyPass.DueAmount).ToString("N2") + "/-";
+                labelAmountDetails.Text = (objCustomerweeklyPass.Amount).ToString("N2") + " Rs Pass +" + (objCustomerweeklyPass.DueAmount).ToString("N2") + "Rs Due";
             }
             catch (Exception ex)
             {

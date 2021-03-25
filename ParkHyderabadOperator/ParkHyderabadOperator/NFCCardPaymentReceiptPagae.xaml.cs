@@ -77,21 +77,11 @@ namespace ParkHyderabadOperator
                     labelValidTo.Text = Convert.ToDateTime(objReceipt.ExpiryDate).ToString("dd MMM yyyy");
 
                 }
-                if (objReceipt.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "2W")
-                {
-                    vehicleType = "BIKE";
-                    imageVehicleImage.Source = "bike_black.png";
-                }
-                if (objReceipt.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "4W")
-                {
-                    vehicleType = "CAR";
-                    imageVehicleImage.Source = "car_black.png";
-                }
-
+                imageVehicleImage.Source = objReceipt.CustomerVehicleID.VehicleTypeID.VehicleIcon;
                 labelCustomerName.Text = objReceipt.CustomerVehicleID.CustomerID.Name;
                 labelVehicleDetails.Text = objReceipt.CustomerVehicleID.RegistrationNumber;
                 labelParkingFeesDetails.Text = objReceipt.CardAmount.ToString("N2") + "/-";
-                labelParkingPaymentType.Text = "Paid - By " + objReceipt.NFCCardPaymentID.PaymentTypeName;
+                labelParkingPaymentType.Text = "Paid - By " + objReceipt.NFCCardPaymentID.PaymentTypeCode;
 
                 if (objReceipt.CreatedBy.UserName != "")
                 {
@@ -118,7 +108,7 @@ namespace ParkHyderabadOperator
                         receiptlines[6] = "\x1B\x21\x01" + "Valid Till:" + Convert.ToDateTime(objReceipt.ExpiryDate).ToString("dd MMM yyyy") + "\x1B\x21\x00" + "\n";
                         receiptlines[7] = "\x1B\x21\x01" + "(Pass Type :" + objReceipt.PassPriceID.PassTypeID.PassTypeName + ")" + "\x1B\x21\x00\n";
                         receiptlines[8] = "\x1B\x21\x01" + "Station(s):" + stations + "\x1B\x21\x01" + "\n";
-                        receiptlines[9] = "\x1B\x21\x01" + "Paid: Rs" + objReceipt.PassPriceID.NFCCardPrice.ToString("N2") + "\x1B\x21\x01" + "\n";
+                        receiptlines[9] = "\x1B\x21\x01" + "Paid: Rs" + objReceipt.PassPriceID.CardPrice.ToString("N2") + "\x1B\x21\x01" + "\n";
                         receiptlines[10] = "\x1B\x21\x06" + "Operator Id:" + objReceipt.CreatedBy.UserCode + "\x1B\x21\x00\n";
                         receiptlines[11] = "\x1B\x21\x01" + "(Supervisor Mobile:" + objReceipt.SuperVisorID.PhoneNumber + ")" + "\x1B\x21\x00\n";
                         receiptlines[12] = "\x1B\x21\x01" + "We are not responsible for your valuable items like laptop,       wallet,helmet etc." + "\x1B\x21\x00\n";

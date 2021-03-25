@@ -5,8 +5,11 @@
              xmlns:local="clr-namespace:ParkHyderabadOperator.Behaviors"
              NavigationPage.HasBackButton="True" >
     <NavigationPage.TitleView>
+        <StackLayout Spacing="2" VerticalOptions="CenterAndExpand">
+            <Label Text="VIOLATION"  Style="{StaticResource LabelRegularPageTitlesStyle}" Padding="0,0,70,0"/>
+            <Label x:Name="lblcheckInLocation"  Style="{StaticResource LabelRegularEndNormalFontBoldStyle}" VerticalOptions="EndAndExpand"  HorizontalOptions="CenterAndExpand"  FontSize="11" Padding="0,0,70,0"></Label>
+        </StackLayout>
         
-        <Label Text="VIOLATION"  Style="{StaticResource LabelRegularPageTitlesStyle}" Padding="0,0,70,0"/>
     </NavigationPage.TitleView>
     <ContentPage.Content>
         <AbsoluteLayout VerticalOptions="FillAndExpand"  x:Name="absLayoutViolationpage">

@@ -1,5 +1,6 @@
 ﻿
 using Newtonsoft.Json;
+using ParkHyderabadOperator.DAL.DALCheckIn;
 using ParkHyderabadOperator.DAL.DALExceptionLog;
 using ParkHyderabadOperator.DAL.DALLogin;
 using ParkHyderabadOperator.Model;
@@ -11,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -32,7 +34,7 @@ namespace ParkHyderabadOperator
         {
             InitializeComponent();
             dal_Exceptionlog = new DALExceptionManagment();
-            App.Current.Properties["BaseURL"] = "http://35.202.198.25:81/InstaParkingOperatorAPIDev/";
+            App.Current.Properties["BaseURL"] = "http://35.202.198.25:81/InstaParkingOperatorAPI/";
 
         }
         protected async override void OnAppearing()
@@ -181,7 +183,6 @@ namespace ParkHyderabadOperator
             UserLoginVerification();
         }
 
-
         public async void UserLoginVerification()
         {
             User resultObj = null;
@@ -204,6 +205,7 @@ namespace ParkHyderabadOperator
                             await GetAPIToken();
                             await GetCurrentLocation();
 
+
                             if (App.Current.Properties.ContainsKey("apitoken"))
                             {
                                 DALUserLogin objdalLogin = new DALUserLogin();
@@ -225,9 +227,9 @@ namespace ParkHyderabadOperator
                                         MasterHomePage masterPage = null;
                                         DateTime toDay = DateTime.Parse(resultObj.LocationParkingLotID.LotCloseTime);
                                         // Load VehicleTypes in SQLLite
-                                        await App.SQLiteDb.SaveAllVehicleTypesInSQLLite(Convert.ToString(App.Current.Properties["apitoken"]));
+                                        await App.SQLiteDb.SaveAllVehicleTypesInSQLLite(Convert.ToString(App.Current.Properties["apitoken"]), resultObj.LocationParkingLotID.LocationID.LocationID);
                                         await App.SQLiteDb.SaveVehiclesParkingFeesDetailOnLogin(Convert.ToString(App.Current.Properties["apitoken"]), resultObj.LocationParkingLotID.LocationParkingLotID);
-                                       
+
                                         await DisplayAlert("Alert", "Your Location and Lot details are:" + resultObj.LocationParkingLotID.LocationID.LocationName + "-" + resultObj.LocationParkingLotID.LocationParkingLotName, "Ok");
                                         if ((resultObj.UserTypeID.UserTypeName.ToUpper()) == ("Operator".ToUpper()))
                                         {

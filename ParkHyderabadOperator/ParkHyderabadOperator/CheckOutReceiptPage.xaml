@@ -41,17 +41,17 @@
                                             <Image x:Name="imageVehicleImage"  HeightRequest="20" ></Image>
                                             <Label  x:Name="labelVehicleDetails"     Style="{StaticResource LabelProximaBoldStyle}"  VerticalOptions="CenterAndExpand"></Label>
                                         </StackLayout>
-                                        <StackLayout Orientation="Horizontal"  HorizontalOptions="StartAndExpand" Margin="2,0,0,0" Spacing="12">
+                                        <StackLayout Orientation="Horizontal"  HorizontalOptions="FillAndExpand" Margin="2,0,0,0" Spacing="12">
                                             <Image x:Name="imageParkingFeeImage"  HeightRequest="18" VerticalOptions="StartAndExpand" ></Image>
-                                            <StackLayout>
+                                            <StackLayout HorizontalOptions="FillAndExpand">
                                                 <StackLayout Orientation="Horizontal">
                                                     <Label  x:Name="labelParkingFeesDetails"  Style="{StaticResource LabelProximaBoldStyle}" VerticalOptions="CenterAndExpand"></Label>
                                                     <Label  x:Name="labelParkingPaymentType"  Style="{StaticResource LabelProximaRegStyle}" ></Label>
                                                 </StackLayout>
-                                                <StackLayout Orientation="Horizontal">
-                                                    <Label  x:Name="labelCheckOutFeesDetails"   Style="{StaticResource LabelProximaRegBombayStyle}" VerticalOptions="CenterAndExpand"></Label>
-                                                </StackLayout>
                                             </StackLayout>
+                                        </StackLayout>
+                                        <StackLayout   HorizontalOptions="FillAndExpand">
+                                            <Label  x:Name="labelCheckOutFeesDetails"   Style="{StaticResource LabelProximaRegBombayStyle}" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" FontSize="11"></Label>
                                         </StackLayout>
                                         <StackLayout Orientation="Horizontal"   HorizontalOptions="StartAndExpand" Margin="2,0,0,0" Spacing="12">
                                             <Image x:Name="imageOperatorProfile"  HeightRequest="18"   ></Image>

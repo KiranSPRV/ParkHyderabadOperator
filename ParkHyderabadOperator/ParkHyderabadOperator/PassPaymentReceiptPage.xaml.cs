@@ -53,7 +53,11 @@ namespace ParkHyderabadOperator
                 labelParkingLot.Text = objReceipt.LocationID.LocationName + "-" + objReceipt.PassPriceID.StationAccess;
                 labelValidFrom.Text = Convert.ToDateTime(objReceipt.StartDate).ToString("dd MMM yyyy");
                 labelValidTo.Text = Convert.ToDateTime(objReceipt.ExpiryDate).ToString("dd MMM yyyy");
-                if (objReceipt.PassPriceID.PassTypeID.PassTypeCode == "MP")
+                if (objReceipt.PassPriceID.PassTypeID.PassTypeCode == "WP" || objReceipt.PassPriceID.PassTypeID.PassTypeCode == "EP")
+                {
+                    stations = objReceipt.LocationID.LocationName;
+                }
+                else if (objReceipt.PassPriceID.PassTypeID.PassTypeCode == "MP")
                 {
                     if (objReceipt.PassPriceID.StationAccess == "Single Station")
                     {
@@ -69,7 +73,14 @@ namespace ParkHyderabadOperator
                             {
                                 for (var s = 0; s < lstpasslocations.Count; s++)
                                 {
-                                    stations = stations + lstpasslocations[s].LocationName + ",";
+                                    if (s == (lstpasslocations.Count - 1))
+                                    {
+                                        stations = stations + lstpasslocations[s].LocationName;
+                                    }
+                                    else
+                                    {
+                                        stations = stations + lstpasslocations[s].LocationName + ",";
+                                    }
                                 }
                                 labelParkingLot.Text = "Multi Stations:" + stations + ".";
                             }
@@ -90,14 +101,15 @@ namespace ParkHyderabadOperator
 
                 if (objReceipt.IssuedCard)
                 {
-                    labelParkingFeesDetails.Text = objReceipt.TotalAmount.ToString("N2") + "/-";
-                    labelParkingPaymentType.Text = "Paid (Including NFC) - By " + objReceipt.PaymentTypeID.PaymentTypeName;
+                    labelParkingFeesDetails.Text = (objReceipt.TotalAmount + objReceipt.DueAmount).ToString("N2") + "/-";
+                    labelParkingPaymentType.Text = "Paid (Including " + objReceipt.CardTypeID.CardTypeName + ")- By " + objReceipt.PaymentTypeID.PaymentTypeName;
+                    labelPassAmountDetails.Text = "( Pass Rs " + (objReceipt.Amount).ToString("N2") + "/-" + " TAG Rs " + (objReceipt.CardAmount).ToString("N2") + "/-" + " Due Amount:" + objReceipt.DueAmount.ToString("N2") + "/-" + " )";
                 }
                 else
                 {
-                    labelParkingFeesDetails.Text = objReceipt.Amount.ToString("N2") + "/-";
+                    labelParkingFeesDetails.Text = (objReceipt.Amount + objReceipt.DueAmount).ToString("N2") + "/-";
                     labelParkingPaymentType.Text = "Paid - By " + objReceipt.PaymentTypeID.PaymentTypeName;
-
+                    labelPassAmountDetails.Text = "( Pass Rs " + (objReceipt.Amount).ToString("N2") + "/-" + " Due Amount Rs " + objReceipt.DueAmount.ToString("N2") + "/-"+" )";
                 }
                 if (objReceipt.CreatedBy.UserName != "")
                 {
@@ -107,12 +119,14 @@ namespace ParkHyderabadOperator
                     imageOperatorProfile.IsVisible = true;
                 }
                 else
+
                 {
                     imageOperatorProfile.IsVisible = false;
                 }
                 labelGSTNumber.Text = objReceipt.GSTNumber;
                 try
                 {
+                    string passPaidAmount = string.Empty;
                     if (receiptlines != null && receiptlines.Length > 0)
                     {
                         receiptlines[0] = "\x1B\x21\x08" + "          " + "HMRL PARKING" + "\x1B\x21\x00" + "\n";
@@ -123,7 +137,21 @@ namespace ParkHyderabadOperator
                         receiptlines[6] = "\x1B\x21\x01" + "Valid Till:" + Convert.ToDateTime(objReceipt.ExpiryDate).ToString("dd MMM yyyy") + "\x1B\x21\x00" + "\n";
                         receiptlines[7] = "\x1B\x21\x01" + "(Pass Type :" + objReceipt.PassPriceID.PassTypeID.PassTypeName + ")" + "\x1B\x21\x00\n";
                         receiptlines[8] = "\x1B\x21\x01" + "Station(s):" + stations + "\x1B\x21\x01" + "\n";
-                        receiptlines[9] = "\x1B\x21\x01" + "Paid: Rs" + (objReceipt.IssuedCard ? objReceipt.TotalAmount.ToString("N2") + "(NFC Rs" + objReceipt.PassPriceID.NFCCardPrice.ToString("N2") + ")" : objReceipt.Amount.ToString("N2")) + "\x1B\x21\x01" + "\n";
+                        if (objReceipt.IssuedCard)
+                        {
+                            passPaidAmount = "Rs " + (objReceipt.TotalAmount + objReceipt.DueAmount).ToString("N2");
+                            passPaidAmount = passPaidAmount + "(" + objReceipt.CardTypeID.CardTypeName + " Rs" + objReceipt.PassPriceID.CardPrice.ToString("N2") + ")";
+                        }
+                        else
+                        {
+                            passPaidAmount = (objReceipt.Amount + objReceipt.DueAmount).ToString("N2");
+                        }
+                        if (objReceipt.DueAmount > 0)
+                        {
+                            passPaidAmount = passPaidAmount + "( Rs" + objReceipt.DueAmount.ToString("N2") + ")";
+                        }
+
+                        receiptlines[9] = "\x1B\x21\x01" + "Paid: " + passPaidAmount + "\x1B\x21\x01" + "\n";
                         receiptlines[10] = "\x1B\x21\x06" + "Operator Id:" + objReceipt.CreatedBy.UserCode + "\x1B\x21\x00\n";
                         receiptlines[11] = "\x1B\x21\x01" + "(Supervisor Mobile:" + objReceipt.SuperVisorID.PhoneNumber + ")" + "\x1B\x21\x00\n";
                         receiptlines[12] = "\x1B\x21\x01" + "We are not responsible for your valuable items like laptop,       wallet,helmet etc." + "\x1B\x21\x00\n";
@@ -211,7 +239,7 @@ namespace ParkHyderabadOperator
                                     ObjblueToothDevicePrinting.PrintCommand(printerName, printtext);
                                 }
                             }
-                            
+
                             await Task.Run(() =>
                             {
                                 masterPage = new MasterHomePage();
@@ -221,7 +249,7 @@ namespace ParkHyderabadOperator
                     }
                     else
                     {
-                       
+
                         await DisplayAlert("Alert", "Unable to find Bluetooth device", "Ok");
                         await Navigation.PushAsync(masterPage);
                     }
@@ -238,5 +266,6 @@ namespace ParkHyderabadOperator
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "PassPaymentReceiptPage.xaml.cs", "", "BtnDone_Clicked");
             }
         }
+
     }
 }

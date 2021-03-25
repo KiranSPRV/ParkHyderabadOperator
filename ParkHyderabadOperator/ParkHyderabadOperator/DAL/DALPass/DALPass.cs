@@ -473,7 +473,7 @@ namespace ParkHyderabadOperator.DAL.DALPass
             return nfccardVehicle;
         }
 
-        public List<VehicleType> GetAllVehicleTypes(string accessToken)
+        public List<VehicleType> GetAllVehicleTypes(string accessToken,int LocationID)
         {
             dal_DALExceptionManagment = new DALExceptionManagment();
             List<VehicleType> lstVehicleType = new List<VehicleType>();
@@ -488,7 +488,7 @@ namespace ParkHyderabadOperator.DAL.DALPass
                     // Add the Authorization header with the AccessToken.
                     client.DefaultRequestHeaders.Add("Authorization", "bearer  " + accessToken);
                     // create the URL string.
-                    string url = "api/InstaOperator/getAllVehicleTypes";
+                    string url = "api/InstaOperator/getAllVehicleTypes?LocationID="+Convert.ToString(LocationID);
                     // make the request
                     
                    

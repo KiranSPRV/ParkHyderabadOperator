@@ -63,19 +63,27 @@ namespace ParkHyderabadOperator
                         entryRegistrationNumber.IsReadOnly = true;
                         entryPhoneNumber.IsReadOnly = true;
                         entryName.IsReadOnly = true;
+                        GetVehiceDueAmont(objReNewVehicle.CustomerVehicleID.RegistrationNumber, objResultVMPass.VehicleTypeID.VehicleTypeCode);
                     }
                 }
                 labelPassType.Text = objResultVMPass.PassTypeID.PassTypeName.ToUpper();
                 labelPassStationAccess.Text = objResultVMPass.StationAccess.ToUpper();
 
                 labelPassAmount.Text = String.Format("{0:0.#}", objResultVMPass.Price);
-               
+
 
                 imgCustomerVehcileType.Source = objResultVMPass.VehicleTypeID.VehicleIcon;
                 if (objResultVMPass.PassTypeID.PassTypeCode == "EP")// Event Pass
                 {
                     objResultVMPass.Duration = (objResultVMPass.Duration == null || objResultVMPass.Duration == "0" || objResultVMPass.Duration == "") ? "0" : objResultVMPass.Duration;
+
+                    // EP Start Date Validation
+                    if (DateTime.Now.Date >= Convert.ToDateTime(objResultVMPass.StartDate).Date && DateTime.Now.Date <= Convert.ToDateTime(objResultVMPass.EndDate).Date)
+                    {
+                        objResultVMPass.StartDate = DateTime.Now.Date;
+                    }
                     labelValidFrom.Text = Convert.ToDateTime(objResultVMPass.StartDate).ToString("dd MMM yyyy");
+
                     labelValidTo.Text = Convert.ToDateTime(objResultVMPass.EndDate).ToString("dd MMM yyyy");
                 }
                 else if (objResultVMPass.PassTypeID.PassTypeCode == "DP")
@@ -87,7 +95,13 @@ namespace ParkHyderabadOperator
                 {
                     User objloginuser = (User)App.Current.Properties["LoginUser"];
                     labelParkingLocation.Text = objloginuser.LocationParkingLotID.LocationID.LocationName + " Station Only";
+                    if (!string.IsNullOrEmpty( objloginuser.LocationParkingLotID.LotCloseTime))
+                    {
+                        objResultVMPass.EndDate = Convert.ToDateTime((Convert.ToDateTime(objResultVMPass.EndDate).ToString("dd MMM yyyy")) + " " + objloginuser.LocationParkingLotID.LotCloseTime);
+                    }
+                    
                 }
+
             }
             catch (Exception ex)
             {
@@ -126,6 +140,7 @@ namespace ParkHyderabadOperator
                                         objCustomerPass.PassPriceID.PassTypeID.PassTypeName = objResultVMPass.PassTypeID.PassTypeName;
                                         objCustomerPass.Amount = objResultVMPass.Price;
                                         objCustomerPass.TotalAmount = objResultVMPass.Price;
+                                        objCustomerPass.DueAmount = string.IsNullOrEmpty(labelDueAmount.Text) ? 0 : Convert.ToDecimal(labelDueAmount.Text);
                                         objCustomerPass.PrimaryLocationParkingLotID.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
                                         objCustomerPass.PrimaryLocationParkingLotID.LocationParkingLotName = objloginuser.LocationParkingLotID.LocationParkingLotName;
                                         objCustomerPass.LocationID.LocationID = objloginuser.LocationParkingLotID.LocationID.LocationID;
@@ -200,6 +215,7 @@ namespace ParkHyderabadOperator
                                         objCustomerPass.PassPriceID.PassTypeID.PassTypeName = objResultVMPass.PassTypeID.PassTypeName;
                                         objCustomerPass.Amount = objResultVMPass.Price;
                                         objCustomerPass.TotalAmount = objResultVMPass.Price;
+                                        objCustomerPass.DueAmount = string.IsNullOrEmpty(labelDueAmount.Text) ? 0 : Convert.ToDecimal(labelDueAmount.Text);
                                         objCustomerPass.PrimaryLocationParkingLotID.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
                                         objCustomerPass.PrimaryLocationParkingLotID.LocationParkingLotName = objloginuser.LocationParkingLotID.LocationParkingLotName;
                                         objCustomerPass.LocationID.LocationID = objloginuser.LocationParkingLotID.LocationID.LocationID;
@@ -350,29 +366,40 @@ namespace ParkHyderabadOperator
 
         }
 
-        private async void entryRegistrationNumber_Completed(object sender, EventArgs e)
+        private void entryRegistrationNumber_Completed(object sender, EventArgs e)
         {
-           
             try
             {
                 var text = ((Entry)sender).Text;
-                var dal_Menubar = new DALMenubar();
-                imagePopVehicleImage.Source = imgCustomerVehcileType.Source;
-                labelPopVehicleDetails.Text = text;
-                decimal dueAmount=0;
-                await Task.Run(() =>
-                {
-                    dueAmount = dal_Menubar.GetVehicleDueAmount(Convert.ToString(App.Current.Properties["apitoken"]), text, objResultVMPass.VehicleTypeID.VehicleTypeCode);
-                });
-                labelDueAmount.Text = String.Format("{0:0.#}", dueAmount);
-                labelTotalFee.Text = String.Format("{0:0.#}", dueAmount+ objResultVMPass.Price);
-
+                GetVehiceDueAmont(text, objResultVMPass.VehicleTypeID.VehicleTypeCode);
             }
             catch (Exception ex)
             {
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "DailyPass.xaml.cs", "", "DailyPass");
             }
-           
+        }
+        public async void GetVehiceDueAmont(string RegistrationNumber, string VehicleTypeCode)
+        {
+            try
+            {
+                ShowLoading(true);
+                var dal_Menubar = new DALMenubar();
+                imagePopVehicleImage.Source = imgCustomerVehcileType.Source;
+                labelPopVehicleDetails.Text = RegistrationNumber;
+                decimal dueAmount = 0;
+                await Task.Run(() =>
+                {
+                    dueAmount = dal_Menubar.GetVehicleDueAmount(Convert.ToString(App.Current.Properties["apitoken"]), RegistrationNumber, VehicleTypeCode);
+                });
+                labelDueAmount.Text = String.Format("{0:0.#}", dueAmount);
+                labelTotalFee.Text = String.Format("{0:0.#}", dueAmount + objResultVMPass.Price);
+                ShowLoading(false);
+            }
+            catch (Exception ex)
+            {
+                ShowLoading(false);
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "DailyPass.xaml.cs", "", "DailyPass");
+            }
         }
     }
 }

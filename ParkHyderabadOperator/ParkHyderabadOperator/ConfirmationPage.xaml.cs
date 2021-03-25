@@ -5,6 +5,8 @@ using ParkHyderabadOperator.Model.APIInputModel;
 using ParkHyderabadOperator.Model.APIOutPutModel;
 using System;
 using System.IO;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -45,20 +47,13 @@ namespace ParkHyderabadOperator
                 if (obj != null)
                 {
                     objNewCheckIn = obj;
-                    ImgVehicleType.Source =  obj.VehicleImage;
+                    ImgVehicleType.Source = obj.VehicleImage;
                     vehicleTypeName = obj.VehicleTypeName;
                     labelVehicleRegNumber.Text = obj.RegistrationNumber;
                     labelParkingLocation.Text = obj.LocationName + "-" + obj.LocationParkingLotName + "," + "Bay Number " + "-" + obj.BayRange;
-                    labelChekInAmount.Text = Convert.ToDecimal(obj.ParkingFees + obj.ClampFees).ToString("N2");
-                    labelClampAmount.Text = "( Clamp Fees " + obj.ClampFees.ToString("N2") + " )";
-                    if (obj.ClampFees > 0)
-                    {
-                        labelChekInAmountDetails.Text = "( " + vehicleTypeName + " - For " + obj.ParkingHours + " hrs )";
-                    }
-                    else
-                    {
-                        labelChekInAmountDetails.Text = "( " + vehicleTypeName + " - For " + obj.ParkingHours + " hrs )";
-                    }
+                    labelChekInAmount.Text = Convert.ToDecimal(obj.ParkingFees + obj.ClampFees + obj.DueAmount).ToString("N2");
+                    labelClampAmount.Text = "(Due Amount: " + obj.DueAmount.ToString("N2") + ",Clamp Fees: " + obj.ClampFees.ToString("N2") + ")";
+                    labelChekInAmountDetails.Text = "( " + vehicleTypeName + " - For " + obj.ParkingHours + " hrs )";
 
                 }
                 else
@@ -95,19 +90,28 @@ namespace ParkHyderabadOperator
                             });
                             if (objResultCustomerParkingSlot.CustomerParkingSlotID != 0)
                             {
-                                if (printerName != string.Empty && printerName != "")
+                                if (string.IsNullOrEmpty(objNewCheckIn.PhoneNumber))
                                 {
-                                    PrintReceipt();
-                                    await Navigation.PushAsync(checkInPage);
+                                    if (printerName != string.Empty && printerName != "")
+                                    {
+                                        PrintReceipt();
+                                        await Navigation.PushAsync(checkInPage);
+                                    }
+                                    else
+                                    {
+
+                                        await DisplayAlert("Alert", "Unable to find Bluetooth device", "Ok");
+                                        await Navigation.PushAsync(checkInPage);
+                                        ShowLoading(false);
+                                        btnYes.IsVisible = true;
+                                    }
                                 }
                                 else
                                 {
-
-                                    await DisplayAlert("Alert", "Unable to find Bluetooth device", "Ok");
+                                    SendSMS(objNewCheckIn.PhoneNumber);
                                     await Navigation.PushAsync(checkInPage);
-                                    ShowLoading(false);
-                                    btnYes.IsVisible = true;
                                 }
+
                             }
                             else
                             {
@@ -164,7 +168,7 @@ namespace ParkHyderabadOperator
             try
             {
                 string[] receiptlines = new string[17]; // Receipt Lines
-
+                string ParkingAmount = string.Empty;
                 await Task.Run(() =>
                 {
                     if (receiptlines != null && receiptlines.Length > 0)
@@ -177,14 +181,19 @@ namespace ParkHyderabadOperator
                             receiptlines[2] = "" + "\n";
                             receiptlines[3] = "\x1B\x21\x08" + vehicleType + ":" + objResultCustomerParkingSlot.CustomerVehicleID.RegistrationNumber + "\x1B\x21\x00\n";
                             receiptlines[4] = "\x1B\x21\x01" + (objResultCustomerParkingSlot.ActualStartTime == null ? "" : "In:" + Convert.ToDateTime(objResultCustomerParkingSlot.ActualStartTime).ToString("dd MMM yyyy,hh:mm tt")) + "\x1B\x21\x00" + "\n";
-                            receiptlines[5] = "\x1B\x21\x01" + "Paid: Rs" + objResultCustomerParkingSlot.Amount.ToString("N2") + "(Up to " + objResultCustomerParkingSlot.Duration + " hours)" + "\x1B\x21\x00\n";
+                            ParkingAmount = (objResultCustomerParkingSlot.Amount).ToString("N2");
+                            if (objResultCustomerParkingSlot.PaidDueAmount > 0)
+                            {
+                                ParkingAmount = ParkingAmount + "(Due Amount:" + (objResultCustomerParkingSlot.PaidDueAmount).ToString("N2") + ")";
+                            }
+                            receiptlines[5] = "\x1B\x21\x01" + "Paid: Rs" + ParkingAmount + "(Up to " + objResultCustomerParkingSlot.Duration + " hours)" + "\x1B\x21\x00\n";
                             receiptlines[6] = "\x1B\x21\x01" + "Valid Till:" + (objResultCustomerParkingSlot.ActualEndTime == null ? "" : Convert.ToDateTime(objResultCustomerParkingSlot.ActualEndTime).ToString("dd MMM yyyy,hh:mm tt")) + "\x1B\x21\x00\n";
                             receiptlines[7] = "\x1B\x21\x01" + "Parked at: (Bays)" + objResultCustomerParkingSlot.LocationParkingLotID.ParkingBayID.ParkingBayRange + "\x1B\x21\x00\n";
-                            receiptlines[8] = "\x1B\x21\x06" + "OperatorId :" + objResultCustomerParkingSlot.UserCode + "\x1B\x21\x00\n";
+                            receiptlines[8] = "\x1B\x21\x06" + "OperatorId/SupervisorId :" + objResultCustomerParkingSlot.UserCode + "\x1B\x21\x00\n";
                             receiptlines[9] = "\x1B\x21\x01" + "(Supervisor Mobile:" + objResultCustomerParkingSlot.SuperVisorID.PhoneNumber + ")" + "\x1B\x21\x00\n";
                             receiptlines[10] = "\x1B\x21\x06" + "Security available " + objResultCustomerParkingSlot.LocationParkingLotID.LotOpenTime + "-" + objResultCustomerParkingSlot.LocationParkingLotID.LotCloseTime + "\x1B\x21\x00\n";
                             receiptlines[11] = "\x1B\x21\x01" + "We are not responsible for your valuable items like laptop,       wallet,helmet etc." + "\x1B\x21\x00\n";
-                            receiptlines[12] = "\x1B\x21\x06" + "GST Number 36AACFZ1015E1ZL" + "\x1B\x21\x00\n";
+                            receiptlines[12] = "\x1B\x21\x06" + "GST Number "+ objResultCustomerParkingSlot.GSTNumber +"" + "\x1B\x21\x00\n";
                             receiptlines[13] = "\x1B\x21\x06" + "Amount includes 18% GST" + "\x1B\x21\x00\n";
                             receiptlines[14] = "" + "\n";
                             receiptlines[15] = "" + "\n";
@@ -231,11 +240,58 @@ namespace ParkHyderabadOperator
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ConfirmationPage.xaml.cs", "", "BtnPrint_Clicked");
             }
         }
+        public void SendSMS(string PhoneNumber)
+        {
+            try
+            {
+                string ParkingAmount = string.Empty;
+                StringBuilder sbSMS = new StringBuilder();
+                if (DeviceInternet.InternetConnected())
+                {
+                    string vehicleType = objResultCustomerParkingSlot.VehicleTypeID.VehicleTypeCode;
+                    sbSMS.AppendLine("  HMRL PARKING  ");
+                    sbSMS.AppendLine(objResultCustomerParkingSlot.LocationParkingLotID.LocationID.LocationName + " - " + objResultCustomerParkingSlot.LocationParkingLotID.LocationParkingLotName);
+                    sbSMS.AppendLine(vehicleType + ": " + objResultCustomerParkingSlot.CustomerVehicleID.RegistrationNumber);
+                    sbSMS.AppendLine((objResultCustomerParkingSlot.ActualStartTime == null ? "" :  Convert.ToDateTime(objResultCustomerParkingSlot.ActualStartTime).ToString("dd MMM yyyy,hh:mm tt")) +" To "+ (objResultCustomerParkingSlot.ActualEndTime == null ? "" : Convert.ToDateTime(objResultCustomerParkingSlot.ActualEndTime).ToString("dd MMM yyyy,hh:mm tt")));
+                    ParkingAmount = (objResultCustomerParkingSlot.Amount).ToString("N2");
+                    if (objResultCustomerParkingSlot.PaidDueAmount > 0)
+                    {
+                        ParkingAmount = ParkingAmount + " (Due Amount: " + (objResultCustomerParkingSlot.PaidDueAmount).ToString("N2") + ")";
+                    }
+                    decimal GSTPercentage = 18;
+                    decimal GSTAmount=((objResultCustomerParkingSlot.Amount) * GSTPercentage) /100;
+                    decimal AmountAfterGST = (objResultCustomerParkingSlot.Amount ) - GSTAmount;
+                    string GSTString = "Rs" + AmountAfterGST.ToString("N2") + "," + " GST " + GSTPercentage + "%" + " Rs" + GSTAmount.ToString("N2");
+                    sbSMS.AppendLine("Paid: Rs" + ParkingAmount+" "+"("+GSTString+")");
+                    sbSMS.AppendLine("Bay " + objResultCustomerParkingSlot.LocationParkingLotID.ParkingBayID.ParkingBayRange);
+                    sbSMS.AppendLine("ID: " + objResultCustomerParkingSlot.UserCode);
+                    sbSMS.AppendLine("Ph: " + objResultCustomerParkingSlot.SuperVisorID.PhoneNumber);
+                    sbSMS.AppendLine("Security " + objResultCustomerParkingSlot.LocationParkingLotID.LotOpenTime + "-" + objResultCustomerParkingSlot.LocationParkingLotID.LotCloseTime);
+                    sbSMS.AppendLine("GST "+ objResultCustomerParkingSlot.GSTNumber + "");
+                    string resultmsg = sbSMS.ToString();
+                    dal_DALCheckIn.SendReceiptToMobile(resultmsg, PhoneNumber);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowLoading(false);
+                btnYes.IsVisible = true;
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ConfirmationPage.xaml.cs", "", "SendSMS");
+            }
+        }
         private async void BtnNo_Clicked(object sender, EventArgs e)
         {
             try
             {
-                await Navigation.PushAsync(new CheckIn());
+                ShowLoading(true);
+                MasterHomePage masterPage = null;
+                await Task.Run(() =>
+                {
+                    masterPage = new MasterHomePage();
+                });
+                await Navigation.PushAsync(masterPage);
+                ShowLoading(false);
             }
             catch (Exception ex)
             {
