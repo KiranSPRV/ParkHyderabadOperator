@@ -95,11 +95,11 @@ namespace ParkHyderabadOperator
                 {
                     User objloginuser = (User)App.Current.Properties["LoginUser"];
                     labelParkingLocation.Text = objloginuser.LocationParkingLotID.LocationID.LocationName + " Station Only";
-                    if (!string.IsNullOrEmpty( objloginuser.LocationParkingLotID.LotCloseTime))
+                    if (!string.IsNullOrEmpty(objloginuser.LocationParkingLotID.LotCloseTime))
                     {
                         objResultVMPass.EndDate = Convert.ToDateTime((Convert.ToDateTime(objResultVMPass.EndDate).ToString("dd MMM yyyy")) + " " + objloginuser.LocationParkingLotID.LotCloseTime);
                     }
-                    
+
                 }
 
             }
@@ -110,67 +110,79 @@ namespace ParkHyderabadOperator
         }
         private async void SlCashPayment_Tapped(object sender, EventArgs e)
         {
+            int number = 0;
             bool IsVehicleAlreayhasPass = false;
             try
             {
                 if (Convert.ToDateTime(objResultVMPass.EndDate).Date >= DateTime.Now.Date)
                 {
-                    if (entryName.Text != null && entryName.Text != "")
+                    if (entryRegistrationNumber.Text != null && entryRegistrationNumber.Text.Length >= 6)
                     {
-                        if (entryPhoneNumber.Text != null && entryPhoneNumber.Text != "")
+                        string regNumber = entryRegistrationNumber.Text;
+                        string regFormat = regNumber.Substring(regNumber.Length - 4);
+                        if (int.TryParse(regFormat, out number))
                         {
-                            if (entryRegistrationNumber.Text != null && entryRegistrationNumber.Text.Length >= 6)
+                            if (entryName.Text != null && entryName.Text != "")
                             {
-                                if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
+                                if (!string.IsNullOrEmpty(entryPhoneNumber.Text) && entryPhoneNumber.Text.Length == 10)
                                 {
-                                    User objloginuser = (User)App.Current.Properties["LoginUser"];
-                                    IsVehicleAlreayhasPass = IsVehiclePassVerification(Convert.ToString(App.Current.Properties["apitoken"]), objloginuser.LocationParkingLotID.LocationID.LocationID, entryRegistrationNumber.Text, objResultVMPass.PassTypeID.PassTypeCode, objResultVMPass.PassTypeID.PassTypeID, objResultVMPass.VehicleTypeID.VehicleTypeCode, DateTime.Now);
-                                    if (!IsVehicleAlreayhasPass)
+
+                                    if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                                     {
-                                        objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode = objResultVMPass.VehicleTypeID.VehicleTypeCode;
-                                        objCustomerPass.CustomerVehicleID.VehicleTypeID = objResultVMPass.VehicleTypeID;
-                                        objCustomerPass.CustomerVehicleID.RegistrationNumber = entryRegistrationNumber.Text;
-                                        objCustomerPass.CustomerVehicleID.CustomerID.Name = entryName.Text;
-                                        objCustomerPass.CustomerVehicleID.CustomerID.PhoneNumber = entryPhoneNumber.Text;
-                                        objCustomerPass.PaymentTypeID.PaymentTypeCode = "Cash";
-                                        objCustomerPass.IsMultiLot = false;
-                                        objCustomerPass.PassPriceID.StationAccess = objResultVMPass.StationAccess;
-                                        objCustomerPass.PassPriceID.PassPriceID = objResultVMPass.PassPriceID;
-                                        objCustomerPass.PassPriceID.PassTypeID.PassTypeID = objResultVMPass.PassTypeID.PassTypeID;
-                                        objCustomerPass.PassPriceID.PassTypeID.PassTypeName = objResultVMPass.PassTypeID.PassTypeName;
-                                        objCustomerPass.Amount = objResultVMPass.Price;
-                                        objCustomerPass.TotalAmount = objResultVMPass.Price;
-                                        objCustomerPass.DueAmount = string.IsNullOrEmpty(labelDueAmount.Text) ? 0 : Convert.ToDecimal(labelDueAmount.Text);
-                                        objCustomerPass.PrimaryLocationParkingLotID.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
-                                        objCustomerPass.PrimaryLocationParkingLotID.LocationParkingLotName = objloginuser.LocationParkingLotID.LocationParkingLotName;
-                                        objCustomerPass.LocationID.LocationID = objloginuser.LocationParkingLotID.LocationID.LocationID;
-                                        objCustomerPass.LocationID.LocationName = objloginuser.LocationParkingLotID.LocationID.LocationName;
-                                        objCustomerPass.PassPurchaseLocationID.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
-                                        objCustomerPass.PassPurchaseLocationID.LocationID.LocationID = objloginuser.LocationParkingLotID.LocationID.LocationID;
-                                        objCustomerPass.StartDate = Convert.ToDateTime(objResultVMPass.StartDate);
-                                        objCustomerPass.ExpiryDate = Convert.ToDateTime(objResultVMPass.EndDate);
-                                        objCustomerPass.CreatedBy.UserID = objloginuser.UserID;
-                                        await Navigation.PushAsync(new DayPassPaymentConfirmationPage(IsNewORReNew, objCustomerPass));
+                                        User objloginuser = (User)App.Current.Properties["LoginUser"];
+                                        IsVehicleAlreayhasPass = IsVehiclePassVerification(Convert.ToString(App.Current.Properties["apitoken"]), objloginuser.LocationParkingLotID.LocationID.LocationID, entryRegistrationNumber.Text, objResultVMPass.PassTypeID.PassTypeCode, objResultVMPass.PassTypeID.PassTypeID, objResultVMPass.VehicleTypeID.VehicleTypeCode, DateTime.Now);
+                                        if (!IsVehicleAlreayhasPass)
+                                        {
+                                            objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode = objResultVMPass.VehicleTypeID.VehicleTypeCode;
+                                            objCustomerPass.CustomerVehicleID.VehicleTypeID = objResultVMPass.VehicleTypeID;
+                                            objCustomerPass.CustomerVehicleID.RegistrationNumber = entryRegistrationNumber.Text;
+                                            objCustomerPass.CustomerVehicleID.CustomerID.Name = entryName.Text;
+                                            objCustomerPass.CustomerVehicleID.CustomerID.PhoneNumber = entryPhoneNumber.Text;
+                                            objCustomerPass.PaymentTypeID.PaymentTypeCode = "Cash";
+                                            objCustomerPass.IsMultiLot = false;
+                                            objCustomerPass.PassPriceID.StationAccess = objResultVMPass.StationAccess;
+                                            objCustomerPass.PassPriceID.PassPriceID = objResultVMPass.PassPriceID;
+                                            objCustomerPass.PassPriceID.PassTypeID.PassTypeID = objResultVMPass.PassTypeID.PassTypeID;
+                                            objCustomerPass.PassPriceID.PassTypeID.PassTypeName = objResultVMPass.PassTypeID.PassTypeName;
+                                            objCustomerPass.Amount = objResultVMPass.Price;
+                                            objCustomerPass.TotalAmount = objResultVMPass.Price;
+                                            objCustomerPass.DueAmount = string.IsNullOrEmpty(labelDueAmount.Text) ? 0 : Convert.ToDecimal(labelDueAmount.Text);
+                                            objCustomerPass.PrimaryLocationParkingLotID.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
+                                            objCustomerPass.PrimaryLocationParkingLotID.LocationParkingLotName = objloginuser.LocationParkingLotID.LocationParkingLotName;
+                                            objCustomerPass.LocationID.LocationID = objloginuser.LocationParkingLotID.LocationID.LocationID;
+                                            objCustomerPass.LocationID.LocationName = objloginuser.LocationParkingLotID.LocationID.LocationName;
+                                            objCustomerPass.PassPurchaseLocationID.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
+                                            objCustomerPass.PassPurchaseLocationID.LocationID.LocationID = objloginuser.LocationParkingLotID.LocationID.LocationID;
+                                            objCustomerPass.StartDate = Convert.ToDateTime(objResultVMPass.StartDate);
+                                            objCustomerPass.ExpiryDate = Convert.ToDateTime(objResultVMPass.EndDate);
+                                            objCustomerPass.CreatedBy.UserID = objloginuser.UserID;
+                                            await Navigation.PushAsync(new DayPassPaymentConfirmationPage(IsNewORReNew, objCustomerPass));
+                                        }
+                                        else
+                                        {
+                                            await DisplayAlert("Alert", "Please check registration number,vehicle already has day pass", "Ok");
+                                        }
                                     }
-                                    else
-                                    {
-                                        await DisplayAlert("Alert", "Please check registration number,vehicle already has day pass", "Ok");
-                                    }
+
+                                }
+                                else
+                                {
+                                    await DisplayAlert("Alert", "Please enter Phone Number", "Ok");
                                 }
                             }
                             else
                             {
-                                await DisplayAlert("Alert", "Please enter Registration Number", "Ok");
+                                await DisplayAlert("Alert", "Please enter Name", "Ok");
                             }
                         }
                         else
                         {
-                            await DisplayAlert("Alert", "Please phone number", "Ok");
+                            await DisplayAlert("Alert", "Please enter valid Registration Number", "Ok");
                         }
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Please enter Name", "Ok");
+                        await DisplayAlert("Alert", "Please enter Registration Number", "Ok");
                     }
                 }
                 else
@@ -185,68 +197,80 @@ namespace ParkHyderabadOperator
         }
         private async void SlEpayment_Tapped(object sender, EventArgs e)
         {
+            int number = 0;
             bool IsVehicleAlreayhasPass = false;
             try
             {
                 if (Convert.ToDateTime(objResultVMPass.EndDate).Date >= DateTime.Now.Date)
                 {
-                    if (entryName.Text != null && entryName.Text != "")
+                    if (entryRegistrationNumber.Text != null && entryRegistrationNumber.Text.Length >= 6)
                     {
-                        if (entryPhoneNumber.Text != null && entryPhoneNumber.Text != "")
+                        string regNumber = entryRegistrationNumber.Text;
+                        string regFormat = regNumber.Substring(regNumber.Length - 4);
+                        if (int.TryParse(regFormat, out number))
                         {
-                            if (entryRegistrationNumber.Text != null && entryRegistrationNumber.Text.Length >= 6)
+                            if (entryName.Text != null && entryName.Text != "")
                             {
-                                if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
+                                if (!string.IsNullOrEmpty(entryPhoneNumber.Text) && entryPhoneNumber.Text.Length == 10)
                                 {
-                                    User objloginuser = (User)App.Current.Properties["LoginUser"];
-                                    IsVehicleAlreayhasPass = IsVehiclePassVerification(Convert.ToString(App.Current.Properties["apitoken"]), objloginuser.LocationParkingLotID.LocationID.LocationID, entryRegistrationNumber.Text, objResultVMPass.PassTypeID.PassTypeCode, objResultVMPass.PassTypeID.PassTypeID, objResultVMPass.VehicleTypeID.VehicleTypeCode, DateTime.Now);
-                                    if (!IsVehicleAlreayhasPass)
-                                    {
-                                        objCustomerPass.CustomerVehicleID.VehicleTypeID = objResultVMPass.VehicleTypeID;
-                                        objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode = objResultVMPass.VehicleTypeID.VehicleTypeCode;
-                                        objCustomerPass.CustomerVehicleID.RegistrationNumber = entryRegistrationNumber.Text;
-                                        objCustomerPass.CustomerVehicleID.CustomerID.Name = entryName.Text;
-                                        objCustomerPass.CustomerVehicleID.CustomerID.PhoneNumber = entryPhoneNumber.Text;
-                                        objCustomerPass.PaymentTypeID.PaymentTypeCode = "EPay";
-                                        objCustomerPass.IsMultiLot = false;
-                                        objCustomerPass.PassPriceID.PassPriceID = objResultVMPass.PassPriceID;
-                                        objCustomerPass.PassPriceID.PassTypeID.PassTypeID = objResultVMPass.PassTypeID.PassTypeID;
-                                        objCustomerPass.PassPriceID.StationAccess = objResultVMPass.StationAccess;
-                                        objCustomerPass.PassPriceID.PassTypeID.PassTypeName = objResultVMPass.PassTypeID.PassTypeName;
-                                        objCustomerPass.Amount = objResultVMPass.Price;
-                                        objCustomerPass.TotalAmount = objResultVMPass.Price;
-                                        objCustomerPass.DueAmount = string.IsNullOrEmpty(labelDueAmount.Text) ? 0 : Convert.ToDecimal(labelDueAmount.Text);
-                                        objCustomerPass.PrimaryLocationParkingLotID.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
-                                        objCustomerPass.PrimaryLocationParkingLotID.LocationParkingLotName = objloginuser.LocationParkingLotID.LocationParkingLotName;
-                                        objCustomerPass.LocationID.LocationID = objloginuser.LocationParkingLotID.LocationID.LocationID;
-                                        objCustomerPass.LocationID.LocationName = objloginuser.LocationParkingLotID.LocationID.LocationName;
-                                        objCustomerPass.StartDate = Convert.ToDateTime(objResultVMPass.StartDate);
-                                        objCustomerPass.ExpiryDate = Convert.ToDateTime(objResultVMPass.EndDate);
-                                        objCustomerPass.PassPurchaseLocationID.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
-                                        objCustomerPass.PassPurchaseLocationID.LocationID.LocationID = objloginuser.LocationParkingLotID.LocationID.LocationID;
-                                        objCustomerPass.CreatedBy.UserID = objloginuser.UserID;
 
-                                        await Navigation.PushAsync(new DayPassPaymentConfirmationPage(IsNewORReNew, objCustomerPass));
-                                    }
-                                    else
+                                    if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                                     {
-                                        await DisplayAlert("Alert", "Please check registration number,vehicle already has day pass", "Ok");
+                                        User objloginuser = (User)App.Current.Properties["LoginUser"];
+                                        IsVehicleAlreayhasPass = IsVehiclePassVerification(Convert.ToString(App.Current.Properties["apitoken"]), objloginuser.LocationParkingLotID.LocationID.LocationID, entryRegistrationNumber.Text, objResultVMPass.PassTypeID.PassTypeCode, objResultVMPass.PassTypeID.PassTypeID, objResultVMPass.VehicleTypeID.VehicleTypeCode, DateTime.Now);
+                                        if (!IsVehicleAlreayhasPass)
+                                        {
+                                            objCustomerPass.CustomerVehicleID.VehicleTypeID = objResultVMPass.VehicleTypeID;
+                                            objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode = objResultVMPass.VehicleTypeID.VehicleTypeCode;
+                                            objCustomerPass.CustomerVehicleID.RegistrationNumber = entryRegistrationNumber.Text;
+                                            objCustomerPass.CustomerVehicleID.CustomerID.Name = entryName.Text;
+                                            objCustomerPass.CustomerVehicleID.CustomerID.PhoneNumber = entryPhoneNumber.Text;
+                                            objCustomerPass.PaymentTypeID.PaymentTypeCode = "EPay";
+                                            objCustomerPass.IsMultiLot = false;
+                                            objCustomerPass.PassPriceID.PassPriceID = objResultVMPass.PassPriceID;
+                                            objCustomerPass.PassPriceID.PassTypeID.PassTypeID = objResultVMPass.PassTypeID.PassTypeID;
+                                            objCustomerPass.PassPriceID.StationAccess = objResultVMPass.StationAccess;
+                                            objCustomerPass.PassPriceID.PassTypeID.PassTypeName = objResultVMPass.PassTypeID.PassTypeName;
+                                            objCustomerPass.Amount = objResultVMPass.Price;
+                                            objCustomerPass.TotalAmount = objResultVMPass.Price;
+                                            objCustomerPass.DueAmount = string.IsNullOrEmpty(labelDueAmount.Text) ? 0 : Convert.ToDecimal(labelDueAmount.Text);
+                                            objCustomerPass.PrimaryLocationParkingLotID.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
+                                            objCustomerPass.PrimaryLocationParkingLotID.LocationParkingLotName = objloginuser.LocationParkingLotID.LocationParkingLotName;
+                                            objCustomerPass.LocationID.LocationID = objloginuser.LocationParkingLotID.LocationID.LocationID;
+                                            objCustomerPass.LocationID.LocationName = objloginuser.LocationParkingLotID.LocationID.LocationName;
+                                            objCustomerPass.StartDate = Convert.ToDateTime(objResultVMPass.StartDate);
+                                            objCustomerPass.ExpiryDate = Convert.ToDateTime(objResultVMPass.EndDate);
+                                            objCustomerPass.PassPurchaseLocationID.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
+                                            objCustomerPass.PassPurchaseLocationID.LocationID.LocationID = objloginuser.LocationParkingLotID.LocationID.LocationID;
+                                            objCustomerPass.CreatedBy.UserID = objloginuser.UserID;
+
+                                            await Navigation.PushAsync(new DayPassPaymentConfirmationPage(IsNewORReNew, objCustomerPass));
+                                        }
+                                        else
+                                        {
+                                            await DisplayAlert("Alert", "Please check registration number,vehicle already has day pass", "Ok");
+                                        }
                                     }
+
+                                }
+                                else
+                                {
+                                    await DisplayAlert("Alert", "Please enter Phone Number", "Ok");
                                 }
                             }
                             else
                             {
-                                await DisplayAlert("Alert", "Please enter Registration Number", "Ok");
+                                await DisplayAlert("Alert", "Please enter Name", "Ok");
                             }
                         }
                         else
                         {
-                            await DisplayAlert("Alert", "Please enter Phone Number", "Ok");
+                            await DisplayAlert("Alert", "Please enter valid Registration Number", "Ok");
                         }
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Please enter Name", "Ok");
+                        await DisplayAlert("Alert", "Please enter Registration Number", "Ok");
                     }
                 }
                 else
@@ -399,6 +423,32 @@ namespace ParkHyderabadOperator
             {
                 ShowLoading(false);
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "DailyPass.xaml.cs", "", "DailyPass");
+            }
+        }
+
+        private void entryPhoneNumber_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(entryPhoneNumber.Text))
+            {
+                if (entryPhoneNumber.Text.Length > 9)
+                {
+                   
+                    try
+                    {
+                        if (!string.IsNullOrEmpty(entryRegistrationNumber.Text))
+                        {
+                            var text = entryRegistrationNumber.Text;
+                            GetVehiceDueAmont(text, objResultVMPass.VehicleTypeID.VehicleTypeCode);
+                        }
+                        
+                       
+                    }
+                    catch (Exception ex)
+                    {
+                        dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "DailyPass.xaml.cs", "", "DailyPass");
+                    }
+                }
+
             }
         }
     }

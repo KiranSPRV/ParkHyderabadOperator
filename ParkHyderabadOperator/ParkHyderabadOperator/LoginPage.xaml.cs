@@ -182,7 +182,6 @@ namespace ParkHyderabadOperator
         {
             UserLoginVerification();
         }
-
         public async void UserLoginVerification()
         {
             User resultObj = null;

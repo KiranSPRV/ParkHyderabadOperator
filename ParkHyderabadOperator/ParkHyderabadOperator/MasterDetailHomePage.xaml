@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:localBehaviors="clr-namespace:ParkHyderabadOperator.Behaviors"
-             x:Class="ParkHyderabadOperator.MasterDetailHomePage">
+             x:Class="ParkHyderabadOperator.MasterDetailHomePage"
+             NavigationPage.HasBackButton="False">
     <NavigationPage.TitleView >
         <StackLayout HorizontalOptions="FillAndExpand"  VerticalOptions="CenterAndExpand">
             <Picker x:Name="pickerLocationLot"  ItemDisplayBinding="{Binding LotName}"   HorizontalOptions="FillAndExpand"  VerticalOptions="CenterAndExpand"   Style="{StaticResource PickerProximaRegStyle}" FontSize="20"  SelectedIndexChanged="PickerLocationLot_SelectedIndexChanged"></Picker>

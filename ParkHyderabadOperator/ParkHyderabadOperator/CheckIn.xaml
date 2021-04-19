@@ -208,7 +208,7 @@
                             <Picker x:Name="pickerBayNumers" ItemDisplayBinding="{Binding ParkingBayRange}"  Title="-Select-"   HorizontalOptions="FillAndExpand"  Style="{StaticResource PickerProximaRegStyle }"  SelectedIndexChanged="PickerBayNumers_SelectedIndexChanged"></Picker>
                         </StackLayout>
                         <StackLayout Orientation="Vertical"  Spacing="0">
-                            <Label Text="Phone Number (Optional)" x:Name="lblPhoneNumber"  Style="{StaticResource LabelPlaceHolderStyle}"></Label>
+                            <Label Text="Phone Number" x:Name="lblPhoneNumber"  Style="{StaticResource LabelPlaceHolderStyle}"></Label>
                             <Entry x:Name="entryPhoneNumber" Style="{StaticResource EntryProximaBlackStyle}" Keyboard="Numeric">
                                 <Entry.Behaviors>
                                     <local:NumberValidationBehavior MaxLength="10" MinLength="10"/>

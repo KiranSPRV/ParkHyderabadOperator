@@ -88,7 +88,7 @@ namespace ParkHyderabadOperator
         private async void BtnCheckOut_Clicked(object sender, EventArgs e)
         {
             string resultmsg = string.Empty;
-            MasterHomePage masterPage = null;
+            MasterDetailHomePage masterPage = null;
             btnCheckOut.IsVisible = false;
             try
             {
@@ -110,7 +110,7 @@ namespace ParkHyderabadOperator
                                 resultmsg = dal_CheckOut.FOCVehicleCheckOut(Convert.ToString(App.Current.Properties["apitoken"]), objFOCVehicle);
                                 if (resultmsg != null && resultmsg == "Success")
                                 {
-                                    masterPage = new MasterHomePage();
+                                    masterPage = new MasterDetailHomePage();
                                 }
                             });
                             if (resultmsg != null && resultmsg == "Success")
@@ -159,6 +159,11 @@ namespace ParkHyderabadOperator
                 absLayoutFOCpage.Opacity = 1;
             }
 
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            return true;
         }
     }
 }

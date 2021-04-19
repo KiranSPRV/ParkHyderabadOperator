@@ -43,21 +43,36 @@ namespace ParkHyderabadOperator.Model
         public Task<int> SaveOfflineCheckInAsync(VehicleCheckIn objNewCheckIn)
         {
             Task<int> output = null;
-            if (objNewCheckIn.CustomerParkingSlotID != 0)
+            try
             {
 
-                return db.UpdateAsync(objNewCheckIn);
+                if (objNewCheckIn.CustomerParkingSlotID != 0)
+                {
 
+                    return db.UpdateAsync(objNewCheckIn);
+
+                }
+                else
+                {
+                    output = db.InsertAsync(objNewCheckIn);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                output = db.InsertAsync(objNewCheckIn);
+                throw ex;
             }
             return output;
         }
         public Task<List<VehicleCheckIn>> GetAllVehicleAsync()
         {
-            return db.Table<VehicleCheckIn>().ToListAsync();
+            try
+            {
+                return db.Table<VehicleCheckIn>().ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         public VehicleCheckIn GetIVehicleDetailsAsync(string RegistrationNumber)
         {
@@ -67,7 +82,7 @@ namespace ParkHyderabadOperator.Model
                 var rstdata = db.Table<VehicleCheckIn>().Where(i => i.RegistrationNumber == RegistrationNumber).FirstOrDefaultAsync();
                 resultvehicle = rstdata.Result;
             }
-            catch (Exception ex) { }
+            catch (Exception ex) { throw ex; }
             return resultvehicle;
 
         }
@@ -78,21 +93,40 @@ namespace ParkHyderabadOperator.Model
             {
                 deleted = db.ExecuteAsync("DELETE FROM VehicleCheckIn WHERE [RegistrationNumber] = ?;", objdelCheckIn.RegistrationNumber);
             }
-            catch (Exception ex) { }
+            catch (Exception ex) { throw ex; }
             return deleted;
         }
-
+        public Task<int> DeleteAllItemAsync()
+        {
+            Task<int> deleted = null;
+            try
+            {
+                deleted = db.ExecuteAsync("DELETE FROM VehicleCheckIn ;");
+            }
+            catch (Exception ex) { throw ex; }
+            return deleted;
+        }
         #region DeSync Items
-
         public Task<int> SaveDeSyncCheckInAsync(DeSyncVehicleCheckIn objDeSyncCheckIn)
         {
             Task<int> output = null;
-            output = db.InsertAsync(objDeSyncCheckIn);
+            try
+            {
+                output = db.InsertAsync(objDeSyncCheckIn);
+            }
+            catch (Exception ex) { throw ex; }
             return output;
         }
         public Task<List<DeSyncVehicleCheckIn>> GetDeSyncCheckInAsync()
         {
-            return db.Table<DeSyncVehicleCheckIn>().ToListAsync();
+            try
+            {
+                return db.Table<DeSyncVehicleCheckIn>().ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         public Task<int> DeleteDesycItemAsync(DeSyncVehicleCheckIn objdelCheckIn)
         {
@@ -101,14 +135,29 @@ namespace ParkHyderabadOperator.Model
             {
                 deleted = db.ExecuteAsync("DELETE FROM DeSyncVehicleCheckIn WHERE [RegistrationNumber] = ?;", objdelCheckIn.RegistrationNumber);
             }
-            catch (Exception ex) { }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
             return deleted;
         }
-
+        public Task<int> DeleteAllDesycItemAsync()
+        {
+            Task<int> deleted = null;
+            try
+            {
+                deleted = db.ExecuteAsync("DELETE FROM DeSyncVehicleCheckIn ;");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return deleted;
+        }
         #endregion
 
         #region Load VehicleTypes on Login
-        public Task<int> SaveAllVehicleTypesInSQLLite(string apitoken,int LocationID)
+        public Task<int> SaveAllVehicleTypesInSQLLite(string apitoken, int LocationID)
         {
 
             Task<int> output = null;
@@ -136,7 +185,14 @@ namespace ParkHyderabadOperator.Model
         }
         public Task<List<VehicleType>> GetAllVehicleTypesInSQLLite()
         {
-            return db.Table<VehicleType>().ToListAsync();
+            try
+            {
+                return db.Table<VehicleType>().ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
         }
 
@@ -175,7 +231,14 @@ namespace ParkHyderabadOperator.Model
         }
         public Task<List<VehicleParkingFee>> GetLotVehiclesParkingFeesSQLLite()
         {
-            return db.Table<VehicleParkingFee>().ToListAsync();
+            try
+            {
+                return db.Table<VehicleParkingFee>().ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
         }
         #endregion

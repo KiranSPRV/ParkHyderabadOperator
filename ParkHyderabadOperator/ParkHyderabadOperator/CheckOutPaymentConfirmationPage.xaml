@@ -30,7 +30,7 @@
                                         <Label x:Name="lableAmount"   Style="{StaticResource LabelProximaRegBoldDodgerBlueStyle}" HorizontalOptions="CenterAndExpand"  FontSize="22" />
                                     </StackLayout>
                                 </StackLayout>
-                                <Label x:Name="labelChekInAmount"  Style="{StaticResource LabelBoldPlaceHolderStyle}"  VerticalOptions="CenterAndExpand"   HorizontalOptions="FillAndExpand"/>
+                                <Label x:Name="labelChekInAmount"  Style="{StaticResource LabelBoldPlaceHolderStyle}"  VerticalOptions="CenterAndExpand"   HorizontalOptions="StartAndExpand"/>
                             </StackLayout>
                         </StackLayout>
 

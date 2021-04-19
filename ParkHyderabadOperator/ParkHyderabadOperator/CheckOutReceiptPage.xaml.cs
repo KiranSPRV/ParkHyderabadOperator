@@ -22,14 +22,14 @@ namespace ParkHyderabadOperator
             InitializeComponent();
 
             ObjblueToothDevicePrinting = new BlueToothDevicePrinting();
-            
+
         }
         public CheckOutReceiptPage(string vehicleInformation)
         {
             InitializeComponent();
             VehicleInformation = vehicleInformation;
             ObjblueToothDevicePrinting = new BlueToothDevicePrinting();
-           
+
         }
         public CheckOutReceiptPage(string vehicleInformation, CustomerParkingSlot objInput)
         {
@@ -50,9 +50,18 @@ namespace ParkHyderabadOperator
                 imageVehicleImage.Source = objCheckOutReceipt.VehicleTypeID.VehicleIcon;
                 labelVehicleDetails.Text = objCheckOutReceipt.CustomerVehicleID.RegistrationNumber;
                 imageParkingFeeImage.Source = "rupee_black.png";
-                labelParkingFeesDetails.Text = (objCheckOutReceipt.ExtendAmount + objCheckOutReceipt.ViolationFees + objCheckOutReceipt.ClampFees + objCheckOutReceipt.PaidDueAmount).ToString("N2") + "/-"; //objCheckOutReceipt.PaidAmount.ToString("N2") + "/-";
-                labelParkingPaymentType.Text = "Paid for " + objCheckOutReceipt.Duration + "hr - " + "By " + objCheckOutReceipt.PaymentTypeID.PaymentTypeName;
-                labelCheckOutFeesDetails.Text = "(Parking" + " ₹" + (objCheckOutReceipt.ExtendAmount + objCheckOutReceipt.ViolationFees).ToString("N2") + " + " + "Clamp" + " ₹" + objCheckOutReceipt.ClampFees +" + "+" Paid DueAmount" + " ₹" + objCheckOutReceipt.PaidDueAmount + ")";
+                decimal totalParkingFees = (objCheckOutReceipt.ExtendAmount + objCheckOutReceipt.ViolationFees + objCheckOutReceipt.ClampFees + objCheckOutReceipt.PaidDueAmount);
+                labelParkingFeesDetails.Text = totalParkingFees.ToString("N2") + "/-"; //objCheckOutReceipt.PaidAmount.ToString("N2") + "/-";
+                if ((objCheckOutReceipt.ExtendAmount + objCheckOutReceipt.ViolationFees + objCheckOutReceipt.PaidDueAmount) > 0)
+                {
+                    labelParkingPaymentType.Text = "Paid for " + objCheckOutReceipt.Duration + "hr - " + "By " + objCheckOutReceipt.PaymentTypeID.PaymentTypeName;
+                }
+                else
+                {
+                    labelParkingPaymentType.Text = "By " + objCheckOutReceipt.PaymentTypeID.PaymentTypeName;
+                }
+
+                labelCheckOutFeesDetails.Text = "(Parking" + " ₹" + (objCheckOutReceipt.ExtendAmount + objCheckOutReceipt.ViolationFees).ToString("N2") + " + " + "Clamp" + " ₹" + objCheckOutReceipt.ClampFees + " + " + " Paid DueAmount" + " ₹" + objCheckOutReceipt.PaidDueAmount + ")";
                 imageOperatorProfile.Source = "operator.png";
 
                 if (objCheckOutReceipt.CreatedByName != "")
@@ -86,7 +95,7 @@ namespace ParkHyderabadOperator
                         receiptlines[10] = "\x1B\x21\x01" + "(Supervisor Mobile:" + objCheckOutReceipt.SuperVisorID.PhoneNumber + ")" + "\x1B\x21\x00\n";
                         receiptlines[11] = "\x1B\x21\x06" + "Security available " + objCheckOutReceipt.LocationParkingLotID.LotOpenTime + "-" + objCheckOutReceipt.LocationParkingLotID.LotCloseTime + "\x1B\x21\x00\n";
                         receiptlines[12] = "\x1B\x21\x01" + "We are not responsible for your valuable items like laptop,       wallet,helmet etc." + "\x1B\x21\x00\n";
-                        receiptlines[13] = "\x1B\x21\x06" + "GST Number"+ objCheckOutReceipt.GSTNumber + "\x1B\x21\x00\n";
+                        receiptlines[13] = "\x1B\x21\x06" + "GST Number" + objCheckOutReceipt.GSTNumber + "\x1B\x21\x00\n";
                         receiptlines[14] = "\x1B\x21\x06" + "Amount includes 18% GST" + "\x1B\x21\x00\n";
                         receiptlines[15] = "" + "\n";
                         receiptlines[16] = "" + "\n";
@@ -108,7 +117,7 @@ namespace ParkHyderabadOperator
             {
                 ShowLoading(true);
                 string printerName = string.Empty;
-                MasterHomePage masterPage = null;
+                MasterDetailHomePage masterPage = null;
                 printerName = ObjblueToothDevicePrinting.GetBlueToothDevices();
                 await Task.Run(() =>
                 {
@@ -126,7 +135,7 @@ namespace ParkHyderabadOperator
                             }
                         }
                     }
-                    masterPage = new MasterHomePage();
+                    masterPage = new MasterDetailHomePage();
                 });
                 if (printerName != string.Empty && printerName != "")
                 {
@@ -150,12 +159,12 @@ namespace ParkHyderabadOperator
             {
                 ShowLoading(true);
                 BtnDone.IsVisible = false;
-                MasterHomePage masterPage = null;
+                MasterDetailHomePage masterHomePage = null;
                 await Task.Run(() =>
                     {
-                        masterPage = new MasterHomePage();
+                        masterHomePage = new MasterDetailHomePage();
                     });
-                await Navigation.PushAsync(masterPage);
+                await Navigation.PushAsync(masterHomePage);
                 ShowLoading(false);
                 BtnDone.IsVisible = true;
             }
@@ -179,6 +188,10 @@ namespace ParkHyderabadOperator
                 absLayoutReceiptpage.Opacity = 1;
             }
 
+        }
+        protected override bool OnBackButtonPressed()
+        {
+            return true;
         }
 
     }

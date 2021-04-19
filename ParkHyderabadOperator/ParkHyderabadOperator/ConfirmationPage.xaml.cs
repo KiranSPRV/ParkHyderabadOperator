@@ -268,6 +268,7 @@ namespace ParkHyderabadOperator
                     sbSMS.AppendLine("Ph: " + objResultCustomerParkingSlot.SuperVisorID.PhoneNumber);
                     sbSMS.AppendLine("Security " + objResultCustomerParkingSlot.LocationParkingLotID.LotOpenTime + "-" + objResultCustomerParkingSlot.LocationParkingLotID.LotCloseTime);
                     sbSMS.AppendLine("GST "+ objResultCustomerParkingSlot.GSTNumber + "");
+                    sbSMS.AppendLine("SPRV Technologies (INSPRK)");
                     string resultmsg = sbSMS.ToString();
                     dal_DALCheckIn.SendReceiptToMobile(resultmsg, PhoneNumber);
 
@@ -275,6 +276,7 @@ namespace ParkHyderabadOperator
             }
             catch (Exception ex)
             {
+
                 ShowLoading(false);
                 btnYes.IsVisible = true;
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ConfirmationPage.xaml.cs", "", "SendSMS");

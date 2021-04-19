@@ -389,15 +389,15 @@ namespace ParkHyderabadOperator
             ShowLoading(false);
 
         }
-        private async void LstVWParkingVehicle_Refreshing(object sender, EventArgs e)
+        private  void LstVWParkingVehicle_Refreshing(object sender, EventArgs e)
         {
             try
             {
 
                 // Auto Offline-Sync
-                var loguser = (User)App.Current.Properties["LoginUser"];
-                dal_DALCheckIn = new DALCheckIn();
-                await dal_DALCheckIn.CheckInOfflineSync(Convert.ToString(App.Current.Properties["apitoken"]), loguser);
+                // var loguser = (User)App.Current.Properties["LoginUser"];
+                //dal_DALCheckIn = new DALCheckIn();
+                //await dal_DALCheckIn.CheckInOfflineSync(Convert.ToString(App.Current.Properties["apitoken"]), loguser);
                 LoadParkedVehicle(null);
                 LstVWParkingVehicle.IsRefreshing = false;
             }

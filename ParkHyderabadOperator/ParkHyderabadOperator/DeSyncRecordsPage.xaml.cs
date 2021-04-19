@@ -5,6 +5,7 @@ using ParkHyderabadOperator.Model.APIOutPutModel;
 using ParkHyderabadOperator.ViewModel.VMHome;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -91,7 +92,7 @@ namespace ParkHyderabadOperator
         private async void frmClearDeSynchGesutre_Tapped(object sender, EventArgs e)
         {
             StringBuilder sbUnMoved = new StringBuilder();
-            string delMsg = "Records deleted successfully";
+            string delMsg = string.Empty;
             try
             {
                 ShowLoading(true);
@@ -104,11 +105,26 @@ namespace ParkHyderabadOperator
                     {
                         foreach (var items in lstchekIns)
                         {
-                            App.SQLiteDb.DeleteDesycItemAsync(items).Wait();
+                            await App.SQLiteDb.DeleteDesycItemAsync(items);
+                            dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", "DeleteDesycItemAsync called: " + items.RegistrationNumber, "DeSyncRecordsPage.xaml.cs", "", "frmClearDeSynchGesutre_Tapped");
                         }
+                        delMsg = "Records deleted successfully";
+                    }
+                    else
+                    {
+                       
+                        delMsg = "No Records Found";
                     }
                 }
+                else
+                {
+                    delMsg = "No Records Found";
+                   
+                    dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", "No Records Found", "DeSyncRecordsPage.xaml.cs", "", "frmClearDeSynchGesutre_Tapped");
+                }
+                frmClear.BorderColor = Color.FromHex("#DFDFDFDF");
                 LoadDeSyncVehicle();
+                
                 ShowLoading(false);
                 await DisplayAlert("Alert", delMsg, "Ok");
 
@@ -116,7 +132,21 @@ namespace ParkHyderabadOperator
             catch (Exception ex)
             {
                 ShowLoading(false);
-                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "CheckInPage.xaml.cs", "", "frmOnlineSynchGesutre_Tapped");
+                StackTrace st = new StackTrace(ex, true);
+                //Get the first stack frame
+                StackFrame frame = st.GetFrame(0);
+
+                //Get the file name
+                string fileName = frame.GetFileName();
+
+                //Get the method name
+                string methodName = frame.GetMethod().Name;
+
+                //Get the line number from the stack frame
+                int line = frame.GetFileLineNumber();
+
+                string exDetails = fileName + "," + methodName + "," + line;
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "DeSyncRecordsPage.xaml.cs", exDetails, "frmClearDeSynchGesutre_Tapped");
             }
         }
         public void ShowLoading(bool show)

@@ -184,13 +184,8 @@ namespace ParkHyderabadOperator
         {
             if (SelectedVehicle != string.Empty)
             {
-                if (!IsminChckinTime)
-                {
-                    GetParkingFeeDeatils();
-                }
-
+                GetParkingFeeDeatils();
             }
-
 
 
         }
@@ -209,8 +204,6 @@ namespace ParkHyderabadOperator
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "CheckInPage.xaml.cs", "", "PickerBayNumers_SelectedIndexChanged");
             }
         }
-
-
 
         #region Parking Fee Details
         public async void GetParkingFeeDeatils()
@@ -390,8 +383,8 @@ namespace ParkHyderabadOperator
                                             objPassVehicle.PhoneNumber = entryPhoneNumber.Text;
                                             objPassVehicle.ParkingHours = selectedhours;
                                             objPassVehicle.ParkingFees = Convert.ToDecimal(labelParkingFee.Text);
-                                            objPassVehicle.DueAmount =string.IsNullOrEmpty(labelDueAmount.Text)?0: Convert.ToDecimal(labelDueAmount.Text);
-                                            
+                                            objPassVehicle.DueAmount = string.IsNullOrEmpty(labelDueAmount.Text) ? 0 : Convert.ToDecimal(labelDueAmount.Text);
+
                                             objPassVehicle.PaymentType = "Cash";
                                             if (objloginuser.LocationParkingLotID.LocationParkingLotID == 0)
                                             {
@@ -713,7 +706,7 @@ namespace ParkHyderabadOperator
                         slGovVehicleImage.IsVisible = true;
                         stlayoutCheckInPayment.IsVisible = false;
                         slParkinghours.IsVisible = false;
-                        lblPhoneNumber.Text = "Phone Number";
+
                     }
                     else
                     {
@@ -721,7 +714,7 @@ namespace ParkHyderabadOperator
                         slGovVehicleImage.IsVisible = false;
                         stlayoutCheckInPayment.IsVisible = true;
                         slParkinghours.IsVisible = true;
-                        lblPhoneNumber.Text = "Phone Number (Optional)";
+
                     }
                 }
                 else
@@ -1087,8 +1080,16 @@ namespace ParkHyderabadOperator
                                 objCustomerPass = objVMVehiclePassWithDueAmount.CustomerVehiclePassID;
 
                                 labelDueAmount.Text = String.Format("{0:0.#}", objVMVehiclePassWithDueAmount.VehicleDueAmount);
+
+                                //Auto Populate Register Vehicle User Phone Number
+                                if (objCustomerPass.CustomerVehicleID != null)
+                                {
+
+                                    entryPhoneNumber.Text = string.IsNullOrEmpty(objCustomerPass.CustomerVehicleID.CustomerID.PhoneNumber) ? "" : Convert.ToString(objCustomerPass.CustomerVehicleID.CustomerID.PhoneNumber);
+                                }
+
                                 labelTotalFee.Text = String.Format("{0:0.#}", (string.IsNullOrEmpty(labelParkingFee.Text) ? 0 : Convert.ToDecimal(labelParkingFee.Text) + objVMVehiclePassWithDueAmount.VehicleDueAmount));
-                                if ((objCustomerPass.CustomerVehiclePassID != 0) && ((Convert.ToDateTime(objCustomerPass.StartDate).Date <= DateTime.Now.Date)&& (Convert.ToDateTime(objCustomerPass.ExpiryDate).Date >= DateTime.Now.Date)))
+                                if ((objCustomerPass.CustomerVehiclePassID != 0) && ((Convert.ToDateTime(objCustomerPass.StartDate).Date <= DateTime.Now.Date) && (Convert.ToDateTime(objCustomerPass.ExpiryDate).Date >= DateTime.Now.Date)))
                                 {
                                     if (SelectedVehicle == objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode.ToUpper())
                                     {
@@ -1269,6 +1270,7 @@ namespace ParkHyderabadOperator
                 if (!string.IsNullOrEmpty(selectedvehicle.VehicleImage))
                 {
                     SelectedVehicle = selectedvehicle.VehicleTypeCode;
+                    pickerBayNumers.SelectedIndex = -1;
                     UpdateCollectionViewSelectedItem(selectedvehicle);
                     if (chkGovernment.IsChecked)
                     {
@@ -1276,7 +1278,6 @@ namespace ParkHyderabadOperator
                         slGovVehicleImage.IsVisible = true;
                         stlayoutCheckInPayment.IsVisible = false;
                         slParkinghours.IsVisible = false;
-                        lblPhoneNumber.Text = "Phone Number";
                     }
                     else
                     {
@@ -1285,7 +1286,7 @@ namespace ParkHyderabadOperator
                         slGovVehicleImage.IsVisible = false;
                         stlayoutCheckInPayment.IsVisible = true;
                         slParkinghours.IsVisible = true;
-                        lblPhoneNumber.Text = "Phone Number (Optional)";
+
                         GetParkingFeeDeatils();
 
 
@@ -1329,7 +1330,10 @@ namespace ParkHyderabadOperator
         #endregion
 
         #region Navigation BackButton
-
+        protected override bool OnBackButtonPressed()
+        {
+            return true;
+        }
         private async void BtnBack_Clicked(object sender, EventArgs e)
         {
             try
@@ -1364,7 +1368,7 @@ namespace ParkHyderabadOperator
                 if (App.Current.Properties.ContainsKey("apitoken"))
                 {
                     List<CustomerParkingSlot> lstVehicleHistory = null;
-                    
+
                     await Task.Run(() =>
                     {
                         lstVehicleHistory = dal_Menubar.GetVehicleDueAmountHistory(Convert.ToString(App.Current.Properties["apitoken"]), entryRegistrationNumber.Text, SelectedVehicle);

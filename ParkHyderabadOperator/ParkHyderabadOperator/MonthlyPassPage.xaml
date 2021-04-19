@@ -153,22 +153,6 @@
                     <StackLayout Spacing="5">
                        
                         <StackLayout Spacing="12">
-                            <StackLayout Orientation="Vertical"  Spacing="-6">
-                                <Label Text="Name" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
-                                <Entry x:Name="entryName" Style="{StaticResource EntryProximaBlackStyle}">
-                                    <Entry.Behaviors>
-                                        <local:AlphaValidation MaxLength="25" MinLength="3"/>
-                                    </Entry.Behaviors>
-                                </Entry>
-                            </StackLayout>
-                            <StackLayout Orientation="Vertical"  Spacing="-6">
-                                <Label Text="Phone Number" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
-                                <Entry x:Name="entryPhoneNumber" Style="{StaticResource EntryProximaBlackStyle}" Keyboard="Numeric">
-                                    <Entry.Behaviors>
-                                        <local:NumberValidationBehavior MaxLength="10" MinLength="10"/>
-                                    </Entry.Behaviors>
-                                </Entry>
-                            </StackLayout>
                             <StackLayout Orientation="Horizontal"  Spacing="-6" >
                                 <StackLayout Orientation="Vertical"   HorizontalOptions="FillAndExpand">
                                     <Label Text="Registration Number" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
@@ -180,6 +164,23 @@
                                 </StackLayout>
                                 <Image x:Name="imgCustomerVehcileType" Source="bike_black.png" HeightRequest="25"  VerticalOptions="Center"/>
                             </StackLayout>
+                            <StackLayout Orientation="Vertical"  Spacing="-6">
+                                <Label Text="Name" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
+                                <Entry x:Name="entryName" Style="{StaticResource EntryProximaBlackStyle}">
+                                    <Entry.Behaviors>
+                                        <local:AlphaValidation MaxLength="25" MinLength="3"/>
+                                    </Entry.Behaviors>
+                                </Entry>
+                            </StackLayout>
+                            <StackLayout Orientation="Vertical"  Spacing="-6">
+                                <Label Text="Phone Number" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
+                                <Entry x:Name="entryPhoneNumber" Style="{StaticResource EntryProximaBlackStyle}" Keyboard="Numeric" TextChanged="entryPhoneNumber_TextChanged">
+                                    <Entry.Behaviors>
+                                        <local:NumberValidationBehavior MaxLength="10" MinLength="10"/>
+                                    </Entry.Behaviors>
+                                </Entry>
+                            </StackLayout>
+                          
 
                         </StackLayout>
                         

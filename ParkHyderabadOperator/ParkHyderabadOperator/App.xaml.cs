@@ -1,4 +1,5 @@
-﻿using ParkHyderabadOperator.Model;
+﻿
+using ParkHyderabadOperator.Model;
 using Plugin.Connectivity;
 using System;
 using System.IO;
@@ -17,6 +18,7 @@ namespace ParkHyderabadOperator
             get
             {
                 if (db == null)
+
                 {
                     db = new SQLiteHelper(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "XamarinSQLite.db4"));
                 }

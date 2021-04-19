@@ -34,9 +34,9 @@ namespace ParkHyderabadOperator
             PageCalledBy = redirectdFrom;
             objviolationVehicleChekOut = objInput;
             ImgVehicleType.Source = objInput.VehicleTypeID.VehicleIcon;
-            labelChekInAmount.Text     = "("+objInput.VehicleTypeID.VehicleTypeName +" - For " + objInput.Duration + " Hours)";
+            labelChekInAmount.Text = "(" + objInput.VehicleTypeID.VehicleTypeName + " - For " + objInput.Duration + " Hours)";
             labelVehicleRegNumber.Text = objInput.CustomerVehicleID.RegistrationNumber;
-            labelParkingLocation.Text  = objInput.LocationParkingLotID.LocationID.LocationName + "-" + objInput.LocationParkingLotID.LocationParkingLotName + "," + objInput.LocationParkingLotID.ParkingBayID.ParkingBayName + " " + objInput.LocationParkingLotID.ParkingBayID.ParkingBayRange;
+            labelParkingLocation.Text = objInput.LocationParkingLotID.LocationID.LocationName + "-" + objInput.LocationParkingLotID.LocationParkingLotName + "," + objInput.LocationParkingLotID.ParkingBayID.ParkingBayName + " " + objInput.LocationParkingLotID.ParkingBayID.ParkingBayRange;
 
             if (redirectdFrom == "ViolationVehicleInformation")
             {
@@ -73,7 +73,7 @@ namespace ParkHyderabadOperator
                 ShowLoading(false);
             }
         }
-        private  void BtnYes_Clicked(object sender, EventArgs e)
+        private void BtnYes_Clicked(object sender, EventArgs e)
         {
             try
             {
@@ -108,6 +108,10 @@ namespace ParkHyderabadOperator
                         });
                         if (VehicleCheckOut != null)
                         {
+                            if (VehicleCheckOut.PaymentTypeID != null)  // IF Payment Type NULL
+                            {
+                                VehicleCheckOut.PaymentTypeID.PaymentTypeName = objviolationVehicleChekOut.PaymentTypeID.PaymentTypeName;
+                            }
                             await Navigation.PushAsync(new CheckOutReceiptPage(PageCalledBy, VehicleCheckOut));
                         }
                         else

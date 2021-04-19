@@ -465,6 +465,8 @@ namespace ParkHyderabadOperator
             try
             {
                 string existingnfcCardVehcile = string.Empty;
+                labelNFCCard.Text = string.Empty;
+                labelBARCode.Text = string.Empty;
                 if (chkNewCard.IsChecked)
                 {
                     if (chkhasCard.IsChecked)
@@ -530,6 +532,8 @@ namespace ParkHyderabadOperator
             try
             {
                 string existingnfcCardVehcile = string.Empty;
+                labelNFCCard.Text = string.Empty;
+                labelBARCode.Text = string.Empty;
                 if (chkhasCard.IsChecked)
                 {
                     if (chkNewCard.IsChecked)

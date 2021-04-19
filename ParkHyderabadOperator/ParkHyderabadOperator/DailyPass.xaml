@@ -151,7 +151,18 @@
             <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,0.88"  AbsoluteLayout.LayoutFlags="All" Margin="15,0,15,0">
                 <StackLayout Spacing="12" >
                     <StackLayout Spacing="12">
-                            <StackLayout Orientation="Vertical"    Spacing="0">
+                        <StackLayout Orientation="Horizontal" Spacing="0" VerticalOptions="EndAndExpand" >
+                            <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
+                                <Label Text="Registration Number" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
+                                <Entry x:Name="entryRegistrationNumber" HorizontalOptions="FillAndExpand"  Style="{StaticResource EntryProximaBlackStyle}" Completed="entryRegistrationNumber_Completed">
+                                    <Entry.Behaviors>
+                                        <local:AlphaNumericValidatorBehavior MaxLength="10" MinLength="6"/>
+                                    </Entry.Behaviors>
+                                </Entry>
+                            </StackLayout>
+                            <Image x:Name="imgCustomerVehcileType"  HeightRequest="30"  VerticalOptions="CenterAndExpand" />
+                        </StackLayout>
+                        <StackLayout Orientation="Vertical"    Spacing="0">
                                 <Label Text="Name" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
                                 <Entry x:Name="entryName" Style="{StaticResource EntryProximaBlackStyle}">
                                     <Entry.Behaviors>
@@ -161,23 +172,13 @@
                             </StackLayout>
                             <StackLayout Orientation="Vertical"    Spacing="0">
                                 <Label Text="Phone Number" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
-                                <Entry x:Name="entryPhoneNumber" Style="{StaticResource EntryProximaBlackStyle}" Keyboard="Numeric">
+                                <Entry x:Name="entryPhoneNumber" Style="{StaticResource EntryProximaBlackStyle}" Keyboard="Numeric" TextChanged="entryPhoneNumber_TextChanged">
                                     <Entry.Behaviors>
                                         <local:NumberValidationBehavior MaxLength="10" MinLength="10"/>
                                     </Entry.Behaviors>
                                 </Entry>
                             </StackLayout>
-                            <StackLayout Orientation="Horizontal" Spacing="0" VerticalOptions="EndAndExpand" >
-                                <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
-                                    <Label Text="Registration Number" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
-                                    <Entry x:Name="entryRegistrationNumber" HorizontalOptions="FillAndExpand"  Style="{StaticResource EntryProximaBlackStyle}" Completed="entryRegistrationNumber_Completed">
-                                        <Entry.Behaviors>
-                                            <local:AlphaNumericValidatorBehavior MaxLength="10" MinLength="6"/>
-                                        </Entry.Behaviors>
-                                    </Entry>
-                                </StackLayout>
-                                <Image x:Name="imgCustomerVehcileType"  HeightRequest="30"  VerticalOptions="CenterAndExpand" />
-                            </StackLayout>
+                           
                         </StackLayout>
                     <StackLayout VerticalOptions="FillAndExpand" Spacing="10">
                         <StackLayout  Orientation="Horizontal"     VerticalOptions="StartAndExpand" Spacing="5"  HorizontalOptions="Start">

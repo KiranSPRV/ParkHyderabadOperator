@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ParkHyderabadOperator.DAL.DALExceptionLog;
 using ParkHyderabadOperator.ViewModel;
+using System.Diagnostics;
 
 namespace ParkHyderabadOperator.DAL.DALCheckIn
 {
@@ -70,7 +71,7 @@ namespace ParkHyderabadOperator.DAL.DALCheckIn
             List<VehicleParkingFee> lstVehicleParkingFee = new List<VehicleParkingFee>();
             try
             {
-                lstVehicleParkingFee =Task.Run(async()=> await App.SQLiteDb.GetLotVehiclesParkingFeesSQLLite()).Result;
+                lstVehicleParkingFee = Task.Run(async () => await App.SQLiteDb.GetLotVehiclesParkingFeesSQLLite()).Result;
             }
             catch (Exception ex)
             {
@@ -78,7 +79,7 @@ namespace ParkHyderabadOperator.DAL.DALCheckIn
             if (!string.IsNullOrEmpty(vehicleTypeCode) && Hours != 0)
             {
                 lstVehicleParkingFee = lstVehicleParkingFee.Where(i => i.VehicleTypeCode == vehicleTypeCode && i.Duration == Hours).ToList();
-                
+
             }
             return lstVehicleParkingFee;
         }
@@ -335,7 +336,7 @@ namespace ParkHyderabadOperator.DAL.DALCheckIn
 
         }
 
-        public VMVehiclePassWithDueAmount GetVerifyVehicleHasPassWithDueAmount(string accessToken, string RegistrationNumber,string VehicleTypeCode, int LocationID, int LocationParkingLotID, int UserID, string NFCCardNumber)
+        public VMVehiclePassWithDueAmount GetVerifyVehicleHasPassWithDueAmount(string accessToken, string RegistrationNumber, string VehicleTypeCode, int LocationID, int LocationParkingLotID, int UserID, string NFCCardNumber)
         {
             CheckInVehiclePass objVehiclePass = new CheckInVehiclePass();
             VMVehiclePassWithDueAmount objCustomerVehiclePass = new VMVehiclePassWithDueAmount();
@@ -348,7 +349,7 @@ namespace ParkHyderabadOperator.DAL.DALCheckIn
                 objVehiclePass.UserID = UserID;
                 objVehiclePass.LocationParkingLotID = LocationParkingLotID;
                 objVehiclePass.NFCCardNumber = NFCCardNumber;
-                
+
                 string baseUrl = Convert.ToString(App.Current.Properties["BaseURL"]);
                 using (var client = new HttpClient())
                 {
@@ -548,6 +549,7 @@ namespace ParkHyderabadOperator.DAL.DALCheckIn
             }
             catch (Exception ex)
             {
+                throw ex;
             }
             return objResultCustomerParkingSlot;
         }
@@ -612,46 +614,63 @@ namespace ParkHyderabadOperator.DAL.DALCheckIn
                                 try
                                 {
                                     var resultCustomerID = SaveVehicleNewCheckIn(apitoken, items);
-                                    objexlog.RegistrationNumber = items.RegistrationNumber;
-                                    objexlog.CustomerParkingSlotID = resultCustomerID.CustomerParkingSlotID;
-                                    objexlog.LocationParkingLotName = loguser.LocationParkingLotID.LocationParkingLotName;
-                                    objexlog.LocationParkingLotID = loguser.LocationParkingLotID.LocationParkingLotID;
-                                    objexlog.ExpectedStartTime = Convert.ToDateTime(items.ParkingStartTime);
-                                    objexlog.ExpectedEndTime = Convert.ToDateTime(items.ParkingEndTime);
-                                    objexlog.CreatedBy = loguser.UserID;
-
-                                    if (resultCustomerID != null && resultCustomerID.CustomerParkingSlotID != 0)
+                                    if (resultCustomerID != null)
                                     {
-                                        objexlog.ExceptionMessage = "Success";
-                                        objexlog.IsSync = true;
-                                        dal_Exceptionlog.InsertOfflineSynchException(Convert.ToString(App.Current.Properties["apitoken"]), objexlog);
-
+                                        try
+                                        {
+                                            objexlog.CustomerParkingSlotID = resultCustomerID.CustomerParkingSlotID;
+                                            objexlog.RegistrationNumber = items.RegistrationNumber;
+                                            objexlog.LocationParkingLotName = loguser.LocationParkingLotID.LocationParkingLotName;
+                                            objexlog.LocationParkingLotID = loguser.LocationParkingLotID.LocationParkingLotID;
+                                            objexlog.CreatedBy = resultCustomerID.CreatedBy;
+                                            if (resultCustomerID.CustomerParkingSlotID != 0)
+                                            {
+                                                objexlog.ExceptionMessage = "Success";
+                                                objexlog.IsSync = true;
+                                                if (!string.IsNullOrEmpty(items.ParkingStartTime) && !string.IsNullOrEmpty(items.ParkingEndTime))
+                                                {
+                                                    objexlog.ExpectedStartTime = Convert.ToDateTime(items.ParkingStartTime);
+                                                    objexlog.ExpectedEndTime = Convert.ToDateTime(items.ParkingEndTime);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (sbUnMoved.Length == 0)
+                                                {
+                                                    sbUnMoved.AppendLine(items.RegistrationNumber);
+                                                }
+                                                else
+                                                {
+                                                    sbUnMoved.AppendLine(", " + items.RegistrationNumber);
+                                                }
+                                                objexlog.ExceptionMessage = "Failed";
+                                                objexlog.IsSync = false;
+                                                DeSyncVehicleCheckIn objdesync = new DeSyncVehicleCheckIn();
+                                                objdesync.VehicleTypeCode = items.VehicleTypeCode;
+                                                objdesync.BayRange = items.BayRange;
+                                                objdesync.RegistrationNumber = items.RegistrationNumber;
+                                                objdesync.LocationParkingLotName = items.LocationParkingLotName;
+                                                await App.SQLiteDb.SaveDeSyncCheckInAsync(objdesync);
+                                            }
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            objexlog.ExceptionMessage = "Failed";
+                                            objexlog.IsSync = false;
+                                            dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message + ",At:" + "Item after Online Sync" + resultCustomerID.CustomerParkingSlotID, "DALCheckIn.cs", items.RegistrationNumber + "," + items.ParkingStartTime + "," + items.ParkingEndTime + "," + "", "CheckInOfflineSync");
+                                        }
+                                        finally
+                                        {
+                                            dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", "Finally at:" + "Item after Online Sync" + resultCustomerID.CustomerParkingSlotID, "DALCheckIn.cs", items.RegistrationNumber + "," + items.ParkingStartTime + "," + items.ParkingEndTime + "," + "", "CheckInOfflineSync");
+                                            dal_Exceptionlog.InsertOfflineSynchException(Convert.ToString(App.Current.Properties["apitoken"]), objexlog);
+                                            await App.SQLiteDb.DeleteItemAsync(items);
+                                        }
                                     }
                                     else
                                     {
-                                        objexlog.ExceptionMessage = "Failed";
-                                        objexlog.IsSync = false;
-                                        if (sbUnMoved.Length == 0)
-                                        {
-                                            sbUnMoved.AppendLine(items.RegistrationNumber);
-                                        }
-                                        else
-                                        {
-                                            sbUnMoved.AppendLine(", " + items.RegistrationNumber);
-                                        }
-                                        DeSyncVehicleCheckIn objdesync = new DeSyncVehicleCheckIn();
-                                        objdesync.VehicleTypeCode = items.VehicleTypeCode;
-                                        objdesync.BayRange = items.BayRange;
-                                        objdesync.RegistrationNumber = items.RegistrationNumber;
-                                        objdesync.LocationParkingLotName = items.LocationParkingLotName;
-                                        App.SQLiteDb.SaveDeSyncCheckInAsync(objdesync).Wait();
-                                        dal_Exceptionlog.InsertOfflineSynchException(Convert.ToString(App.Current.Properties["apitoken"]), objexlog);
+                                        dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", "No Records found ", "DALCheckIn.cs", "", "CheckInOfflineSync");
                                     }
-                                    Task<int> resultdel = App.SQLiteDb.DeleteItemAsync(items);
-                                    if (resultdel.Result > 0)
-                                    {
-                                        totalCounts = totalCounts - 1;
-                                    }
+
                                 }
                                 catch (Exception ex)
                                 {
@@ -663,8 +682,11 @@ namespace ParkHyderabadOperator.DAL.DALCheckIn
                                     {
                                         sbUnMoved.AppendLine(", " + items.RegistrationNumber);
                                     }
-                                    dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "CheckInPage.xaml.cs", "", "frmOnlineSynchGesutre_Tapped");
+                                    await App.SQLiteDb.DeleteItemAsync(items);
+
                                     dal_Exceptionlog.InsertOfflineSynchException(Convert.ToString(App.Current.Properties["apitoken"]), objexlog);
+                                    dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "DALCheckIn.cs", items.RegistrationNumber + "," + items.ParkingStartTime + "," + items.ParkingEndTime, "CheckInOfflineSync");
+
                                 }
                             }
                             else
@@ -680,10 +702,34 @@ namespace ParkHyderabadOperator.DAL.DALCheckIn
                             }
                         }
                     }
+                    else
+                    {
+                        dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", "No Records in VehicleCheckIn", "DALCheckIn.cs", "", "CheckInOfflineSync");
+                    }
+                }
+                else
+                {
+                    dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", "No Records in VehicleCheckIn", "DALCheckIn.cs", "", "CheckInOfflineSync");
                 }
             }
             catch (Exception ex)
             {
+                StackTrace st = new StackTrace(ex, true);
+                //Get the first stack frame
+                StackFrame frame = st.GetFrame(0);
+
+                //Get the file name
+                string fileName = frame.GetFileName();
+
+                //Get the method name
+                string methodName = frame.GetMethod().Name;
+
+                //Get the line number from the stack frame
+                int line = frame.GetFileLineNumber();
+
+                string exDetails = fileName + "," + methodName + "," + line;
+
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "DALCheckIn.cs", exDetails, "CheckInOfflineSync");
             }
             return sbUnMoved.ToString();
         }
@@ -695,7 +741,7 @@ namespace ParkHyderabadOperator.DAL.DALCheckIn
             bool IsOTPSended = false;
             try
             {
-                
+
                 string baseUrl = "https://www.smsstriker.com/";
                 using (var client = new HttpClient())
                 {
@@ -706,11 +752,11 @@ namespace ParkHyderabadOperator.DAL.DALCheckIn
                     // Add the Authorization header with the AccessToken.
                     // create the URL string.
 
-                    string url = "API/sms.php?username=sprvtechnology&password=128391&from=INSPRK&to="+ mobile + " &msg= "+ ReceiptMsg + "&type=1";
+                    string url = "API/sms.php?username=sprvtechnology&password=128391&from=INSPRK&to=" + mobile + " &msg= " + ReceiptMsg + "&type=1&template_id=1407161777346458051";
                     // make the request
                     // make the request
                     HttpResponseMessage response = client.GetAsync(url).Result;
-                    
+
                     if (response.IsSuccessStatusCode)
                     {
                         IsOTPSended = true;

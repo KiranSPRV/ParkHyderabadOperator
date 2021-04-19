@@ -71,7 +71,7 @@ namespace ParkHyderabadOperator
                     entryPhoneNumber.IsReadOnly = true;
                     entryName.IsReadOnly = true;
                     lblCardType.Text = "ADD  TAG"; //+ objResultVMPass.CardTypeID.CardTypeName;
-                   
+
                     if (objReNewVehicle.IssuedCard)
                     {
                         checkAddNFCCard.IsChecked = true;
@@ -170,21 +170,22 @@ namespace ParkHyderabadOperator
             string IsPassInOverstay = string.Empty;
             try
             {
-                if (entryName.Text != null && entryName.Text != "")
+                if (entryRegistrationNumber.Text != null && entryRegistrationNumber.Text.Length >= 6)
                 {
-                    if (entryPhoneNumber.Text != null && entryPhoneNumber.Text != "")
+                    string regNumber = entryRegistrationNumber.Text;
+                    string regFormat = regNumber.Substring(regNumber.Length - 4);
+                    if (int.TryParse(regFormat, out number))
                     {
-                        if (entryRegistrationNumber.Text != null && entryRegistrationNumber.Text.Length >= 6)
+                        if (entryName.Text != null && entryName.Text != "")
                         {
-                            IsPassInOverstay = VerifyPassVehicleCheckInStatus(objResultVMPass.VehicleTypeID.VehicleTypeCode, entryRegistrationNumber.Text);
-                            if (IsPassInOverstay == string.Empty)
+                            if (!string.IsNullOrEmpty(entryPhoneNumber.Text) && entryPhoneNumber.Text.Length == 10)
                             {
-                                if (!IsVehiclehasPass())
+                                IsPassInOverstay = VerifyPassVehicleCheckInStatus(objResultVMPass.VehicleTypeID.VehicleTypeCode, entryRegistrationNumber.Text);
+                                if (IsPassInOverstay == string.Empty)
                                 {
-                                    string regNumber = entryRegistrationNumber.Text;
-                                    string regFormat = regNumber.Substring(regNumber.Length - 4);
-                                    if (int.TryParse(regFormat, out number))
+                                    if (!IsVehiclehasPass())
                                     {
+
                                         if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                                         {
                                             User objloginuser = (User)App.Current.Properties["LoginUser"];
@@ -233,36 +234,37 @@ namespace ParkHyderabadOperator
                                             objCustomerPass.PassPurchaseLocationID.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
                                             await Navigation.PushAsync(new MonthlyPassCashPaymentPage(objCustomerPass));
                                         }
+
                                     }
                                     else
                                     {
-                                        await DisplayAlert("Alert", "Please enter valid Registration Number", "Ok");
+                                        await DisplayAlert("Alert", entryRegistrationNumber.Text.ToUpper() + ": This vehicle already has Pass.", "Ok");
                                     }
                                 }
                                 else
                                 {
-                                    await DisplayAlert("Alert", entryRegistrationNumber.Text.ToUpper() + ": This vehicle already has Pass.", "Ok");
+
+                                    await DisplayAlert("Alert", "Please clear due amount to Buy/Renew Pass", "Ok");
                                 }
                             }
                             else
                             {
-
-                                await DisplayAlert("Alert", "Please clear due amount to Buy/Renew Pass", "Ok");
+                                await DisplayAlert("Alert", "Please enter Phone Number", "Ok");
                             }
                         }
                         else
                         {
-                            await DisplayAlert("Alert", "Please enter Registration Number", "Ok");
+                            await DisplayAlert("Alert", "Please enter Name", "Ok");
                         }
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Please enter Phone Number", "Ok");
+                        await DisplayAlert("Alert", "Please enter valid Registration Number", "Ok");
                     }
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please enter Name", "Ok");
+                    await DisplayAlert("Alert", "Please enter Registration Number", "Ok");
                 }
             }
             catch (Exception ex)
@@ -276,21 +278,22 @@ namespace ParkHyderabadOperator
             string IsPassInOverstay = string.Empty;
             try
             {
-                if (entryName.Text != null && entryName.Text != "")
+                if (entryRegistrationNumber.Text != null && entryRegistrationNumber.Text.Length >= 6)
                 {
-                    if (entryPhoneNumber.Text != null && entryPhoneNumber.Text != "")
+                    string regNumber = entryRegistrationNumber.Text;
+                    string regFormat = regNumber.Substring(regNumber.Length - 4);
+                    if (int.TryParse(regFormat, out number))
                     {
-                        if (entryRegistrationNumber.Text != null && entryRegistrationNumber.Text.Length >= 6)
+                        if (entryName.Text != null && entryName.Text != "")
                         {
-                            IsPassInOverstay = VerifyPassVehicleCheckInStatus(objResultVMPass.VehicleTypeID.VehicleTypeCode, entryRegistrationNumber.Text);
-                            if (IsPassInOverstay == string.Empty)
+                            if (!string.IsNullOrEmpty(entryPhoneNumber.Text) && entryPhoneNumber.Text.Length == 10)
                             {
-                                if (!IsVehiclehasPass())
+                                IsPassInOverstay = VerifyPassVehicleCheckInStatus(objResultVMPass.VehicleTypeID.VehicleTypeCode, entryRegistrationNumber.Text);
+                                if (IsPassInOverstay == string.Empty)
                                 {
-                                    string regNumber = entryRegistrationNumber.Text;
-                                    string regFormat = regNumber.Substring(regNumber.Length - 4);
-                                    if (int.TryParse(regFormat, out number))
+                                    if (!IsVehiclehasPass())
                                     {
+
                                         if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                                         {
 
@@ -340,36 +343,37 @@ namespace ParkHyderabadOperator
                                             objCustomerPass.PassPurchaseLocationID.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
                                             await Navigation.PushAsync(new PassGenerationEPayPaymentConfirmationPage(objCustomerPass));
                                         }
+
                                     }
                                     else
                                     {
-                                        await DisplayAlert("Alert", "Please enter valid Registration Number", "Ok");
+                                        await DisplayAlert("Alert", entryRegistrationNumber.Text.ToUpper() + ": This vehicle already has Pass.", "Ok");
                                     }
                                 }
                                 else
                                 {
-                                    await DisplayAlert("Alert", entryRegistrationNumber.Text.ToUpper() + ": This vehicle already has Pass.", "Ok");
+
+                                    await DisplayAlert("Alert", "Please clear due amount to Buy/Renew Pass", "Ok");
                                 }
                             }
                             else
                             {
-
-                                await DisplayAlert("Alert", "Please clear due amount to Buy/Renew Pass", "Ok");
+                                await DisplayAlert("Alert", "Please enter Phone Number", "Ok");
                             }
                         }
                         else
                         {
-                            await DisplayAlert("Alert", "Please enter Registration Number", "Ok");
+                            await DisplayAlert("Alert", "Please enter Name", "Ok");
                         }
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Please enter Phone Number", "Ok");
+                        await DisplayAlert("Alert", "Please enter valid Registration Number", "Ok");
                     }
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please enter Name", "Ok");
+                    await DisplayAlert("Alert", "Please enter Registration Number", "Ok");
                 }
 
             }
@@ -578,5 +582,27 @@ namespace ParkHyderabadOperator
             }
         }
 
+        private void entryPhoneNumber_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(entryPhoneNumber.Text))
+            {
+                if (entryPhoneNumber.Text.Length > 9)
+                {
+                    try
+                    {
+                        if (!string.IsNullOrEmpty(entryRegistrationNumber.Text))
+                        {
+                            var text = entryRegistrationNumber.Text;
+                            GetVehiceDueAmont(text, objResultVMPass.VehicleTypeID.VehicleTypeCode);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "MonthlyPassPage.xaml.cs", "", "MonthlyPassPage");
+                    }
+                }
+
+            }
+        }
     }
 }
