@@ -4,6 +4,7 @@ using ParkHyderabadOperator.Model;
 using ParkHyderabadOperator.Model.APIInputModel;
 using ParkHyderabadOperator.Model.APIOutPutModel;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -32,6 +33,11 @@ namespace ParkHyderabadOperator
                     User loginUser = (User)App.Current.Properties["LoginUser"];
                     labelUserName.Text = loginUser.UserName;
                     labelUserID.Text = "ID: " + Convert.ToString(loginUser.UserCode);
+                    if(loginUser.Photo!=null&& loginUser.Photo.Length>0)
+                    {
+                        imgProfile.Source = ImageSource.FromStream(() => new MemoryStream(ByteArrayCompressionUtility.Decompress(loginUser.Photo)));
+                    }
+                  
                     if (loginUser.UserTypeID.UserTypeName.ToUpper() == "Administrator".ToUpper())
                     {
                         AdminHomePage adminhomePage = new AdminHomePage();

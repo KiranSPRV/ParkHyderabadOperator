@@ -1,10 +1,12 @@
-﻿using ParkHyderabadOperator.DAL.DALExceptionLog;
+﻿using ParkHyderabadOperator.DAL.DALCheckIn;
+using ParkHyderabadOperator.DAL.DALExceptionLog;
 using ParkHyderabadOperator.DAL.DALHome;
 using ParkHyderabadOperator.Model;
 using ParkHyderabadOperator.Model.APIOutPutModel;
 using ParkHyderabadOperator.ViewModel.VMPass;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -40,12 +42,12 @@ namespace ParkHyderabadOperator
             {
                 string vehicleType = string.Empty;
                 string stations = string.Empty;
-                
+
                 labelParkingReceiptTitle.Text = "InstaParking-" + objReceipt.PassPriceID.PassTypeID.PassTypeName;
                 labelParkingLot.Text = objReceipt.LocationID.LocationName + "-" + objReceipt.PassPriceID.StationAccess;
                 labelValidFrom.Text = Convert.ToDateTime(objReceipt.StartDate).ToString("dd MMM yyyy");
                 labelValidTo.Text = Convert.ToDateTime(objReceipt.ExpiryDate).ToString("dd MMM yyyy");
-                
+
                 if (objReceipt.PassPriceID.PassTypeID.PassTypeCode == "MP")
                 {
                     if (objReceipt.PassPriceID.StationAccess == "Single Station")
@@ -121,12 +123,56 @@ namespace ParkHyderabadOperator
                 }
                 catch (Exception ex)
                 {
-                    dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "PassPaymentReceiptPage.xaml.cs", "", "receiptlines");
+                    dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "NFCCardPaymentReceiptPagae.xaml.cs", "", "receiptlines");
                 }
+
+
+                try
+                {
+
+                    //SMS Sending 
+                    string ParkingAmount = string.Empty;
+                    StringBuilder sbSMS = new StringBuilder();
+                    if (DeviceInternet.InternetConnected())
+                    {
+
+                        sbSMS.AppendLine("  HMRL PARKING  ");
+                        sbSMS.AppendLine(objReceipt.LocationID.LocationName + "-" + objReceipt.PassPriceID.StationAccess);
+                        sbSMS.AppendLine(vehicleType + ": " + objReceipt.CustomerVehicleID.RegistrationNumber);
+                        sbSMS.AppendLine("Valid From: " + Convert.ToDateTime(objReceipt.StartDate).ToString("dd MMM yyyy"));
+                        sbSMS.AppendLine("Valid Till: " + Convert.ToDateTime(objReceipt.ExpiryDate).ToString("dd MMM yyyy"));
+                        sbSMS.AppendLine("Pass Type: " + objReceipt.PassPriceID.PassTypeID.PassTypeName);
+                        sbSMS.AppendLine("Station(s): " + stations);
+                        ParkingAmount = objReceipt.PassPriceID.CardPrice.ToString("N2");
+                        decimal GSTPercentage = 18;
+                        decimal GSTAmount = (Convert.ToDecimal(objReceipt.PassPriceID.CardPrice) * GSTPercentage) / 100;
+                        decimal AmountAfterGST = (Convert.ToDecimal(objReceipt.PassPriceID.CardPrice)) - GSTAmount;
+                        string GSTString = "Rs" + AmountAfterGST.ToString("N2") + "," + " GST " + GSTPercentage + "%" + " Rs" + GSTAmount.ToString("N2");
+                        sbSMS.AppendLine("Paid: Rs" + ParkingAmount + " " + "(" + GSTString + ")");
+                        sbSMS.AppendLine("ID: " + objReceipt.CreatedBy.UserCode);
+                        sbSMS.AppendLine("Ph: " + objReceipt.SuperVisorID.PhoneNumber + ")");
+                        if (App.Current.Properties.ContainsKey("LoginUser"))
+                        {
+                            User objLoginUser = (User)App.Current.Properties["LoginUser"];
+                            sbSMS.AppendLine("Security " + objLoginUser.LocationParkingLotID.LotOpenTime + "-" + objLoginUser.LocationParkingLotID.LotCloseTime);
+
+                        }
+                        sbSMS.AppendLine("GST " + objReceipt.GSTNumber + "");
+                        sbSMS.AppendLine("SPRV Technologies (INSPRK)");
+                        string resultsmsmsg = sbSMS.ToString();
+
+                        SendSMS(objReceipt.CustomerVehicleID.CustomerID.PhoneNumber, resultsmsmsg);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "NFCCardPaymentReceiptPagae.xaml.cs", "", " SMS Sending Text");
+                }
+
             }
             catch (Exception ex)
             {
-                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "PassPaymentReceiptPage.xaml.cs", "", "LoadCustomerPassPaymentDetails");
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "NFCCardPaymentReceiptPagae.xaml.cs", "", "LoadCustomerPassPaymentDetails");
             }
         }
         private async void BtnDone_Clicked(object sender, EventArgs e)
@@ -217,6 +263,21 @@ namespace ParkHyderabadOperator
             catch (Exception ex)
             {
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "PassPaymentReceiptPage.xaml.cs", "", "BtnDone_Clicked");
+            }
+        }
+
+        public void SendSMS(string PhoneNumber, string resultmsg)
+        {
+            try
+            {
+                DALCheckIn dal_DALCheckIn = new DALCheckIn();
+                dal_DALCheckIn.SendReceiptToMobile(resultmsg, PhoneNumber, "1407161890458311579");
+            }
+            catch (Exception ex)
+            {
+
+                ShowLoading(false);
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "PassPaymentReceiptPage.xaml.cs", "", "SendSMS");
             }
         }
     }

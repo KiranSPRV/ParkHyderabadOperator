@@ -1,4 +1,5 @@
-﻿using ParkHyderabadOperator.DAL.DALExceptionLog;
+﻿using ParkHyderabadOperator.DAL.DALCheckIn;
+using ParkHyderabadOperator.DAL.DALExceptionLog;
 using ParkHyderabadOperator.DAL.DALHome;
 using ParkHyderabadOperator.Model;
 using ParkHyderabadOperator.Model.APIOutPutModel;
@@ -6,6 +7,7 @@ using ParkHyderabadOperator.ViewModel.VMPass;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -48,6 +50,7 @@ namespace ParkHyderabadOperator
             {
                 string vehicleType = string.Empty;
                 string stations = string.Empty;
+                decimal toatlPassPaidAmont = 0;
                 labelParkingReceiptTitle.Text = "InstaParking-" + objReceipt.PassPriceID.PassTypeID.PassTypeName;
 
                 labelParkingLot.Text = objReceipt.LocationID.LocationName + "-" + objReceipt.PassPriceID.StationAccess;
@@ -101,15 +104,17 @@ namespace ParkHyderabadOperator
 
                 if (objReceipt.IssuedCard)
                 {
+                    toatlPassPaidAmont = objReceipt.TotalAmount + objReceipt.DueAmount;
                     labelParkingFeesDetails.Text = (objReceipt.TotalAmount + objReceipt.DueAmount).ToString("N2") + "/-";
                     labelParkingPaymentType.Text = "Paid (Including " + objReceipt.CardTypeID.CardTypeName + ")- By " + objReceipt.PaymentTypeID.PaymentTypeName;
                     labelPassAmountDetails.Text = "( Pass Rs " + (objReceipt.Amount).ToString("N2") + "/-" + " TAG Rs " + (objReceipt.CardAmount).ToString("N2") + "/-" + " Due Amount:" + objReceipt.DueAmount.ToString("N2") + "/-" + " )";
                 }
                 else
                 {
+                    toatlPassPaidAmont = objReceipt.Amount + objReceipt.DueAmount;
                     labelParkingFeesDetails.Text = (objReceipt.Amount + objReceipt.DueAmount).ToString("N2") + "/-";
                     labelParkingPaymentType.Text = "Paid - By " + objReceipt.PaymentTypeID.PaymentTypeName;
-                    labelPassAmountDetails.Text = "( Pass Rs " + (objReceipt.Amount).ToString("N2") + "/-" + " Due Amount Rs " + objReceipt.DueAmount.ToString("N2") + "/-"+" )";
+                    labelPassAmountDetails.Text = "( Pass Rs " + (objReceipt.Amount).ToString("N2") + "/-" + " Due Amount Rs " + objReceipt.DueAmount.ToString("N2") + "/-" + " )";
                 }
                 if (objReceipt.CreatedBy.UserName != "")
                 {
@@ -124,9 +129,10 @@ namespace ParkHyderabadOperator
                     imageOperatorProfile.IsVisible = false;
                 }
                 labelGSTNumber.Text = objReceipt.GSTNumber;
+                string passPaidAmount = string.Empty;
                 try
                 {
-                    string passPaidAmount = string.Empty;
+
                     if (receiptlines != null && receiptlines.Length > 0)
                     {
                         receiptlines[0] = "\x1B\x21\x08" + "          " + "HMRL PARKING" + "\x1B\x21\x00" + "\n";
@@ -155,7 +161,7 @@ namespace ParkHyderabadOperator
                         receiptlines[10] = "\x1B\x21\x06" + "Operator Id:" + objReceipt.CreatedBy.UserCode + "\x1B\x21\x00\n";
                         receiptlines[11] = "\x1B\x21\x01" + "(Supervisor Mobile:" + objReceipt.SuperVisorID.PhoneNumber + ")" + "\x1B\x21\x00\n";
                         receiptlines[12] = "\x1B\x21\x01" + "We are not responsible for your valuable items like laptop,       wallet,helmet etc." + "\x1B\x21\x00\n";
-                        receiptlines[13] = "\x1B\x21\x06" + "GST Number 36AACFZ1015E1ZL" + "\x1B\x21\x00\n";
+                        receiptlines[13] = "\x1B\x21\x06" + "GST Number" + objReceipt.GSTNumber + "\x1B\x21\x00\n";
                         receiptlines[14] = "\x1B\x21\x06" + "Amount includes 18% GST" + "\x1B\x21\x00\n";
                         receiptlines[15] = "" + "\n";
                         receiptlines[16] = "" + "\n";
@@ -166,6 +172,55 @@ namespace ParkHyderabadOperator
                 {
                     dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "PassPaymentReceiptPage.xaml.cs", "", "receiptlines");
                 }
+
+
+                try
+                {
+                    //SMS Sending 
+                    string ParkingAmount = string.Empty;
+                    StringBuilder sbSMS = new StringBuilder();
+                    if (DeviceInternet.InternetConnected())
+                    {
+
+                        sbSMS.AppendLine("  HMRL PARKING  ");
+                        sbSMS.AppendLine(objReceipt.LocationID.LocationName + "-" + objReceipt.PassPriceID.StationAccess);
+                        sbSMS.AppendLine(vehicleType + ": " + objReceipt.CustomerVehicleID.RegistrationNumber);
+                        sbSMS.AppendLine("Valid From: " + Convert.ToDateTime(objReceipt.StartDate).ToString("dd MMM yyyy"));
+                        sbSMS.AppendLine("Valid Till: " + Convert.ToDateTime(objReceipt.ExpiryDate).ToString("dd MMM yyyy"));
+                        sbSMS.AppendLine("Pass Type: " + objReceipt.PassPriceID.PassTypeID.PassTypeName);
+                        sbSMS.AppendLine("Station(s): " + stations);
+                        ParkingAmount = toatlPassPaidAmont.ToString("N2");
+                        if (objReceipt.DueAmount > 0)
+                        {
+                            ParkingAmount = ParkingAmount + "(Due Amount: "+(objReceipt.DueAmount).ToString("N2")+")";
+                        }
+                        decimal GSTPercentage = 18;
+                        decimal GSTAmount = (Convert.ToDecimal(toatlPassPaidAmont) * GSTPercentage) / 100;
+                        decimal AmountAfterGST = (Convert.ToDecimal(toatlPassPaidAmont)) - GSTAmount;
+                        string GSTString = "Rs" + AmountAfterGST.ToString("N2") + "," + " GST " + GSTPercentage + "%" + " Rs" + GSTAmount.ToString("N2");
+                        sbSMS.AppendLine("Paid: Rs" + ParkingAmount );
+                        sbSMS.AppendLine("(" + GSTString + ")");
+                        sbSMS.AppendLine("ID: " + objReceipt.CreatedBy.UserCode);
+                        sbSMS.AppendLine("Ph: " + objReceipt.SuperVisorID.PhoneNumber);
+                        if (App.Current.Properties.ContainsKey("LoginUser"))
+                        {
+                            User objLoginUser = (User)App.Current.Properties["LoginUser"];
+                            sbSMS.AppendLine("Security " + objLoginUser.LocationParkingLotID.LotOpenTime + "-" + objLoginUser.LocationParkingLotID.LotCloseTime);
+
+                        }
+                        sbSMS.AppendLine("GST " + objReceipt.GSTNumber + "");
+                        sbSMS.AppendLine("SPRV Technologies (INSPRK)");
+                        string resultsmsmsg = sbSMS.ToString();
+
+                        SendSMS(objReceipt.CustomerVehicleID.CustomerID.PhoneNumber, resultsmsmsg);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "PassPaymentReceiptPage.xaml.cs", "", " SMS Sending Text");
+                }
+
+
             }
             catch (Exception ex)
             {
@@ -220,12 +275,13 @@ namespace ParkHyderabadOperator
                 string printerName = string.Empty;
                 MasterHomePage masterPage = null;
                 ShowLoading(true);
-                if (App.Current.Properties.ContainsKey("MultiSelectionLocations"))
-                {
-                    App.Current.Properties.Remove("MultiSelectionLocations");
-                }
+
                 try
                 {
+                    if (App.Current.Properties.ContainsKey("MultiSelectionLocations"))
+                    {
+                        App.Current.Properties.Remove("MultiSelectionLocations");
+                    }
                     printerName = ObjblueToothDevicePrinting.GetBlueToothDevices();
                     if (printerName != string.Empty && printerName != "")
                     {
@@ -266,6 +322,19 @@ namespace ParkHyderabadOperator
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "PassPaymentReceiptPage.xaml.cs", "", "BtnDone_Clicked");
             }
         }
+        public void SendSMS(string PhoneNumber, string resultmsg)
+        {
+            try
+            {
+                DALCheckIn dal_DALCheckIn = new DALCheckIn();
+                dal_DALCheckIn.SendReceiptToMobile(resultmsg, PhoneNumber, "1407161899995769413");
+            }
+            catch (Exception ex)
+            {
 
+                ShowLoading(false);
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "PassPaymentReceiptPage.xaml.cs", "", "SendSMS");
+            }
+        }
     }
 }

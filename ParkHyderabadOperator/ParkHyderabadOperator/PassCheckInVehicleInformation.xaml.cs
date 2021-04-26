@@ -358,7 +358,7 @@ namespace ParkHyderabadOperator
                 ShowLoading(true);
                 BtnCheckOut.IsVisible = false;
                 CustomerParkingSlot objcheckoutresult = null;
-                MasterHomePage masterpage = null;
+                MasterDetailHomePage masterpage = null;
                 DALVehicleCheckOut dal_VehicleCheckOut = new DALVehicleCheckOut();
                 if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                 {
@@ -376,7 +376,7 @@ namespace ParkHyderabadOperator
                         objcheckoutresult = dal_VehicleCheckOut.VehicleCheckOut(Convert.ToString(App.Current.Properties["apitoken"]), objresult);
                         if (objcheckoutresult != null)
                         {
-                            masterpage = new MasterHomePage();
+                            masterpage = new MasterDetailHomePage();
                         }
                     });
                     if (objcheckoutresult != null)

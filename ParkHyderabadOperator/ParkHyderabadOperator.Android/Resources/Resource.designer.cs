@@ -9245,61 +9245,64 @@ namespace ParkHyderabadOperator.Droid
 			public const int search = 2131165565;
 			
 			// aapt resource value: 0x7F07017E
-			public const int share = 2131165566;
+			public const int security = 2131165566;
 			
 			// aapt resource value: 0x7F07017F
-			public const int splash = 2131165567;
+			public const int share = 2131165567;
 			
 			// aapt resource value: 0x7F070180
-			public const int splash_bg = 2131165568;
+			public const int splash = 2131165568;
 			
 			// aapt resource value: 0x7F070181
-			public const int sync = 2131165569;
+			public const int splash_bg = 2131165569;
 			
 			// aapt resource value: 0x7F070182
-			public const int ThreeW = 2131165570;
+			public const int sync = 2131165570;
 			
 			// aapt resource value: 0x7F070183
-			public const int ThreeW_active = 2131165571;
+			public const int ThreeW = 2131165571;
 			
 			// aapt resource value: 0x7F070184
-			public const int ThreeW_black = 2131165572;
+			public const int ThreeW_active = 2131165572;
 			
 			// aapt resource value: 0x7F070185
-			public const int ThreeW_blue = 2131165573;
+			public const int ThreeW_black = 2131165573;
 			
 			// aapt resource value: 0x7F070186
-			public const int ThreeW_green = 2131165574;
+			public const int ThreeW_blue = 2131165574;
 			
 			// aapt resource value: 0x7F070187
-			public const int ThreeW_grey = 2131165575;
+			public const int ThreeW_green = 2131165575;
 			
 			// aapt resource value: 0x7F070188
-			public const int ThreeW_orange = 2131165576;
+			public const int ThreeW_grey = 2131165576;
 			
 			// aapt resource value: 0x7F070189
-			public const int ThreeW_red = 2131165577;
+			public const int ThreeW_orange = 2131165577;
 			
 			// aapt resource value: 0x7F07018A
-			public const int Timesheet = 2131165578;
+			public const int ThreeW_red = 2131165578;
 			
 			// aapt resource value: 0x7F07018B
-			public const int tooltip_frame_dark = 2131165579;
+			public const int Timesheet = 2131165579;
 			
 			// aapt resource value: 0x7F07018C
-			public const int tooltip_frame_light = 2131165580;
+			public const int tooltip_frame_dark = 2131165580;
 			
 			// aapt resource value: 0x7F07018D
-			public const int trashsolid = 2131165581;
+			public const int tooltip_frame_light = 2131165581;
 			
 			// aapt resource value: 0x7F07018E
-			public const int Twowheeler_circle = 2131165582;
+			public const int trashsolid = 2131165582;
 			
 			// aapt resource value: 0x7F07018F
-			public const int Twowheeler_circle_ticked = 2131165583;
+			public const int Twowheeler_circle = 2131165583;
 			
 			// aapt resource value: 0x7F070190
-			public const int Wifi_off = 2131165584;
+			public const int Twowheeler_circle_ticked = 2131165584;
+			
+			// aapt resource value: 0x7F070191
+			public const int Wifi_off = 2131165585;
 			
 			static Drawable()
 			{

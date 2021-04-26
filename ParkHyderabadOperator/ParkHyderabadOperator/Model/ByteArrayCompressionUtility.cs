@@ -43,7 +43,6 @@ namespace ParkHyderabadOperator.Model
                 }
             }
         }
-
         public static byte[] GetImageStreamAsBytes(Stream input)
         {
             var buffer = new byte[16 * 1024];

@@ -47,14 +47,38 @@ namespace ParkHyderabadOperator
                 if (obj != null)
                 {
                     objNewCheckIn = obj;
+                    labelParkingLocation.Text = obj.LocationName + "-" + obj.LocationParkingLotName + "," + "Bay Number " + "-" + obj.BayRange;
+                    if (!string.IsNullOrEmpty(obj.ParkingStartTime) && !string.IsNullOrEmpty(obj.ParkingEndTime))
+                    {
+                        //lblValidFrom.Text = Convert.ToDateTime(obj.ParkingStartTime).ToString("dd MMM yyyy hh:mm tt");
+                        //lblValidTo.Text = Convert.ToDateTime(obj.ParkingEndTime).ToString("dd MMM yyyy hh:mm tt");
+                        lblValidFrom.Text = obj.ParkingStartTime;
+                        lblValidTo.Text = obj.ParkingEndTime;
+                    }
                     ImgVehicleType.Source = obj.VehicleImage;
                     vehicleTypeName = obj.VehicleTypeName;
-                    labelVehicleRegNumber.Text = obj.RegistrationNumber;
-                    labelParkingLocation.Text = obj.LocationName + "-" + obj.LocationParkingLotName + "," + "Bay Number " + "-" + obj.BayRange;
-                    labelChekInAmount.Text = Convert.ToDecimal(obj.ParkingFees + obj.ClampFees + obj.DueAmount).ToString("N2");
-                    labelClampAmount.Text = "(Due Amount: " + obj.DueAmount.ToString("N2") + ",Clamp Fees: " + obj.ClampFees.ToString("N2") + ")";
-                    labelChekInAmountDetails.Text = "( " + vehicleTypeName + " - For " + obj.ParkingHours + " hrs )";
+                    lblRegistrationNumber.Text = obj.RegistrationNumber;
 
+                    lblParkingAmount.Text = "- Rs " + obj.ParkingFees.ToString("N2") + "/-";
+                    lblParkingHours.Text = "for " + obj.ParkingHours.ToString() + " hours";
+                    lblDueAmount.Text = "- Rs " + obj.DueAmount.ToString("N2") + "/-";
+                    lblClampAmount.Text = "- Rs " + obj.ClampFees.ToString("N2") + "/-";
+                    lblChekInAmount.Text = "- Rs " + Convert.ToDecimal(obj.ParkingFees + obj.ClampFees + obj.DueAmount).ToString("N2") + "/-";
+                    lblPaymentTypeCode.Text = obj.PaymentType;
+                    decimal GSTPercentage = 18;
+                    decimal totalCheckInAmount = Convert.ToDecimal(obj.ParkingFees + obj.ClampFees + obj.DueAmount);
+                    decimal GSTAmount = ((totalCheckInAmount) * GSTPercentage) / 100;
+                    decimal AmountAfterGST = (totalCheckInAmount) - GSTAmount;
+                    string GSTString = "( Rs " + AmountAfterGST.ToString("N2") + " +" + " GST " + GSTPercentage + "%" + " Rs " + GSTAmount.ToString("N2") + ")";
+                    lblAmountWithGSTSplit.Text = GSTString;
+                    lblGSTNumber.Text = "GST 36AACFZ1015E1ZL";
+                    if (App.Current.Properties.ContainsKey("LoginUser"))
+                    {
+                        var objLoginUser = (User)App.Current.Properties["LoginUser"];
+                        lblParkingLotTimmings.Text = objLoginUser.LocationParkingLotID.LotOpenTime + " - " + objLoginUser.LocationParkingLotID.LotCloseTime;
+                        lblPhoneNumber.Text = objLoginUser.PhoneNumber;
+                    }
+                    lblSecurityMessage.Text = "We are not responsible for your personal belongings";
                 }
                 else
                 {
@@ -193,7 +217,7 @@ namespace ParkHyderabadOperator
                             receiptlines[9] = "\x1B\x21\x01" + "(Supervisor Mobile:" + objResultCustomerParkingSlot.SuperVisorID.PhoneNumber + ")" + "\x1B\x21\x00\n";
                             receiptlines[10] = "\x1B\x21\x06" + "Security available " + objResultCustomerParkingSlot.LocationParkingLotID.LotOpenTime + "-" + objResultCustomerParkingSlot.LocationParkingLotID.LotCloseTime + "\x1B\x21\x00\n";
                             receiptlines[11] = "\x1B\x21\x01" + "We are not responsible for your valuable items like laptop,       wallet,helmet etc." + "\x1B\x21\x00\n";
-                            receiptlines[12] = "\x1B\x21\x06" + "GST Number "+ objResultCustomerParkingSlot.GSTNumber +"" + "\x1B\x21\x00\n";
+                            receiptlines[12] = "\x1B\x21\x06" + "GST Number " + objResultCustomerParkingSlot.GSTNumber + "" + "\x1B\x21\x00\n";
                             receiptlines[13] = "\x1B\x21\x06" + "Amount includes 18% GST" + "\x1B\x21\x00\n";
                             receiptlines[14] = "" + "\n";
                             receiptlines[15] = "" + "\n";
@@ -252,25 +276,25 @@ namespace ParkHyderabadOperator
                     sbSMS.AppendLine("  HMRL PARKING  ");
                     sbSMS.AppendLine(objResultCustomerParkingSlot.LocationParkingLotID.LocationID.LocationName + " - " + objResultCustomerParkingSlot.LocationParkingLotID.LocationParkingLotName);
                     sbSMS.AppendLine(vehicleType + ": " + objResultCustomerParkingSlot.CustomerVehicleID.RegistrationNumber);
-                    sbSMS.AppendLine((objResultCustomerParkingSlot.ActualStartTime == null ? "" :  Convert.ToDateTime(objResultCustomerParkingSlot.ActualStartTime).ToString("dd MMM yyyy,hh:mm tt")) +" To "+ (objResultCustomerParkingSlot.ActualEndTime == null ? "" : Convert.ToDateTime(objResultCustomerParkingSlot.ActualEndTime).ToString("dd MMM yyyy,hh:mm tt")));
+                    sbSMS.AppendLine((objResultCustomerParkingSlot.ActualStartTime == null ? "" : Convert.ToDateTime(objResultCustomerParkingSlot.ActualStartTime).ToString("dd MMM yyyy,hh:mm tt")) + " To " + (objResultCustomerParkingSlot.ActualEndTime == null ? "" : Convert.ToDateTime(objResultCustomerParkingSlot.ActualEndTime).ToString("dd MMM yyyy,hh:mm tt")));
                     ParkingAmount = (objResultCustomerParkingSlot.Amount).ToString("N2");
                     if (objResultCustomerParkingSlot.PaidDueAmount > 0)
                     {
                         ParkingAmount = ParkingAmount + " (Due Amount: " + (objResultCustomerParkingSlot.PaidDueAmount).ToString("N2") + ")";
                     }
                     decimal GSTPercentage = 18;
-                    decimal GSTAmount=((objResultCustomerParkingSlot.Amount) * GSTPercentage) /100;
-                    decimal AmountAfterGST = (objResultCustomerParkingSlot.Amount ) - GSTAmount;
+                    decimal GSTAmount = ((objResultCustomerParkingSlot.Amount) * GSTPercentage) / 100;
+                    decimal AmountAfterGST = (objResultCustomerParkingSlot.Amount) - GSTAmount;
                     string GSTString = "Rs" + AmountAfterGST.ToString("N2") + "," + " GST " + GSTPercentage + "%" + " Rs" + GSTAmount.ToString("N2");
-                    sbSMS.AppendLine("Paid: Rs" + ParkingAmount+" "+"("+GSTString+")");
+                    sbSMS.AppendLine("Paid: Rs" + ParkingAmount + " " + "(" + GSTString + ")");
                     sbSMS.AppendLine("Bay " + objResultCustomerParkingSlot.LocationParkingLotID.ParkingBayID.ParkingBayRange);
                     sbSMS.AppendLine("ID: " + objResultCustomerParkingSlot.UserCode);
                     sbSMS.AppendLine("Ph: " + objResultCustomerParkingSlot.SuperVisorID.PhoneNumber);
                     sbSMS.AppendLine("Security " + objResultCustomerParkingSlot.LocationParkingLotID.LotOpenTime + "-" + objResultCustomerParkingSlot.LocationParkingLotID.LotCloseTime);
-                    sbSMS.AppendLine("GST "+ objResultCustomerParkingSlot.GSTNumber + "");
+                    sbSMS.AppendLine("GST " + objResultCustomerParkingSlot.GSTNumber + "");
                     sbSMS.AppendLine("SPRV Technologies (INSPRK)");
                     string resultmsg = sbSMS.ToString();
-                    dal_DALCheckIn.SendReceiptToMobile(resultmsg, PhoneNumber);
+                    dal_DALCheckIn.SendReceiptToMobile(resultmsg, PhoneNumber, "1407161777346458051");//msg ,phonenumber,templateid
 
                 }
             }

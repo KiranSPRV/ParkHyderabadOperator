@@ -5,7 +5,7 @@ namespace ParkHyderabadOperator.Model.APIInputModel
 {
     public class VehicleCheckIn
     {
-        
+
         public int CustomerParkingSlotID { get; set; }
         public int UserID { get; set; }
         public int UserTypeID { get; set; }
@@ -38,5 +38,7 @@ namespace ParkHyderabadOperator.Model.APIInputModel
         public decimal VehicleImageLottitude { get; set; }
         public decimal VehicleImageLongitude { get; set; }
         public string VehicleImage { get; set; }
+       
+       
     }
 }

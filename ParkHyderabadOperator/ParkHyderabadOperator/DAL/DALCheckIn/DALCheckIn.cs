@@ -736,7 +736,7 @@ namespace ParkHyderabadOperator.DAL.DALCheckIn
         #endregion
 
         // Receipt SMS
-        public bool SendReceiptToMobile(string ReceiptMsg, string mobile)
+        public bool SendReceiptToMobile(string ReceiptMsg, string mobile,string template_id)
         {
             bool IsOTPSended = false;
             try
@@ -752,7 +752,7 @@ namespace ParkHyderabadOperator.DAL.DALCheckIn
                     // Add the Authorization header with the AccessToken.
                     // create the URL string.
 
-                    string url = "API/sms.php?username=sprvtechnology&password=128391&from=INSPRK&to=" + mobile + " &msg= " + ReceiptMsg + "&type=1&template_id=1407161777346458051";
+                    string url = "API/sms.php?username=sprvtechnology&password=128391&from=INSPRK&to=" + mobile + " &msg= " + ReceiptMsg + "&type=1&template_id="+ template_id + "";
                     // make the request
                     // make the request
                     HttpResponseMessage response = client.GetAsync(url).Result;
