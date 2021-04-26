@@ -6,7 +6,9 @@ using ParkHyderabadOperator.Model.Pass;
 using ParkHyderabadOperator.ViewModel.VMPass;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -15,6 +17,7 @@ namespace ParkHyderabadOperator
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class NewPassPage : ContentPage
     {
+        private ObservableCollection<VehicleType> _vehicleType=null;
         public string PassCategory = string.Empty;
         string SelectedVehicle = string.Empty;
         DALExceptionManagment dal_Exceptionlog;
@@ -23,32 +26,23 @@ namespace ParkHyderabadOperator
         {
             InitializeComponent();
             dal_Exceptionlog = new DALExceptionManagment();
-
             PassCategory = pass;
             if (PassCategory == "New Pass")
             {
                 PassTypePageHeading.Text = "NEW PASS";
-                slPassTypePageHeadingImages.IsVisible = true;
-                LoadPasseTypesAndPriceDetails("2W");
+                GetAllVehicleType().Wait();
             }
             else if (PassCategory == "ReNew Pass")
             {
                 PassTypePageHeading.Text = "CHOOSE PASS";
                 PassTypePageHeading.Margin = new Thickness(0, 0, 100, 0);
-                slPassTypePageHeadingImages.IsVisible = false;
+                
                 if (App.Current.Properties.ContainsKey("ReNewPassCustomerVehicle"))
                 {
                     objReNewVehicle = (CustomerVehiclePass)App.Current.Properties["ReNewPassCustomerVehicle"];
                     if (objReNewVehicle != null && objReNewVehicle.CustomerVehiclePassID != 0)
                     {
-                        if (objReNewVehicle.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "2W")
-                        {
-                            slFourWheelerImage.IsVisible = false;
-                        }
-                        if (objReNewVehicle.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "4W")
-                        {
-                            slTwoWheelerImage.IsVisible = false;
-                        }
+                        GetSelectedVehicleType(objReNewVehicle.CustomerVehicleID.VehicleTypeID.VehicleTypeCode);
                         LoadPasseTypesAndPriceDetails(objReNewVehicle.CustomerVehicleID.VehicleTypeID.VehicleTypeCode);
                     }
 
@@ -68,23 +62,21 @@ namespace ParkHyderabadOperator
                     User objloginuser = (User)App.Current.Properties["LoginUser"];
                     VMPass vm_Pass = new VMPass();
                     DALPass dal_Pass = new DALPass();
-
                     VehicleLotPassPrice objVehicleLotPassPrice = new VehicleLotPassPrice();
                     objVehicleLotPassPrice.VehicleTypeCode = SelectedVehicle;
+                    objVehicleLotPassPrice.LocationID = objloginuser.LocationParkingLotID.LocationID.LocationID;
                     objVehicleLotPassPrice.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
-
                     List<PassPrice> lstVMPass = dal_Pass.GetPassPriceDetails(Convert.ToString(App.Current.Properties["apitoken"]), objVehicleLotPassPrice);
-
-                    if(objReNewVehicle!=null&& objReNewVehicle.CustomerVehiclePassID!=0)
+                    if (objReNewVehicle != null && objReNewVehicle.CustomerVehiclePassID != 0)
                     {
-                        List<PassPrice> renewSelectedPass = lstVMPass.Where(p => (p.PassTypeID.PassTypeCode.ToUpper() == objReNewVehicle.PassPriceID.PassTypeID.PassTypeCode.ToUpper()) && p.StationAccess.ToUpper()== objReNewVehicle.PassPriceID.StationAccess.ToUpper()).ToList();
+                        List<PassPrice> renewSelectedPass = lstVMPass.Where(p => (p.PassTypeID.PassTypeCode.ToUpper() == objReNewVehicle.PassPriceID.PassTypeID.PassTypeCode.ToUpper()) && p.StationAccess.ToUpper() == objReNewVehicle.PassPriceID.StationAccess.ToUpper()).ToList();
                         LstVehiclePasses.ItemsSource = renewSelectedPass;
                     }
                     else
                     {
                         LstVehiclePasses.ItemsSource = lstVMPass;
                     }
-                    
+
 
                 }
                 ShowLoading(false);
@@ -102,7 +94,7 @@ namespace ParkHyderabadOperator
                 PassPrice selectedPass = (PassPrice)e.SelectedItem;
                 if (selectedPass != null)
                 {
-                    if (selectedPass.PassTypeID.PassTypeCode == "DP" || selectedPass.PassTypeID.PassTypeCode == "EP")//Day Pass
+                    if ( selectedPass.PassTypeID.PassTypeCode == "EP"|| selectedPass.PassTypeID.PassTypeCode == "DP")//Event/Day Pass
                     {
                         if (App.Current.Properties.ContainsKey("MultiSelectionLocations"))
                         {
@@ -149,44 +141,6 @@ namespace ParkHyderabadOperator
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "NewPassPage.xaml.cs", "", "LstVehiclePasses_ItemSelected");
             }
         }
-
-        #region Vehicle Type Selection
-
-        private void SlTwoWheeler_Tapped(object sender, EventArgs e)
-        {
-            try
-            {
-                ShowLoading(true);
-                SelectedVehicle = "2W";
-                imgTwoWheeler.Source = "Twowheeler_circle_ticked.png";
-                imgFourWheeler.Source = "Fourwheeler_circle.png";
-                LoadPasseTypesAndPriceDetails(SelectedVehicle);
-                ShowLoading(false);
-            }
-            catch (Exception ex)
-            {
-                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "NewPassPage.xaml.cs", "", "ImgBtnTwoWheeler_Clicked");
-            }
-        }
-        private void SlFourWheeler_Tapped(object sender, EventArgs e)
-        {
-            try
-            {
-                ShowLoading(true);
-                SelectedVehicle = "4W";
-                imgTwoWheeler.Source = "Twowheeler_circle.png";
-                imgFourWheeler.Source = "Fourwheeler_circle_ticked.png";
-
-                LoadPasseTypesAndPriceDetails(SelectedVehicle);
-                ShowLoading(false);
-            }
-            catch (Exception ex)
-            {
-                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "NewPassPage.xaml.cs", "", "ImgBtnFourWheeler_Clicked");
-            }
-        }
-
-        #endregion
         public void ShowLoading(bool show)
         {
             StklauoutactivityIndicator.IsVisible = show;
@@ -202,5 +156,119 @@ namespace ParkHyderabadOperator
             }
 
         }
+
+        #region Dynamic VehicleType
+        public async Task GetAllVehicleType()
+        {
+            try
+            {
+                DALPass objDALPass = new DALPass();
+                if (App.Current.Properties.ContainsKey("apitoken"))
+                {
+                    var lstVehicleType = await App.SQLiteDb.GetAllVehicleTypesInSQLLite();
+                    if (lstVehicleType!=null&& lstVehicleType.Count > 0)
+                    {
+                        lstVehicleType = lstVehicleType.OrderBy(i => i.VehicleTypeID).ToList();
+                        _vehicleType = new ObservableCollection<VehicleType>(lstVehicleType);
+                        collstviewVehicleTye.WidthRequest = 300;
+                        collstviewVehicleTye.ItemsSource = _vehicleType;
+                        collstviewVehicleTye.SelectedItem = _vehicleType[0];
+                        SelectedVehicle = _vehicleType[0].VehicleTypeCode;
+                    }
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "NewPassPage.xaml.cs", "", "GetAllVehicleType");
+            }
+        }
+        public async void GetSelectedVehicleType(string VehicleTypeCode)
+        {
+            try
+            {
+
+                DALPass objDALPass = new DALPass();
+                if (App.Current.Properties.ContainsKey("apitoken"))
+                {
+                    var lstVehicleType = await App.SQLiteDb.GetAllVehicleTypesInSQLLite();
+                    if (lstVehicleType.Count>0)
+                    {
+                        var resultvehihcle = lstVehicleType.Where(v => v.VehicleTypeCode==VehicleTypeCode).ToList();
+                        if(resultvehihcle!=null& resultvehihcle.Count>0)
+                        {
+                            _vehicleType = new ObservableCollection<VehicleType>(resultvehihcle);
+                            if (_vehicleType.Count > 0)
+                            {
+                                for (var item = 0; item < _vehicleType.Count; item++)
+                                {
+                                    _vehicleType[item].VehicleDisplayImage = _vehicleType[item].VehicleActiveImage;
+                                    _vehicleType[item] = _vehicleType[item];
+                                }
+                                collstviewVehicleTye.WidthRequest = 110;
+                                collstviewVehicleTye.ItemsSource = _vehicleType;
+                                SelectedVehicle = _vehicleType[0].VehicleTypeCode;
+                            }
+                        }
+                       
+                    }
+                   
+                }
+            }
+            catch (Exception ex)
+            {
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "NewPassPage.xaml.cs", "", "GetSelectedVehicleType");
+            }
+        }
+        private void collstviewVehicleTye_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                if (PassCategory == "New Pass")
+                {
+                    var item = e.CurrentSelection;
+                    var selectedvehicle = item[0] as VehicleType;
+                    if (!string.IsNullOrEmpty(selectedvehicle.VehicleImage))
+                    {
+                        UpdateCollectionViewSelectedItem(selectedvehicle);
+                    }
+                    LoadPasseTypesAndPriceDetails(selectedvehicle.VehicleTypeCode);
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "NewPassPage.xaml.cs", "", "collstviewVehicleTye_SelectionChanged");
+            }
+        }
+        public void UpdateCollectionViewSelectedItem(VehicleType selectedVehicle)
+        {
+            try
+            {
+                for (var item = 0; item < _vehicleType.Count; item++)
+                {
+
+                    if (_vehicleType[item].VehicleTypeID == selectedVehicle.VehicleTypeID)
+                    {
+
+                        _vehicleType[item].VehicleDisplayImage = _vehicleType[item].VehicleActiveImage;
+                    }
+                    else
+                    {
+                        _vehicleType[item].VehicleDisplayImage = _vehicleType[item].VehicleInActiveImage;
+                    }
+
+                    _vehicleType[item] = _vehicleType[item];
+                }
+                collstviewVehicleTye.ItemsSource = _vehicleType;
+            }
+            catch (Exception ex)
+            {
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "NewPassPage.xaml.cs", "", "UpdateCollectionViewSelectedItem");
+            }
+        }
+
+        #endregion
+
     }
 }

@@ -1,12 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ParkHyderabadOperator.TestingPage">
+             x:Class="ParkHyderabadOperator.TestingPage"
+             NavigationPage.HasBackButton="True" >
+    <NavigationPage.TitleView >
+        <Label Text="TIME SHEET"  Style="{StaticResource LabelRegularPageTitlesStyle}" Padding="0,0,70,0"/>
+    </NavigationPage.TitleView>
     <ContentPage.Content>
-        <StackLayout>
-            <Label x:Name="labelDeviceChange" FontSize="20" FontAttributes="Bold"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <AbsoluteLayout VerticalOptions="FillAndExpand" x:Name="absLayoutTimeSheetpage">
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,0.25"  AbsoluteLayout.LayoutFlags="All" BackgroundColor="Red">
+               
+            </StackLayout>
+            <StackLayout AbsoluteLayout.LayoutBounds="0,0.83,1,0.70"  AbsoluteLayout.LayoutFlags="All" BackgroundColor="Blue">
+                
+            </StackLayout>
+            <StackLayout AbsoluteLayout.LayoutBounds="0,1,1,0.05"  AbsoluteLayout.LayoutFlags="All" BackgroundColor="Yellow">
+                
+            </StackLayout>
+            <ContentView x:Name="StklauoutactivityIndicator" BackgroundColor="Transparent"  IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                <StackLayout Orientation="Vertical" HeightRequest="150" WidthRequest="100" BackgroundColor="Transparent" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="0">
+                    <ActivityIndicator  x:Name="activity" IsEnabled="True" IsVisible="False" IsRunning="False"   HeightRequest="80" Color="#010101"  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></ActivityIndicator>
+                    <Label x:Name="LabelLodaingMsg" Text="Loading..."  Style="{StaticResource LabelProximaBoldStyle}" FontSize="18" TextColor="#010101"   VerticalOptions="StartAndExpand" HorizontalOptions="CenterAndExpand"></Label>
+                </StackLayout>
+
+            </ContentView>
+        </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>

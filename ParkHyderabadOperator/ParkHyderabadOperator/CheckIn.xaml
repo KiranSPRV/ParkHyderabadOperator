@@ -1,48 +1,199 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ParkHyderabadOperator.CheckIn"
-               xmlns:local="clr-namespace:ParkHyderabadOperator.Behaviors"
+               xmlns:localCustomXamarinElementsModel="clr-namespace:ParkHyderabadOperator.CustomXamarinElementsModel"
+              xmlns:local="clr-namespace:ParkHyderabadOperator.Behaviors"
              NavigationPage.HasBackButton="False">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="evenTemplate">
+                <ViewCell>
+                    <Grid  BackgroundColor="#F5F5F5">
+                        <StackLayout Margin="15,5,15,10" Orientation="Horizontal"   BackgroundColor="#F5F5F5">
+                            <StackLayout  HorizontalOptions="FillAndExpand" Spacing="10" Margin="0,5,0,5">
+                                <StackLayout   Spacing="5">
+                                    <Label x:Name="labelParkingLocationDetails"  Style="{StaticResource LabelProximaRegBlackStyle}"  FontSize="16"  >
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span   Text="{Binding LocationParkingLotID.LocationID.LocationName}"/>
+                                                <Span   Text="-"/>
+                                                <Span  Text="{Binding LocationParkingLotID.LocationParkingLotName}"/>
+                                                <Span  Text=" ("/>
+                                                <Span Text="{Binding LocationParkingLotID.ParkingBayID.ParkingBayRange}"/>
+                                                <Span  Text=")"/>
+                                                <Span  Text=" ("/>
+                                                <Span Text="{Binding CreatedByName }"/>
+                                                <Span  Text="-"/>
+                                                <Span  Text="{Binding  CreatedBy }"/>
+                                                <Span  Text=")"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label x:Name="labelParkingTimeDetails" Style="{StaticResource LabelBoldPlaceHolderStyle}"   >
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span   Text="{Binding ExpectedStartTime, StringFormat=' {0:dd-MMM-yyyy hh:mm tt}'}"/>
+                                                    <Span   Text=" to "/>
+                                                    <Span   Text="{Binding ActualEndTime , StringFormat=' {0:dd-MMM-yyyy hh:mm tt}'}"/>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </StackLayout>
+                                    <StackLayout Margin="0,5,0,0">
+                                        <Label x:Name="labelPaymentDetails"  Style="{StaticResource LabelProximaRegBlackStyle}"   VerticalOptions="Center" TextColor="#ff0000">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span  Text="Due Amt: " />
+                                                    <Span  Text="₹"/>
+                                                    <Span  Text="{Binding DueAmount , StringFormat=' {0:F2}'}"/>
+                                                    <Span  Text=",Duration "/>
+                                                    <Span  Text="{Binding Duration}"/>
+                                                    <Span  Text="hr"/>
+
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label    Style="{StaticResource LabelProximaRegBlackStyle}"    VerticalOptions="Center" HorizontalOptions="StartAndExpand" >
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span  Text="FOC Reason: "/>
+                                                        <Span  Text="{Binding  FOCReasonID.Reason}" />
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                        </StackLayout>
+                                    </StackLayout>
+                                </StackLayout>
+                            </StackLayout>
+
+                        </StackLayout>
+                    </Grid>
+                </ViewCell>
+            </DataTemplate>
+            <DataTemplate x:Key="unevenTemplate" >
+                <ViewCell >
+                    <Grid  BackgroundColor="#FFFFFF">
+                        <StackLayout Margin="15,5,15,10" Orientation="Horizontal"   BackgroundColor="#FFFFFF">
+                            <StackLayout  HorizontalOptions="FillAndExpand" Spacing="10" Margin="0,5,0,5">
+                                <StackLayout   Spacing="5">
+                                    <Label x:Name="labelParkingLocationDetails"  Style="{StaticResource LabelProximaRegBlackStyle}"  FontSize="16"  >
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span   Text="{Binding LocationParkingLotID.LocationID.LocationName}"/>
+                                                <Span   Text="-"/>
+                                                <Span  Text="{Binding LocationParkingLotID.LocationParkingLotName}"/>
+                                                <Span  Text=" ("/>
+                                                <Span Text="{Binding LocationParkingLotID.ParkingBayID.ParkingBayRange}"/>
+                                                <Span  Text=")"/>
+                                                <Span  Text=" ("/>
+                                                <Span Text="{Binding CreatedByName }"/>
+                                                <Span  Text="-"/>
+                                                <Span  Text="{Binding  CreatedBy }"/>
+                                                <Span  Text=")"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label x:Name="labelParkingTimeDetails" Style="{StaticResource LabelBoldPlaceHolderStyle}"   >
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span   Text="{Binding ExpectedStartTime, StringFormat=' {0:dd-MMM-yyyy hh:mm tt}'}"/>
+                                                    <Span   Text=" to "/>
+                                                    <Span   Text="{Binding ActualEndTime , StringFormat=' {0:dd-MMM-yyyy hh:mm tt}'}"/>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </StackLayout>
+                                    <StackLayout Margin="0,5,0,0">
+                                        <Label   Style="{StaticResource LabelProximaRegBlackStyle}"   VerticalOptions="Center" TextColor="#ff0000">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span  Text="Due Amt: " />
+                                                    <Span  Text="₹"/>
+                                                    <Span  Text="{Binding DueAmount , StringFormat=' {0:F2}'}"/>
+                                                    <Span  Text=",Duration "/>
+                                                    <Span  Text="{Binding Duration}"/>
+                                                    <Span  Text="hr"/>
+
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label    Style="{StaticResource LabelProximaRegBlackStyle}"    VerticalOptions="Center" HorizontalOptions="StartAndExpand" >
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span  Text="FOC Reason: " />
+                                                        <Span  Text="{Binding  FOCReasonID.Reason}"  />
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                        </StackLayout>
+                                    </StackLayout>
+                                </StackLayout>
+                            </StackLayout>
+                        </StackLayout>
+                    </Grid>
+                </ViewCell>
+            </DataTemplate>
+            <localCustomXamarinElementsModel:AlternateColorDataTemplateSelector x:Key="alternateColorDataTemplateSelector"
+                EvenTemplate="{StaticResource evenTemplate}"
+                UnevenTemplate="{StaticResource unevenTemplate}" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <NavigationPage.TitleView >
+            <StackLayout Orientation="Horizontal"  VerticalOptions="CenterAndExpand">
+            <StackLayout Spacing="2" Margin="35,0,0,0" HorizontalOptions="EndAndExpand">
+                <Label x:Name="lblPageHeading"    Text="CHECK IN"  Style="{StaticResource LabelRegularPageTitlesStyle}" VerticalOptions="CenterAndExpand"  HorizontalOptions="EndAndExpand"  ></Label>
+                <Label x:Name="lblcheckInLocation"  Style="{StaticResource LabelRegularEndNormalFontBoldStyle}" VerticalOptions="EndAndExpand"  HorizontalOptions="CenterAndExpand"  FontSize="11"></Label>
+            </StackLayout>
+                <StackLayout Orientation="Horizontal" Spacing="5"    HorizontalOptions="EndAndExpand">
+                    <Frame CornerRadius="8" x:Name="frmOnlineSynch" BorderColor="#DFDFDFDF" Padding="6" HasShadow ="False"  BackgroundColor="#FFFFF" HorizontalOptions="StartAndExpand"  VerticalOptions="StartAndExpand" >
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer x:Name="frmOnlineSynchGesutre" Tapped="frmOnlineSynchGesutre_Tapped"  NumberOfTapsRequired="1" />
+                        </Frame.GestureRecognizers>
+                        <ImageButton x:Name="imgOnlineSync" HeightRequest="22"  Source="sync.png" BackgroundColor="Transparent" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"  Clicked="frmOnlineSynchGesutre_Tapped"  ></ImageButton>
+                    </Frame>
+                    <Label x:Name="lblOfflineRecCount"  Style="{StaticResource LabelProximaRegBoldRedStyle}" VerticalOptions="CenterAndExpand" HorizontalOptions="EndAndExpand"></Label>
+                </StackLayout>
+                <Frame CornerRadius="8" x:Name="frmHome" BorderColor="#DFDFDFDF" Padding="6" HasShadow ="False"  BackgroundColor="#FFFFF" HorizontalOptions="EndAndExpand"  VerticalOptions="StartAndExpand" Margin="0,0,8,0" >
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer x:Name="frmHomeGesture" Tapped="frmHomeGesture_Tapped"  NumberOfTapsRequired="1" />
+                    </Frame.GestureRecognizers>
+                    <ImageButton x:Name="imgHome"   Source="home.png" BackgroundColor="Transparent" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"  Clicked="imgHome_Clicked"  ></ImageButton>
+                </Frame>
+            </StackLayout>
+    </NavigationPage.TitleView>
     <ContentPage.Content>
         <AbsoluteLayout VerticalOptions="FillAndExpand"  x:Name="absLayoutCheckInpage">
+            <StackLayout   AbsoluteLayout.LayoutBounds="0,0,1,0.15"  AbsoluteLayout.LayoutFlags="All" Orientation="Vertical" BackgroundColor="#F4F4F4" >
+                <CollectionView x:Name="collstviewVehicleTye"    SelectionMode="Single"   Margin="5"
+                                SelectionChanged="collstviewVehicleTye_SelectionChanged"   HeightRequest="300"
+                                    VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"
+                                    FlowDirection="RightToLeft"
+                                    BackgroundColor="#F4F4F4" 
+                                    EmptyView="No items to display">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout  Orientation="Horizontal" HorizontalItemSpacing="15"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame BackgroundColor="#FFFFFF"  CornerRadius="5" Padding="0"  VerticalOptions="Center" HorizontalOptions="Fill" >
+                                <StackLayout VerticalOptions="CenterAndExpand"     x:Name="slTwoWheelerImage" Margin="5" Spacing="0">
+                                    <Image HeightRequest="40"   HorizontalOptions="FillAndExpand"      BackgroundColor="Transparent"  
+                                                        Source="{Binding VehicleDisplayImage}" />
+                                    <Label Text="{Binding VehicleTypeName}" HorizontalOptions="CenterAndExpand" Style="{StaticResource LabelPlaceHolderStyle}"/>
+                                </StackLayout>
+                            </Frame>
 
-            <StackLayout Orientation="Horizontal"  Spacing="0" VerticalOptions="FillAndExpand"  x:Name="stackLayOutHeadder"   AbsoluteLayout.LayoutBounds="0,0,1,0.08"     AbsoluteLayout.LayoutFlags="All">
-                <StackLayout.GestureRecognizers >
-                    <TapGestureRecognizer x:Name="slBackbuttonClick" Tapped="SlBackbuttonClick_Tapped"  NumberOfTapsRequired="1"/>
-                </StackLayout.GestureRecognizers>
-                <ImageButton x:Name="BtnBack" Margin="15,0,0,0" Source="Navigatinbar_back.png" HeightRequest="16"  HorizontalOptions="Start" VerticalOptions="CenterAndExpand"  BackgroundColor="Transparent" Clicked="BtnBack_Clicked" ></ImageButton>
-                <Label x:Name="lblPageHeading"    Text="CHECK IN"  Style="{StaticResource LabelRegularPageTitlesStyle}" VerticalOptions="CenterAndExpand"  HorizontalOptions="CenterAndExpand" Padding="0,0,30,0"></Label>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
             </StackLayout>
-            <StackLayout   AbsoluteLayout.LayoutBounds="0,0.1,1,0.15"  AbsoluteLayout.LayoutFlags="All" Orientation="Vertical" >
-                <StackLayout Orientation="Horizontal"  Spacing="10" VerticalOptions="FillAndExpand" HorizontalOptions="CenterAndExpand">
-                    <StackLayout Orientation="Vertical" Padding="8" Spacing="6" HorizontalOptions="CenterAndExpand"  x:Name="slTwoWheelerImage">
-                        <StackLayout.GestureRecognizers >
-                            <TapGestureRecognizer x:Name="slTwoWheeler" Tapped="SlTwoWheeler_Tapped"/>
-                        </StackLayout.GestureRecognizers>
-                        <Image x:Name="imgBtnTwoWheeler"  HeightRequest="50"   BackgroundColor="Transparent"  Source="Twowheeler_circle.png" >
-                            <Image.GestureRecognizers>
-                                <TapGestureRecognizer   Tapped="SlTwoWheeler_Tapped"  />
-                            </Image.GestureRecognizers>
-                        </Image>
-                        <Label Text="Two Wheeler" HorizontalOptions="CenterAndExpand" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
-                    </StackLayout>
-                    <StackLayout Orientation="Vertical" Padding="8" Spacing="6" x:Name="slFourWheelerImage">
-                        <StackLayout.GestureRecognizers>
-                            <TapGestureRecognizer x:Name="slFourWheeler" Tapped="SlFourWheeler_Tapped"/>
-                        </StackLayout.GestureRecognizers>
-                        <Image x:Name="imgBtnFourWheeler" BackgroundColor="Transparent" HeightRequest="50"    Source="Fourwheeler_circle.png" >
-                            <Image.GestureRecognizers>
-                                <TapGestureRecognizer   Tapped="SlFourWheeler_Tapped"  />
-                            </Image.GestureRecognizers>
-                        </Image>
-                        <Label Text="Four Wheeler" HorizontalOptions="Center" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
-                    </StackLayout>
-                </StackLayout>
-            </StackLayout>
-            <StackLayout    AbsoluteLayout.LayoutBounds="0,0.78,1,0.7"  AbsoluteLayout.LayoutFlags="All" Orientation="Vertical" >
-                <StackLayout Margin="15,8,15,0"  Orientation="Vertical" >
+            <StackLayout    AbsoluteLayout.LayoutBounds="0,0.60,1,0.72"  AbsoluteLayout.LayoutFlags="All" Orientation="Vertical" >
+                <StackLayout Margin="15,0,15,0"  Orientation="Vertical" >
                     <StackLayout Spacing="10">
                         <StackLayout Orientation="Vertical"  Spacing="0">
                             <Label Text="Registration Number" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
@@ -57,7 +208,7 @@
                             <Picker x:Name="pickerBayNumers" ItemDisplayBinding="{Binding ParkingBayRange}"  Title="-Select-"   HorizontalOptions="FillAndExpand"  Style="{StaticResource PickerProximaRegStyle }"  SelectedIndexChanged="PickerBayNumers_SelectedIndexChanged"></Picker>
                         </StackLayout>
                         <StackLayout Orientation="Vertical"  Spacing="0">
-                            <Label Text="Phone Number (Optional)" x:Name="lblPhoneNumber"  Style="{StaticResource LabelPlaceHolderStyle}"></Label>
+                            <Label Text="Phone Number" x:Name="lblPhoneNumber"  Style="{StaticResource LabelPlaceHolderStyle}"></Label>
                             <Entry x:Name="entryPhoneNumber" Style="{StaticResource EntryProximaBlackStyle}" Keyboard="Numeric">
                                 <Entry.Behaviors>
                                     <local:NumberValidationBehavior MaxLength="10" MinLength="10"/>
@@ -78,38 +229,74 @@
                         <ImageButton x:Name="btnCamera" Source="Camera.png"  BackgroundColor="Transparent" Aspect="AspectFit" VerticalOptions="Center" Clicked="BtnCamera_Clicked" HeightRequest="50"></ImageButton>
                     </Frame>
                 </StackLayout>
-                <StackLayout x:Name="slParkinghours" Spacing="10">
-                    <Grid Margin="15,0,15,0" >
+                <StackLayout x:Name="slParkinghours" Spacing="10" >
+                    <Grid Margin="15,0,15,0" ColumnSpacing="5">
                         <Grid.RowDefinitions>
                             <RowDefinition></RowDefinition>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="3*"></ColumnDefinition>
-                            <ColumnDefinition Width="3*"></ColumnDefinition>
-                            <ColumnDefinition Width="3*"></ColumnDefinition>
+                            <ColumnDefinition Width="2.5*"></ColumnDefinition>
+                            <ColumnDefinition Width="2.6*"></ColumnDefinition>
+                            <ColumnDefinition Width="2.15*"></ColumnDefinition>
+                            <ColumnDefinition Width="3.25*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        <AbsoluteLayout  Grid.Column="0" Grid.Row="0" >
-                            <Frame CornerRadius="6" Padding="1" BorderColor="#bcbcbc" AbsoluteLayout.LayoutBounds="0.55,1,0.8,0.7"  AbsoluteLayout.LayoutFlags="All"  BackgroundColor="Transparent">
-                                <Picker x:Name="pickerHours"  VerticalOptions="CenterAndExpand" HorizontalOptions="Center"   Style="{StaticResource PickerLargeFontStyle }" FontFamily="Play-Bold.ttf#Play-Bold" FontSize="20" SelectedIndexChanged="PickerHours_SelectedIndexChanged"></Picker>
-                            </Frame>
-                            <Image HeightRequest="30" Source="clock.png"  AbsoluteLayout.LayoutBounds="0,0,.2,0.4" AbsoluteLayout.LayoutFlags="SizeProportional"></Image>
-                        </AbsoluteLayout>
-                        <StackLayout  Grid.Column="1" Grid.Row="0" Orientation="Horizontal"  >
-                            <Label  Text=":" TextColor="#414141" Style="{StaticResource LabelRegularLargeCenterBoldStyle}"  HorizontalOptions="CenterAndExpand" VerticalOptions="EndAndExpand"></Label>
-                            <AbsoluteLayout VerticalOptions="FillAndExpand"  >
-                                <Frame CornerRadius="6" Padding="1" BorderColor="#bcbcbc" AbsoluteLayout.LayoutBounds="0.2,1,0.9,0.7"  AbsoluteLayout.LayoutFlags="All"  BackgroundColor="Transparent">
-                                    <Picker x:Name="pickerMinutes"    VerticalOptions="CenterAndExpand"  HorizontalOptions="Center" Style="{StaticResource PickerLargeFontStyle }" FontFamily="Play-Bold.ttf#Play-Bold" FontSize="20" ></Picker>
-                                </Frame>
-                                <Image HeightRequest="30"  IsVisible="False" Source="clock.png"  AbsoluteLayout.LayoutBounds="0,0,.2,0.4" AbsoluteLayout.LayoutFlags="SizeProportional"></Image>
-                            </AbsoluteLayout>
-                        </StackLayout>
-                        <AbsoluteLayout VerticalOptions="FillAndExpand"  Grid.Column="2" Grid.Row="0">
-                            <Frame CornerRadius="6" Padding="2" HasShadow="False" BorderColor="#bcbcbc" AbsoluteLayout.LayoutBounds="0,1,1,0.7"  AbsoluteLayout.LayoutFlags="All"  BackgroundColor="#f4f4f4">
-                                <Label x:Name="labelParkingFee" Text="0.00" Style="{StaticResource LabelRegularLargeFontGreenStyle}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"  FontSize="20"></Label>
-                            </Frame>
-                            <Image HeightRequest="30" Source="rupee1.png"  AbsoluteLayout.LayoutBounds="40,0,.2,.4" AbsoluteLayout.LayoutFlags="SizeProportional" ></Image>
 
-                        </AbsoluteLayout>
+
+                        <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"  Grid.Column="0" Grid.Row="0" Spacing="2">
+                            <AbsoluteLayout VerticalOptions="FillAndExpand"  HorizontalOptions="FillAndExpand"  >
+                                <StackLayout AbsoluteLayout.LayoutBounds="0.55,1,0.9,0.8"  AbsoluteLayout.LayoutFlags="All"  BackgroundColor="Transparent">
+                                    <Frame HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"  CornerRadius="6" Padding="1" BorderColor="#bcbcbc"  HasShadow="False">
+                                        <Picker x:Name="pickerHours"   VerticalOptions="CenterAndExpand" HorizontalOptions="Center"   Style="{StaticResource PickerLargeFontStyle }" FontFamily="Play-Bold.ttf#Play-Bold" FontSize="20" SelectedIndexChanged="PickerHours_SelectedIndexChanged"></Picker>
+                                    </Frame>
+                                </StackLayout>
+                                <Image HeightRequest="20" Source="clock.png"  AbsoluteLayout.LayoutBounds="0,0,.3,0.3" AbsoluteLayout.LayoutFlags="SizeProportional"></Image>
+                            </AbsoluteLayout>
+                            <Label  Text="Hours"  Style="{StaticResource LabelRegularStyle}"  HorizontalOptions="CenterAndExpand" VerticalOptions="Center" ></Label>
+                        </StackLayout>
+                        <StackLayout Margin="0,3,0,0" Grid.Column="1" Grid.Row="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Spacing="0">
+                            <AbsoluteLayout VerticalOptions="FillAndExpand"  HorizontalOptions="FillAndExpand" >
+                                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"  AbsoluteLayout.LayoutBounds="0,1,1,0.8"  AbsoluteLayout.LayoutFlags="All" >
+                                    <Frame HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"   CornerRadius="6" Padding="0" HasShadow="False" BorderColor="#efefef"  BackgroundColor="#efefef">
+                                        <Label x:Name="labelParkingFee"  Style="{StaticResource LabelRegularLargeFontGreenStyle}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"  FontSize="20"></Label>
+                                    </Frame>
+                                    <Label  Text="+" FontSize="22" Style="{StaticResource LabelRegularStyle}"  HorizontalOptions="End" VerticalOptions="Center"></Label>
+                                </StackLayout>
+                                <Image HeightRequest="22" Source="rupee1.png"  AbsoluteLayout.LayoutBounds="20,0,.3,.3" AbsoluteLayout.LayoutFlags="SizeProportional" BackgroundColor="Transparent"></Image>
+
+                            </AbsoluteLayout>
+                            <Label  Text="Parking Fee"  Style="{StaticResource LabelRegularStyle}"  HorizontalOptions="CenterAndExpand" VerticalOptions="Center"></Label>
+                        </StackLayout>
+                        <StackLayout Margin="0,3,0,0" Grid.Column="2" Grid.Row="0"   Spacing="0" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" >
+                            <AbsoluteLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"  >
+                                <Frame HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" CornerRadius="6" Padding="1" BorderColor="#efefef"  BackgroundColor="#efefef" HasShadow="False" AbsoluteLayout.LayoutBounds="0,1,1,0.8"  AbsoluteLayout.LayoutFlags="All"  >
+                                    <StackLayout VerticalOptions="FillAndExpand" >
+                                        <Label x:Name="labelDueAmount"  FontSize="20"  Style="{StaticResource LabelExtraLargeBlackColorStyle}"  HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" TextColor="#ff0000"></Label>
+                                    </StackLayout>
+                                </Frame>
+                                <Image HeightRequest="22" Source="rupee1.png"  AbsoluteLayout.LayoutBounds="20,0,.3,.3" AbsoluteLayout.LayoutFlags="SizeProportional" BackgroundColor="Transparent"></Image>
+                            </AbsoluteLayout>
+                            <StackLayout Spacing="5" Orientation="Horizontal" HorizontalOptions="Center"  >
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer x:Name="slDueAmountGesture"  Tapped="slDueAmountGesture_Tapped"   NumberOfTapsRequired="1"></TapGestureRecognizer>
+                                </StackLayout.GestureRecognizers>
+                                <Label  Text="Due"  Style="{StaticResource LabelRegularStyle}"  HorizontalOptions="Start" VerticalOptions="Center"></Label>
+                                <ImageButton Source="info.png" BackgroundColor="Transparent" HeightRequest="13" x:Name="imgDueInfo" Clicked="imgDueInfo_Clicked" ></ImageButton>
+                            </StackLayout>
+                        </StackLayout>
+                        <StackLayout  Margin="0,3,0,0"  Grid.Column="3" Grid.Row="0" Orientation="Horizontal"  VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Spacing="5">
+                            <Label  Text="=" TextColor="#414141" Style="{StaticResource LabelRegularLargeCenterBoldStyle}"  HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"  ></Label>
+                            <StackLayout   Spacing="0">
+                                <AbsoluteLayout  >
+                                    <Frame  CornerRadius="6" Padding="0"  AbsoluteLayout.LayoutBounds="0,1,1,0.8"  AbsoluteLayout.LayoutFlags="All" HasShadow="False" BorderColor="#efefef"  BackgroundColor="#f4f4f4">
+                                        <StackLayout VerticalOptions="CenterAndExpand">
+                                            <Label  FontSize="20" x:Name="labelTotalFee" Style="{StaticResource LabelRegularGreenStyle}"  HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" ></Label>
+                                        </StackLayout>
+                                    </Frame>
+                                    <Image HeightRequest="22" Source="rupee1.png"  AbsoluteLayout.LayoutBounds="25,0,.3,.3" AbsoluteLayout.LayoutFlags="SizeProportional" BackgroundColor="Transparent"></Image>
+                                </AbsoluteLayout>
+                                <Label  Text="Total"  Style="{StaticResource LabelRegularStyle}"  HorizontalOptions="CenterAndExpand" VerticalOptions="Center"></Label>
+                            </StackLayout>
+                        </StackLayout>
                     </Grid>
                     <Frame CornerRadius="5"  Padding="12"    BorderColor="#efefef" BackgroundColor="#f4f4f4"  VerticalOptions="EndAndExpand">
                         <StackLayout Orientation="Horizontal" Spacing="2" HorizontalOptions="CenterAndExpand"  VerticalOptions="Center">
@@ -119,24 +306,24 @@
                     </Frame>
                 </StackLayout>
             </StackLayout>
-            <Frame CornerRadius="0" Padding="5"    BorderColor="#FFFFFF"   AbsoluteLayout.LayoutBounds="0,1,1,0.1"  AbsoluteLayout.LayoutFlags="All"  BackgroundColor="#FFFFFF">
-                <StackLayout VerticalOptions="CenterAndExpand" Spacing="5">
+            <Frame CornerRadius="0" Padding="5"    BorderColor="#FFFFFF"   AbsoluteLayout.LayoutBounds="0,1,1,0.13"  AbsoluteLayout.LayoutFlags="All"  BackgroundColor="#FFFFFF">
+                <StackLayout VerticalOptions="CenterAndExpand" Spacing="5" Margin="5,0,5,0">
                     <StackLayout Orientation="Horizontal"   x:Name="stlayoutCheckInPayment">
-                        <StackLayout   HorizontalOptions="FillAndExpand" BackgroundColor="#2ECC71" Padding="10" >
+                        <StackLayout   HorizontalOptions="FillAndExpand" BackgroundColor="#2ECC71"  Padding="8" HeightRequest="35">
                             <StackLayout.GestureRecognizers >
-                                <TapGestureRecognizer x:Name="slCashPayment" Tapped="SlCashPayment_Tapped"/>
+                                <TapGestureRecognizer x:Name="slCashPayment" Tapped="SlCashPayment_Tapped" NumberOfTapsRequired="1"/>
                             </StackLayout.GestureRecognizers>
                             <StackLayout Orientation="Horizontal" Spacing="5" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-                                <ImageButton Source="rupee_icon_white.png" HeightRequest="30"  BackgroundColor="Transparent"  HorizontalOptions="Center" />
+                                <ImageButton Source="rupee_icon_white.png" HeightRequest="20"  BackgroundColor="Transparent"  HorizontalOptions="Center" />
                                 <Label  Text="CASH" Style="{StaticResource LabelRegularWhiteStyle}" VerticalOptions="Center"  HorizontalOptions="Center" />
                             </StackLayout>
                         </StackLayout>
-                        <StackLayout  HorizontalOptions="FillAndExpand"  BackgroundColor="#3293fa" Padding="10">
+                        <StackLayout  HorizontalOptions="FillAndExpand"  BackgroundColor="#3293fa" Padding="8" HeightRequest="35">
                             <StackLayout.GestureRecognizers>
-                                <TapGestureRecognizer x:Name="slEpayment" Tapped="SlEpayment_Tapped"/>
+                                <TapGestureRecognizer x:Name="slEpayment" Tapped="SlEpayment_Tapped" NumberOfTapsRequired="1"/>
                             </StackLayout.GestureRecognizers>
                             <StackLayout Orientation="Horizontal" Spacing="5" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-                                <ImageButton Source="QR_White_BackGround.png" HeightRequest="30"  BackgroundColor="Transparent"  HorizontalOptions="Center" />
+                                <ImageButton Source="QR_White_BackGround.png" HeightRequest="20"  BackgroundColor="Transparent"  HorizontalOptions="Center" />
                                 <Label  Text="EPAY" Style="{StaticResource LabelRegularWhiteStyle}" VerticalOptions="Center"  HorizontalOptions="Center" />
                             </StackLayout>
                         </StackLayout>
@@ -150,6 +337,30 @@
                 <StackLayout Orientation="Vertical" HeightRequest="150" WidthRequest="100" BackgroundColor="Transparent" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="0">
                     <ActivityIndicator  x:Name="activity" IsEnabled="True" IsVisible="True" IsRunning="True"   HeightRequest="80" Color="#010101"  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></ActivityIndicator>
                     <Label x:Name="LabelLodaingMsg" Text="Loading..."  Style="{StaticResource LabelProximaBoldStyle}" FontSize="18" TextColor="#010101"   VerticalOptions="StartAndExpand" HorizontalOptions="CenterAndExpand"></Label>
+                </StackLayout>
+            </ContentView>
+            <ContentView x:Name="popupDueAmount" BackgroundColor="#C0808080" Padding="10, 0" IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                    <Frame HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" CornerRadius="6" Padding="1" BorderColor="#efefef"  BackgroundColor="#FFFFFF" HasShadow="False" >
+                        <StackLayout Orientation="Vertical" HeightRequest="400" WidthRequest="300" BackgroundColor="White">
+                            <Frame HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" CornerRadius="1" Padding="1" BorderColor="#efefef"  BackgroundColor="#FFFFFF" HasShadow="False" >
+                                <StackLayout Orientation="Horizontal" Margin="5,15,5,15" VerticalOptions="CenterAndExpand">
+                                    <StackLayout Orientation="Horizontal" Spacing="5" HorizontalOptions="StartAndExpand" Margin="10,0,0,0">
+                                        <Image x:Name="imagePopVehicleImage"    HeightRequest="22" ></Image>
+                                        <Label  x:Name="labelPopVehicleDetails" Style="{StaticResource LabelProximaBoldStyle}" VerticalOptions="End"></Label>
+                                    </StackLayout>
+                                    <Label x:Name="lblPopClose" Text="DONE" Style="{StaticResource LabelProximaRegBoldDodgerBlueStyle}" FontSize="18" HorizontalOptions="EndAndExpand" VerticalOptions="Center" Margin="0,0,5,0">
+                                        <Label.GestureRecognizers >
+                                            <TapGestureRecognizer x:Name="lblPopCloseGesture" Tapped="lblPopCloseGesture_Tapped"/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                </StackLayout>
+                            </Frame>
+                            <ListView x:Name="lvVehicleDueAmount" HasUnevenRows="True"  ItemTemplate="{StaticResource alternateColorDataTemplateSelector}" >
+                            </ListView>
+
+                        </StackLayout>
+                    </Frame>
                 </StackLayout>
             </ContentView>
         </AbsoluteLayout>

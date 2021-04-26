@@ -3,6 +3,7 @@ using ParkHyderabadOperator.DAL.DALViolation;
 using ParkHyderabadOperator.Model;
 using ParkHyderabadOperator.Model.APIOutPutModel;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -42,14 +43,7 @@ namespace ParkHyderabadOperator
             try
             {
                 objFOCVehicle = objfocvehicle;
-                if (objfocvehicle.VehicleTypeID.VehicleTypeCode == "2W")
-                {
-                    ImgVehicleType.Source = "bike_black.png";
-                }
-                else if (objfocvehicle.VehicleTypeID.VehicleTypeCode == "4W")
-                {
-                    ImgVehicleType.Source = "car_black.png";
-                }
+                ImgVehicleType.Source = objfocvehicle.CustomerVehicleID.VehicleTypeID.VehicleIcon;
                 labelVehicleRegNumber.Text = objfocvehicle.CustomerVehicleID.RegistrationNumber;
                 labelParkingLocation.Text = objfocvehicle.LocationParkingLotID.LocationID.LocationName + "-" + objfocvehicle.LocationParkingLotID.LocationParkingLotName + "," + objfocvehicle.LocationParkingLotID.ParkingBayID.ParkingBayName + " " + objfocvehicle.LocationParkingLotID.ParkingBayID.ParkingBayRange;
 
@@ -94,7 +88,7 @@ namespace ParkHyderabadOperator
         private async void BtnCheckOut_Clicked(object sender, EventArgs e)
         {
             string resultmsg = string.Empty;
-            MasterHomePage masterPage = null;
+            MasterDetailHomePage masterPage = null;
             btnCheckOut.IsVisible = false;
             try
             {
@@ -116,7 +110,7 @@ namespace ParkHyderabadOperator
                                 resultmsg = dal_CheckOut.FOCVehicleCheckOut(Convert.ToString(App.Current.Properties["apitoken"]), objFOCVehicle);
                                 if (resultmsg != null && resultmsg == "Success")
                                 {
-                                    masterPage = new MasterHomePage();
+                                    masterPage = new MasterDetailHomePage();
                                 }
                             });
                             if (resultmsg != null && resultmsg == "Success")
@@ -127,8 +121,6 @@ namespace ParkHyderabadOperator
                             {
                                 await DisplayAlert("Alert", "FOC Failed,Please contact Admin.", "Ok");
                             }
-
-
                         }
                         else
                         {
@@ -167,6 +159,11 @@ namespace ParkHyderabadOperator
                 absLayoutFOCpage.Opacity = 1;
             }
 
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            return true;
         }
     }
 }

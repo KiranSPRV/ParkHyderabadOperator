@@ -6,7 +6,8 @@ using System;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-
+using System.IO;
+using System.Threading.Tasks;
 
 namespace ParkHyderabadOperator
 {
@@ -43,19 +44,11 @@ namespace ParkHyderabadOperator
             {
                 stLayoutDailyPassGeneratePassReceipt.IsVisible = false;
                 objCustomerDayPass = objCustomerPass;
-
-                if (objCustomerDayPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "2W")
-                {
-                    ImgVehicleType.Source = ImageSource.FromFile("bike_black.png");
-                }
-                else if (objCustomerDayPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode == "4W")
-                {
-                    ImgVehicleType.Source = ImageSource.FromFile("car_black.png");
-                }
-                labelPassType.Text = "( "+objCustomerDayPass.PassPriceID.PassTypeID.PassTypeName+" )";
+                ImgVehicleType.Source = objCustomerDayPass.CustomerVehicleID.VehicleTypeID.VehicleIcon;
+                labelPassType.Text = "( " + objCustomerDayPass.PassPriceID.PassTypeID.PassTypeName + " )";
                 labelVehicleRegNumber.Text = objCustomerDayPass.CustomerVehicleID.RegistrationNumber;
                 labelParkingLocation.Text = objCustomerDayPass.LocationID.LocationName + "-" + objCustomerDayPass.PassPriceID.StationAccess;
-                labelPassAmount.Text = objCustomerDayPass.Amount.ToString("N2") + "/-";
+                labelPassAmount.Text = (objCustomerDayPass.Amount + objCustomerDayPass.DueAmount).ToString("N2") + "/-";
             }
             catch (Exception ex)
             {
@@ -68,8 +61,12 @@ namespace ParkHyderabadOperator
             {
                 if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                 {
-
-                    CustomerVehiclePass resultPass = dal_CustomerPass.CreateCustomerPass(Convert.ToString(App.Current.Properties["apitoken"]), objCustomerDayPass);
+                    ShowLoading(true);
+                    CustomerVehiclePass resultPass = null;
+                    await Task.Run(() =>
+                    {
+                        resultPass = dal_CustomerPass.CreateCustomerPass(Convert.ToString(App.Current.Properties["apitoken"]), objCustomerDayPass);
+                    });
                     if (resultPass != null && resultPass.CustomerVehiclePassID != 0)
                     {
                         await DisplayAlert("Alert", "Vehicle Pass created successfully", "Ok");
@@ -79,7 +76,7 @@ namespace ParkHyderabadOperator
                     {
                         await DisplayAlert("Alert", "Fail to crated pass ,Please contact Admin", "Ok");
                     }
-
+                    ShowLoading(false);
                 }
             }
             catch (Exception ex)
@@ -109,6 +106,22 @@ namespace ParkHyderabadOperator
             {
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "DayPassPaymentConfirmationPage.xaml.cs", "", "BtnNo_Clicked");
             }
+        }
+
+        public void ShowLoading(bool show)
+        {
+            StklauoutactivityIndicator.IsVisible = show;
+            activity.IsVisible = show;
+            activity.IsRunning = show;
+            if (show)
+            {
+                absPassPaymentConfirmationpage.Opacity = 0.5;
+            }
+            else
+            {
+                absPassPaymentConfirmationpage.Opacity = 1;
+            }
+
         }
     }
 }

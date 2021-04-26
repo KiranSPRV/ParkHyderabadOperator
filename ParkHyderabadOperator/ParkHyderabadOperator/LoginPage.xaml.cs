@@ -1,5 +1,6 @@
 ﻿
 using Newtonsoft.Json;
+using ParkHyderabadOperator.DAL.DALCheckIn;
 using ParkHyderabadOperator.DAL.DALExceptionLog;
 using ParkHyderabadOperator.DAL.DALLogin;
 using ParkHyderabadOperator.Model;
@@ -11,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -32,7 +34,8 @@ namespace ParkHyderabadOperator
         {
             InitializeComponent();
             dal_Exceptionlog = new DALExceptionManagment();
-            App.Current.Properties["BaseURL"] = "http://35.202.198.25:81/InstaParkingOperatorAPI/"; //"http://optapi.instaparking.in/";  //"http://35.202.198.25:81/InstaParkingOperatorAPIPROD/"; 
+            App.Current.Properties["BaseURL"] = "http://35.202.198.25:81/InstaParkingOperatorAPIProd/";
+
         }
         protected async override void OnAppearing()
         {
@@ -114,8 +117,6 @@ namespace ParkHyderabadOperator
                         string exmsg = ex.Message;
                     }
                 }
-
-
             }
             catch (Exception ex)
             {
@@ -181,8 +182,6 @@ namespace ParkHyderabadOperator
         {
             UserLoginVerification();
         }
-
-        [Obsolete]
         public async void UserLoginVerification()
         {
             User resultObj = null;
@@ -191,6 +190,7 @@ namespace ParkHyderabadOperator
             IsOnline = VerifyInternet();
             try
             {
+
                 await Task.Run(() =>
                 {
                     appversionmsg = AppVersionServices.GetAndroidStoreAppVersion();
@@ -203,6 +203,8 @@ namespace ParkHyderabadOperator
                         {
                             await GetAPIToken();
                             await GetCurrentLocation();
+
+
                             if (App.Current.Properties.ContainsKey("apitoken"))
                             {
                                 DALUserLogin objdalLogin = new DALUserLogin();
@@ -222,10 +224,12 @@ namespace ParkHyderabadOperator
                                         App.Current.Properties["LoginUser"] = resultObj;
                                         resultObj.LoginDeviceID = LoginDeviceID;
                                         MasterHomePage masterPage = null;
+                                        DateTime toDay = DateTime.Parse(resultObj.LocationParkingLotID.LotCloseTime);
+                                        // Load VehicleTypes in SQLLite
+                                        await App.SQLiteDb.SaveAllVehicleTypesInSQLLite(Convert.ToString(App.Current.Properties["apitoken"]), resultObj.LocationParkingLotID.LocationID.LocationID);
+                                        await App.SQLiteDb.SaveVehiclesParkingFeesDetailOnLogin(Convert.ToString(App.Current.Properties["apitoken"]), resultObj.LocationParkingLotID.LocationParkingLotID);
+
                                         await DisplayAlert("Alert", "Your Location and Lot details are:" + resultObj.LocationParkingLotID.LocationID.LocationName + "-" + resultObj.LocationParkingLotID.LocationParkingLotName, "Ok");
-                                        DateTime toDay = DateTime.Now;
-                                        TimeSpan lotClosingTime = new TimeSpan(22, 30, 0);
-                                        toDay = toDay.Date + lotClosingTime;
                                         if ((resultObj.UserTypeID.UserTypeName.ToUpper()) == ("Operator".ToUpper()))
                                         {
                                             if (DateTime.Now < toDay)
@@ -282,7 +286,7 @@ namespace ParkHyderabadOperator
                             }
                             else
                             {
-                                DisplayAlert("Alert", "Unable to connect API.Please contact Admin", "Ok");
+                                await DisplayAlert("Alert", "Unable to connect API.Please contact Admin", "Ok");
                                 ShowLoading(false);
                             }
 
@@ -299,6 +303,7 @@ namespace ParkHyderabadOperator
                         await DisplayAlert("Alert", "Please enter Valid UserID and Password.", "Ok");
                         ShowLoading(false);
                     }
+                    ShowLoading(false);
                 }
                 else
                 {

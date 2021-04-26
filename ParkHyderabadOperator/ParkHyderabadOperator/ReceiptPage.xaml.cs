@@ -24,7 +24,7 @@ namespace ParkHyderabadOperator
             dal_Exceptionlog = new DALExceptionManagment();
             InitializeComponent();
             ObjblueToothDevicePrinting = new BlueToothDevicePrinting();
-            LoadReceiptDetails(objReceipt);
+            //LoadReceiptDetails(objReceipt);
         }
         public void LoadReceiptDetails(CustomerParkingSlot objCheckInReceipt)
         {

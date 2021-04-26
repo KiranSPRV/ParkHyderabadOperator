@@ -19,19 +19,19 @@ namespace ParkHyderabadOperator
         protected override void OnAppearing()
         {
             Accelerometer.ShakeDetected += Accelerometer_OnShaked;
-            Accelerometer.Start(SensorSpeed.Fastest);
+           // Accelerometer.Start(SensorSpeed.Fastest);
             base.OnAppearing();
         }
 
         void Accelerometer_OnShaked(object sender, EventArgs e)
         {
-            labelDeviceChange.Text = $"Shake detected: {DateTime.Now.ToLongTimeString()}";
+            //labelDeviceChange.Text = $"Shake detected: {DateTime.Now.ToLongTimeString()}";
         }
 
         protected override void OnDisappearing()
         {
-            Accelerometer.Stop();
-            Accelerometer.ShakeDetected -= Accelerometer_OnShaked;
+            //Accelerometer.Stop();
+            //Accelerometer.ShakeDetected -= Accelerometer_OnShaked;
             base.OnDisappearing();
         }
     }

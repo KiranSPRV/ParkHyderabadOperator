@@ -6,9 +6,11 @@ using ParkHyderabadOperator.ViewModel.VMHome;
 using ParkHyderabadOperator.ViewModel.VMPass;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ParkHyderabadOperator.DAL.DALHome
 {
@@ -53,15 +55,16 @@ namespace ParkHyderabadOperator.DAL.DALHome
                                         objlot.LocationParkingLotID = lstParkingLots[i].LocationParkingLotID;
                                         objlot.LotName = lstParkingLots[i].LocationParkingLotName;
                                         objlot.LocationParkingLotName = lstParkingLots[i].LocationID.LocationName + "-" + lstParkingLots[i].LocationParkingLotName;
-                                        objlot.LocationID =lstParkingLots[i].LocationID.LocationID;
+                                        objlot.LocationID = lstParkingLots[i].LocationID.LocationID;
                                         objlot.LocationName = lstParkingLots[i].LocationID.LocationName;
-                                        objlot.IsActive= lstParkingLots[i].IsActive;
+                                        objlot.IsActive = lstParkingLots[i].IsActive;
                                         objlot.LotOpenTime = lstParkingLots[i].LotOpenTime;
                                         objlot.LotCloseTime = lstParkingLots[i].LotCloseTime;
+                                        objlot.LotVehicleAvailabilityName = lstParkingLots[i].LotVehicleAvailabilityName;
                                         lstVMLocationLots.Add(objlot);
                                     }
 
-                                    
+
                                 }
 
                             }
@@ -74,7 +77,30 @@ namespace ParkHyderabadOperator.DAL.DALHome
             }
             return lstVMLocationLots;
         }
+        public List<VMLocationLots> GetUserAllocatedLocationAndLotsOffline(User objUser)
+        {
+            List<LocationParkingLot> lstParkingLots = new List<LocationParkingLot>();
+            List<VMLocationLots> lstVMLocationLots = new List<VMLocationLots>();
+            try
+            {
 
+                VMLocationLots objlot = new VMLocationLots();
+                objlot.LocationParkingLotID = objUser.LocationParkingLotID.LocationParkingLotID;
+                objlot.LotName = objUser.LocationParkingLotID.LocationParkingLotName;
+                objlot.LocationParkingLotName = objUser.LocationParkingLotID.LocationID.LocationName + "-" + objUser.LocationParkingLotID.LocationParkingLotName;
+                objlot.LocationID = objUser.LocationParkingLotID.LocationID.LocationID;
+                objlot.LocationName = objUser.LocationParkingLotID.LocationID.LocationName;
+                objlot.IsActive = objUser.LocationParkingLotID.IsActive;
+                objlot.LotOpenTime = objUser.LocationParkingLotID.LotOpenTime;
+                objlot.LotCloseTime = objUser.LocationParkingLotID.LotCloseTime;
+                lstVMLocationLots.Add(objlot);
+
+            }
+            catch (Exception ex)
+            {
+            }
+            return lstVMLocationLots;
+        }
         public List<User> GetAllOperatorsOfSupervisor(string accessToken, User objSuperVisor)
         {
             List<User> lstOperators = new List<User>();
@@ -116,7 +142,7 @@ namespace ParkHyderabadOperator.DAL.DALHome
             }
             return lstOperators;
         }
-       
+
         public List<User> GetLocationLotActiveOperators(string accessToken, User objLoginUserSelectLocationLot)
         {
             List<User> lstOperators = new List<User>();
@@ -192,6 +218,10 @@ namespace ParkHyderabadOperator.DAL.DALHome
                                 objVMLocationLotParkedVehicles.TotalFourWheeler = resultobj.TotalFourWheeler;
                                 objVMLocationLotParkedVehicles.TotalOutTwoWheeler = resultobj.TotalOutTwoWheeler;
                                 objVMLocationLotParkedVehicles.TotalOutFourWheeler = resultobj.TotalOutFourWheeler;
+                                objVMLocationLotParkedVehicles.TotalHVWheeler = resultobj.TotalHVWheeler;
+                                objVMLocationLotParkedVehicles.TotalOutHVWheeler = resultobj.TotalOutHVWheeler;
+                                objVMLocationLotParkedVehicles.TotalThreeWheeler = resultobj.TotalThreeWheeler;
+                                objVMLocationLotParkedVehicles.TotalOutThreeWheeler = resultobj.TotalOutThreeWheeler;
                             }
                         }
                     }
@@ -202,6 +232,8 @@ namespace ParkHyderabadOperator.DAL.DALHome
             }
             return objVMLocationLotParkedVehicles;
         }
+
+
         public CustomerParkingSlot GetSelectedParkedVehicleDetails(string accessToken, int CustomerParkingSlotID)
         {
             CustomerParkingSlot objCustomerParkingSlot = new CustomerParkingSlot();
@@ -238,7 +270,7 @@ namespace ParkHyderabadOperator.DAL.DALHome
             }
             return objCustomerParkingSlot;
         }
-      
+
         public List<VMMultiLocations> GetAllLocations(string accessToken)
         {
             List<Location> lstLocations = new List<Location>();
@@ -289,7 +321,7 @@ namespace ParkHyderabadOperator.DAL.DALHome
             }
             return lstVMLocations;
         }
-        public List<VMMultiLocations> GetAllLocationsByVehicleType(string accessToken,string VehicleTypeCode)
+        public List<VMMultiLocations> GetAllLocationsByVehicleType(string accessToken, string VehicleTypeCode)
         {
             List<Location> lstLocations = new List<Location>();
             List<VMMultiLocations> lstVMLocations = new List<VMMultiLocations>();
@@ -339,7 +371,7 @@ namespace ParkHyderabadOperator.DAL.DALHome
             }
             return lstVMLocations;
         }
-        public List<VMMultiLocations> GetAllPassLocationsByVehicleType(string accessToken, string VehicleTypeCode,int CustomerVehiclePassId)
+        public List<VMMultiLocations> GetAllPassLocationsByVehicleType(string accessToken, string VehicleTypeCode, int CustomerVehiclePassId)
         {
             List<Location> lstLocations = new List<Location>();
             List<VMMultiLocations> lstVMLocations = new List<VMMultiLocations>();
@@ -354,7 +386,7 @@ namespace ParkHyderabadOperator.DAL.DALHome
                     // Add the Authorization header with the AccessToken.
                     client.DefaultRequestHeaders.Add("Authorization", "bearer  " + accessToken);
                     // create the URL string.
-                    string url = "api/InstaOperator/getOPAPPGetAllPassLocationsByVehicleType?VehicleTypeCode=" + VehicleTypeCode+ "&CustomerVehiclePassId=" + CustomerVehiclePassId;
+                    string url = "api/InstaOperator/getOPAPPGetAllPassLocationsByVehicleType?VehicleTypeCode=" + VehicleTypeCode + "&CustomerVehiclePassId=" + CustomerVehiclePassId;
                     // make the request
                     HttpResponseMessage response = client.GetAsync(url).Result;
                     if (response.IsSuccessStatusCode)
@@ -466,6 +498,148 @@ namespace ParkHyderabadOperator.DAL.DALHome
             return lstStatus;
         }
 
+
+        #region Offline Functions
+        public VMLocationLotParkedVehicles GetAllParkedVehiclesOffline()
+        {
+            VMLocationLotParkedVehicles objVMLocationLotParkedVehicles = new VMLocationLotParkedVehicles();
+            List<LocationLotParkedVehicles> lstCustomerParkingSlot = new List<LocationLotParkedVehicles>();
+            try
+            {
+
+                // Get Records From SQLLite
+                var lstchekIns = Task.Run(async () => await App.SQLiteDb.GetAllVehicleAsync()
+                                ).Result;
+                if (lstchekIns.Count > 0)
+                {
+                    foreach (var items in lstchekIns)
+                    {
+                        LocationLotParkedVehicles objCustomerParkingSlot = new LocationLotParkedVehicles();
+                        objCustomerParkingSlot.VehicleTypeCode = items.VehicleTypeCode;
+                        if (items.VehicleTypeCode == "2W")
+                        {
+                            objCustomerParkingSlot.VehicleImage = "bike_black.png";
+                            objCustomerParkingSlot.BayNumberColor = "#444444";
+                            objCustomerParkingSlot.VehicleStatusColor = "#3293fa";
+                        }
+                        else if (items.VehicleTypeCode == "4W")
+                        {
+                            objCustomerParkingSlot.VehicleImage = "car_black.png";
+                            objCustomerParkingSlot.BayNumberColor = "#444444";
+                            objCustomerParkingSlot.VehicleStatusColor = "#3293fa";
+                        }
+                        else if (items.VehicleTypeCode == "3W")
+                        {
+                            objCustomerParkingSlot.VehicleImage = "ThreeW_black.png";
+                            objCustomerParkingSlot.BayNumberColor = "#444444";
+                            objCustomerParkingSlot.VehicleStatusColor = "#3293fa";
+                        }
+                        else if (items.VehicleTypeCode == "HW")
+                        {
+                            objCustomerParkingSlot.VehicleImage = "hv_black.png";
+                            objCustomerParkingSlot.BayNumberColor = "#444444";
+                            objCustomerParkingSlot.VehicleStatusColor = "#3293fa";
+                        }
+                        objCustomerParkingSlot.RegistrationNumber = items.RegistrationNumber;
+                        objCustomerParkingSlot.ParkingBayName = items.BayRange;
+                        objCustomerParkingSlot.ParkingBayRange = items.BayRange;
+                        objCustomerParkingSlot.ApplicationTypeCode = "O";
+                        lstCustomerParkingSlot.Add(objCustomerParkingSlot);
+                    }
+                    //Count Two Wheeler
+                    if (lstCustomerParkingSlot.Count > 0)
+                    {
+                        var twoCount = lstCustomerParkingSlot.Count(p => p.VehicleTypeCode == "2W");
+                        var fourCount = lstCustomerParkingSlot.Count(p => p.VehicleTypeCode == "4W");
+                        var threeCount = lstCustomerParkingSlot.Count(p => p.VehicleTypeCode == "3W");
+                        var heavyCount = lstCustomerParkingSlot.Count(p => p.VehicleTypeCode == "HW");
+                        objVMLocationLotParkedVehicles.CustomerParkingSlotID = lstCustomerParkingSlot;
+                        objVMLocationLotParkedVehicles.TotalTwoWheeler = twoCount;
+                        objVMLocationLotParkedVehicles.TotalFourWheeler = fourCount;
+                        objVMLocationLotParkedVehicles.TotalThreeWheeler = threeCount;
+                        objVMLocationLotParkedVehicles.TotalHVWheeler = heavyCount;
+                        objVMLocationLotParkedVehicles.TotalOutTwoWheeler = 0;
+                        objVMLocationLotParkedVehicles.TotalOutFourWheeler = 0;
+                        objVMLocationLotParkedVehicles.TotalOutThreeWheeler = 0;
+                        objVMLocationLotParkedVehicles.TotalOutHVWheeler = 0;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+            }
+            return objVMLocationLotParkedVehicles;
+        }
+
+        public VMLocationLotParkedVehicles GetAllDeSyncVehiclesOffline()
+        {
+            VMLocationLotParkedVehicles objVMLocationLotParkedVehicles = new VMLocationLotParkedVehicles();
+            List<LocationLotParkedVehicles> lstCustomerParkingSlot = new List<LocationLotParkedVehicles>();
+            try
+            {
+
+                // Get Records From SQLLite
+                var lstchekIns = Task.Run(async () => await App.SQLiteDb.GetDeSyncCheckInAsync()
+                                ).Result;
+                if (lstchekIns.Count > 0)
+                {
+                    foreach (var items in lstchekIns)
+                    {
+                        LocationLotParkedVehicles objCustomerParkingSlot = new LocationLotParkedVehicles();
+                        objCustomerParkingSlot.VehicleTypeCode = items.VehicleTypeCode;
+                        if (items.VehicleTypeCode == "2W")
+                        {
+                            objCustomerParkingSlot.VehicleImage = "bike_black.png";
+                            objCustomerParkingSlot.BayNumberColor = "#444444";
+                            objCustomerParkingSlot.VehicleStatusColor = "#3293fa";
+                        }
+                        if (items.VehicleTypeCode == "4W")
+                        {
+                            objCustomerParkingSlot.VehicleImage = "car_black.png";
+                            objCustomerParkingSlot.BayNumberColor = "#444444";
+                            objCustomerParkingSlot.VehicleStatusColor = "#3293fa";
+                        }
+                        if (items.VehicleTypeCode == "3W")
+                        {
+                            objCustomerParkingSlot.VehicleImage = "ThreeW_black.png";
+                            objCustomerParkingSlot.BayNumberColor = "#444444";
+                            objCustomerParkingSlot.VehicleStatusColor = "#3293fa";
+                        }
+                        if (items.VehicleTypeCode == "HW")
+                        {
+                            objCustomerParkingSlot.VehicleImage = "hv_black.png";
+                            objCustomerParkingSlot.BayNumberColor = "#444444";
+                            objCustomerParkingSlot.VehicleStatusColor = "#3293fa";
+                        }
+                        objCustomerParkingSlot.RegistrationNumber = items.RegistrationNumber;
+                        objCustomerParkingSlot.ParkingBayName = items.BayRange;
+                        objCustomerParkingSlot.ParkingBayRange = items.BayRange;
+                        objCustomerParkingSlot.ApplicationTypeCode = "O";
+                        lstCustomerParkingSlot.Add(objCustomerParkingSlot);
+                    }
+                    //Count Two Wheeler
+                    if (lstCustomerParkingSlot.Count > 0)
+                    {
+                        var twoCount = lstCustomerParkingSlot.Count(p => p.VehicleTypeCode == "2W");
+                        var fourCount = lstCustomerParkingSlot.Count(p => p.VehicleTypeCode == "4W");
+
+                        objVMLocationLotParkedVehicles.CustomerParkingSlotID = lstCustomerParkingSlot;
+                        objVMLocationLotParkedVehicles.TotalTwoWheeler = twoCount;
+                        objVMLocationLotParkedVehicles.TotalFourWheeler = fourCount;
+                        objVMLocationLotParkedVehicles.TotalOutTwoWheeler = 0;
+                        objVMLocationLotParkedVehicles.TotalOutFourWheeler = 0;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+            }
+            return objVMLocationLotParkedVehicles;
+        }
+
+        #endregion
     }
 }
 

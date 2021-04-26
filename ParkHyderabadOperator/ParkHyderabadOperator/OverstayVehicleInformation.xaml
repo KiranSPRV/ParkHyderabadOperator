@@ -44,10 +44,13 @@
                                             <Label  x:Name="labelVehicleDetails"  Style="{StaticResource LabelProximaBoldStyle}" VerticalOptions="Center"></Label>
                                             <Label x:Name="lblWarningCount" Style="{StaticResource LabelProximaRegRedStyle}" FontSize="12" HorizontalOptions="EndAndExpand" VerticalOptions="CenterAndExpand"/>
                                         </StackLayout>
-                                        <StackLayout Orientation="Horizontal" Margin="5,0,0,0 ">
-                                            <Image x:Name="imageParkingFeeImage"  HeightRequest="20" ></Image>
-                                            <Label  x:Name="labelParkingFeesDetails"  Style="{StaticResource LabelNormalEndBoldStyle}" ></Label>
-                                            <Label  x:Name="labelParkingPaymentType" Style="{StaticResource LabelProximaBoldStyle}" VerticalOptions="Center"></Label>
+                                        <StackLayout Spacing="3"  Margin="5,0,0,0">
+                                            <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand">
+                                                <Image x:Name="imageParkingFeeImage"  HeightRequest="20" ></Image>
+                                                <Label  x:Name="labelParkingFeesDetails"  Style="{StaticResource LabelNormalEndBoldStyle}" ></Label>
+                                                <Label  x:Name="labelParkingPaymentType" Style="{StaticResource LabelProximaBoldStyle}" VerticalOptions="Center"></Label>
+                                            </StackLayout>
+                                            <Label  x:Name="labelPaidDueAmountDetails"  Style="{StaticResource LabelProximaRegStyle}" FontSize="10" ></Label>
                                         </StackLayout>
                                     </StackLayout>
                                     <StackLayout Spacing="0">

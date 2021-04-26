@@ -1,9 +1,11 @@
-﻿using System;
+﻿using SQLite;
+using System;
 
 namespace ParkHyderabadOperator.Model.APIInputModel
 {
     public class VehicleCheckIn
     {
+
         public int CustomerParkingSlotID { get; set; }
         public int UserID { get; set; }
         public int UserTypeID { get; set; }
@@ -16,6 +18,7 @@ namespace ParkHyderabadOperator.Model.APIInputModel
         public string LocationParkingLotName { get; set; }
         public string VehicleTypeCode { get; set; }
         public string VehicleTypeName { get; set; }
+        public string VehicleTypeDisplayName { get; set; }
         public string RegistrationNumber { get; set; }
         public string PhoneNumber { get; set; }
         public string NFCCardNumber { get; set; }
@@ -25,6 +28,7 @@ namespace ParkHyderabadOperator.Model.APIInputModel
         public int ParkingMinutes { get; set; }
         public decimal ParkingFees { get; set; }
         public decimal ClampFees { get; set; }
+        public decimal DueAmount { get; set; }
         public string PaymentType { get; set; }
         public bool PaymentReceived { get; set; }
         public string ParkingStartTime { get; set; }
@@ -33,5 +37,8 @@ namespace ParkHyderabadOperator.Model.APIInputModel
         public byte[] GovernmentVehicleImage { get; set; }
         public decimal VehicleImageLottitude { get; set; }
         public decimal VehicleImageLongitude { get; set; }
+        public string VehicleImage { get; set; }
+       
+       
     }
 }

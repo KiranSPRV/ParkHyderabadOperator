@@ -60,8 +60,8 @@
                                     </StackLayout>
                                     <ImageButton Source="NFC_Card_New.png" HeightRequest="25"  x:Name="imgBtnNFCCard"   VerticalOptions="Center" BackgroundColor="Transparent"/>
                                 </StackLayout>
-                                <StackLayout Orientation="Horizontal">
-                                    <StackLayout    x:Name="slBARCodeReader"  BackgroundColor="#f4f4f4" HorizontalOptions="FillAndExpand"  Spacing="0">
+                                <StackLayout Orientation="Horizontal"  x:Name="slBARCodeReader">
+                                    <StackLayout     BackgroundColor="#f4f4f4" HorizontalOptions="FillAndExpand"  Spacing="0">
                                         <Label Text="BARCode" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
                                         <Entry x:Name="labelBARCode" Style="{StaticResource EntryProximaBlackStyle}" HorizontalOptions="FillAndExpand" IsReadOnly="True"></Entry>
                                     </StackLayout>

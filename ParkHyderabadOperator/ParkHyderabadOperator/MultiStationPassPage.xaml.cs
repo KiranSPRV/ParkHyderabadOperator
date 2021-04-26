@@ -49,17 +49,7 @@ namespace ParkHyderabadOperator
                             var objReNewVehicle = (CustomerVehiclePass)App.Current.Properties["ReNewPassCustomerVehicle"];
                             List<VMMultiLocations> renewPassLocations = dal_Home.GetAllPassLocationsByVehicleType(Convert.ToString(App.Current.Properties["apitoken"]), objResultVMPass.VehicleTypeID.VehicleTypeCode, objReNewVehicle.CustomerVehiclePassID);
                             lstStations.ItemsSource = renewPassLocations;
-                            //if (renewPassLocations.Count > 0)
-                            //{
-                            //    for (int l = 0; l < renewPassLocations.Count; l++)
-                            //    {
-                            //        Location objselected = new Location();
-                            //        objselected.LocationID = renewPassLocations[l].LocationID;
-                            //        objselected.LocationName = renewPassLocations[l].LocationName;
-                            //        labelSelectedStations.Text = labelSelectedStations.Text + "," + renewPassLocations[l].LocationName.ToUpper();
-                            //        lstSelectedLocations.Add(objselected);
-                            //    }
-                            //}
+                            
                         }
                     }
                     else

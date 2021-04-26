@@ -8,19 +8,25 @@
     </NavigationPage.TitleView>
     <ContentPage.Content>
         <AbsoluteLayout VerticalOptions="FillAndExpand" x:Name="absLayoutTimeSheetpage">
-            <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,0.2"  AbsoluteLayout.LayoutFlags="All">
-                <Frame CornerRadius="3"   BackgroundColor="#f4f4f4" Padding="2" >
-                    <Grid VerticalOptions="FillAndExpand" ColumnSpacing="10" HorizontalOptions="CenterAndExpand">
-                        <Frame  Grid.Column="0" CornerRadius="5" Padding="0" BackgroundColor="#3192F9" BorderColor="#f4f4f4" VerticalOptions="CenterAndExpand" >
-                            <Button x:Name="btnPreviousMonth" FontSize="16" HeightRequest="40" WidthRequest="150"  Style="{StaticResource ButtonRegularWhiteStyle}" FontAttributes="Bold" Clicked="BtnPreviousMonth_Clicked"  VerticalOptions="Center" HorizontalOptions="FillAndExpand"></Button>
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,0.18"  AbsoluteLayout.LayoutFlags="All">
+                    <Frame CornerRadius="3"   BackgroundColor="#f4f4f4" Padding="5" >
+                    <StackLayout Margin="15,0,15,0" VerticalOptions="CenterAndExpand">
+                        <Frame CornerRadius="5"  BackgroundColor="#FFFFFF"   Padding="0" >
+                            <Picker x:Name="pickerOperator" ItemDisplayBinding="{Binding UserCode}"    HorizontalOptions="FillAndExpand"  VerticalOptions="CenterAndExpand"   Style="{StaticResource PickerProximaRegStyle}" FontSize="14"  SelectedIndexChanged="pickerOperator_SelectedIndexChanged" />
                         </Frame>
-                        <Frame Grid.Column="1" CornerRadius="5" Padding="0" BackgroundColor="#3293FA" VerticalOptions="CenterAndExpand" >
-                            <Button x:Name="btnCurrentMonth" FontSize="16"  HeightRequest="40" WidthRequest="150"  Style="{StaticResource ButtonRegularWhiteStyle}" FontAttributes="Bold" Clicked="BtnCurrentMonth_Clicked"  VerticalOptions="Center" HorizontalOptions="FillAndExpand"></Button>
-                        </Frame>
-                    </Grid>
+                        <Grid VerticalOptions="FillAndExpand" ColumnSpacing="10" HorizontalOptions="CenterAndExpand">
+                            <Frame  Grid.Column="0" CornerRadius="5" Padding="0" BackgroundColor="#3192F9" BorderColor="#f4f4f4" VerticalOptions="CenterAndExpand" HasShadow="False">
+                                <Button x:Name="btnPreviousMonth" FontSize="16" HeightRequest="37" WidthRequest="150"  Style="{StaticResource ButtonRegularWhiteStyle}" FontAttributes="Bold" Clicked="BtnPreviousMonth_Clicked"  VerticalOptions="Center" HorizontalOptions="FillAndExpand"></Button>
+                            </Frame>
+                            <Frame Grid.Column="1" CornerRadius="5" Padding="0" BackgroundColor="#3293FA" VerticalOptions="CenterAndExpand" HasShadow="False">
+                                <Button x:Name="btnCurrentMonth" FontSize="16"  HeightRequest="37" WidthRequest="150"  Style="{StaticResource ButtonRegularWhiteStyle}" FontAttributes="Bold" Clicked="BtnCurrentMonth_Clicked"  VerticalOptions="Center" HorizontalOptions="FillAndExpand"></Button>
+                            </Frame>
+                        </Grid>
+                    </StackLayout>
                 </Frame>
             </StackLayout>
-            <StackLayout AbsoluteLayout.LayoutBounds="0,0.55,1,0.85"  AbsoluteLayout.LayoutFlags="All" >
+            <StackLayout AbsoluteLayout.LayoutBounds="0,0.70,1,0.75"  AbsoluteLayout.LayoutFlags="All"  >
+                
                 <Frame CornerRadius="3"   BackgroundColor="#FFFFFF" BorderColor="#F4F4F4" Padding="10" HorizontalOptions="FillAndExpand">
                     <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal"  >
                         <Label    Style="{StaticResource LabelProximaRegBlackStyle}"  FontSize="14"    HorizontalOptions="StartAndExpand"   VerticalOptions="Center" >
@@ -42,7 +48,8 @@
                     </StackLayout>
                 </Frame>
                 <Frame CornerRadius="3" Padding="0"  BorderColor="#f4f4f4"  BackgroundColor="#FFFFFF" >
-                    <ListView x:Name="lvTimeSheetSummary"    HasUnevenRows="True" SeparatorVisibility="Default" SeparatorColor="Black" RowHeight="40" VerticalOptions="FillAndExpand">
+                        <StackLayout>
+                             <ListView x:Name="lvTimeSheetSummary"    HasUnevenRows="True" SeparatorVisibility="Default" SeparatorColor="Black" RowHeight="25" VerticalOptions="FillAndExpand">
                         <ListView.Header >
                             <StackLayout BackgroundColor="#f4f4f4">
                                 <Grid   Margin="15,5,15,5">
@@ -63,11 +70,10 @@
                             </StackLayout>
                         </ListView.Header>
                         <ListView.ItemTemplate>
-
                             <DataTemplate>
                                 <ViewCell>
-                                    <StackLayout  BackgroundColor="#FFFFF">
-                                        <Grid  Margin="15,5,15,5" VerticalOptions="FillAndExpand">
+                                    <StackLayout  BackgroundColor="#FFFFF" >
+                                        <Grid  Margin="15,0,15,0" VerticalOptions="FillAndExpand">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="1.3*"></ColumnDefinition>
                                                 <ColumnDefinition Width="3*"></ColumnDefinition>
@@ -93,17 +99,19 @@
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
-                    </ListView>
-                </Frame>
+                        </ListView>
+                        </StackLayout>
+                    </Frame>
+                
             </StackLayout>
-            <StackLayout AbsoluteLayout.LayoutBounds="0,1,1,0.05"  AbsoluteLayout.LayoutFlags="All" BackgroundColor="#F4F4F4" >
-                <Grid   Margin="10,0,10,0" VerticalOptions="StartAndExpand">
+            <StackLayout AbsoluteLayout.LayoutBounds="0,1,1,0.05"  AbsoluteLayout.LayoutFlags="All" >
+                <Grid   Margin="10,0,10,0" VerticalOptions="FillAndExpand" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="3.25*"></ColumnDefinition>
                         <ColumnDefinition Width="3.25*"></ColumnDefinition>
                         <ColumnDefinition Width="3.50*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <Label  Grid.Column="0"   Style="{StaticResource LabelProximaRegBoldStyle}"  FontSize="12" HorizontalOptions="Center"   VerticalOptions="Center" >
+                    <Label  Grid.Column="0"   Style="{StaticResource LabelProximaRegBoldStyle}"  FontSize="12" HorizontalOptions="Center"   VerticalOptions="CenterAndExpand" >
                         <Label.FormattedText>
                             <FormattedString>
                                 <Span Text="Absent Days: "/>
@@ -111,7 +119,7 @@
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>
-                    <Label  Grid.Column="1"   Style="{StaticResource LabelProximaRegBoldStyle}"  FontSize="12"  HorizontalOptions="StartAndExpand"   VerticalOptions="Center" >
+                    <Label  Grid.Column="1"   Style="{StaticResource LabelProximaRegBoldStyle}"  FontSize="12"  HorizontalOptions="StartAndExpand"   VerticalOptions="CenterAndExpand" >
                         <Label.FormattedText>
                             <FormattedString>
                                 <Span Text="Worked Days: "/>
@@ -119,7 +127,6 @@
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>
-
                     <Label  Grid.Column="2"   Style="{StaticResource LabelProximaRegBoldStyle}"  FontSize="12"  HorizontalOptions="EndAndExpand"   VerticalOptions="Center" >
                         <Label.FormattedText>
                             <FormattedString>
@@ -138,7 +145,6 @@
                 </StackLayout>
 
             </ContentView>
-            
         </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>

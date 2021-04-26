@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ParkHyderabadOperator.DeSyncRecordsPage"
+             xmlns:localBehaviors="clr-namespace:ParkHyderabadOperator.Behaviors"
+             NavigationPage.HasBackButton="true">
+    <NavigationPage.TitleView >
+        <StackLayout Orientation="Horizontal"  VerticalOptions="CenterAndExpand">
+            <Label x:Name="lblPageHeading"    Text="OFFLINE RECORDS"  Style="{StaticResource LabelRegularPageTitlesStyle}" VerticalOptions="CenterAndExpand"  HorizontalOptions="StartAndExpand"  ></Label>
+            <StackLayout Orientation="Horizontal" Spacing="5"    HorizontalOptions="EndAndExpand">
+                <Frame CornerRadius="8" x:Name="frmClear" BorderColor="#DFDFDFDF" Padding="6" HasShadow ="False"  BackgroundColor="#FFFFF" HorizontalOptions="StartAndExpand"  VerticalOptions="StartAndExpand" >
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer x:Name="frmClearDeSynchGesutre" Tapped="frmClearDeSynchGesutre_Tapped"  NumberOfTapsRequired="1" />
+                    </Frame.GestureRecognizers>
+                    <ImageButton x:Name="imgClear" HeightRequest="22"   Source="trashsolid.png" BackgroundColor="Transparent" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"  Clicked="frmClearDeSynchGesutre_Tapped"  ></ImageButton>
+                </Frame>
+                <Label x:Name="lblOfflineRecCount"  Style="{StaticResource LabelProximaRegBoldRedStyle}" VerticalOptions="CenterAndExpand" HorizontalOptions="EndAndExpand"></Label>
+            </StackLayout>
+            
+        </StackLayout>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <AbsoluteLayout VerticalOptions="FillAndExpand" x:Name="absLayoutMasterDetailHomePage">
+            <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,0.8"   AbsoluteLayout.LayoutFlags="All" Orientation="Vertical"  VerticalOptions="FillAndExpand"  >
+                <StackLayout Orientation="Vertical" Spacing="0" >
+                    <StackLayout Spacing="5">
+                        <StackLayout Orientation="Horizontal"   Margin="15,0,20,0" >
+                            <Frame CornerRadius="15" Padding="0"  BorderColor="#f9f9f9" BackgroundColor="#f9f9f9" >
+                                <SearchBar BackgroundColor="Transparent" Margin="-10,0,0,0" HeightRequest="35" Keyboard="Numeric"    FontSize="14" FontFamily="ProximaNova-Regular.otf#ProximaNova-Regular"   Placeholder="Search..."   PlaceholderColor="#BCBCBC"  x:Name="srbSearchVehicle"  TextChanged="SrbSearchVehicle_TextChanged"  >
+                                    <SearchBar.Behaviors>
+                                        <localBehaviors:TextChangedBehavior />
+                                    </SearchBar.Behaviors>
+                                </SearchBar>
+                            </Frame>
+                            
+                        </StackLayout>
+                        <Frame CornerRadius="0" Padding="0,1,0,1"  BorderColor="#008000" BackgroundColor="Transparent"   >
+                            <ScrollView x:Name="scroller" Orientation="Horizontal" >
+                                <Grid BackgroundColor="#f4f4f4" >
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="3.5*"></ColumnDefinition>
+                                        <ColumnDefinition Width="6.5*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <StackLayout Orientation="Horizontal"  Margin="15,4,0,4" VerticalOptions="Center" HorizontalOptions="Fill" Grid.Row="0" Grid.Column="0">
+                                        <Label Text="Total Check-Ins"    Style="{StaticResource LabelProximaRegBoldGreenStyle}" VerticalOptions="End" FontSize="14"></Label>
+                                    </StackLayout>
+                                    <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="1" VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand" Spacing="8" >
+                                        <StackLayout Orientation="Horizontal"  HorizontalOptions="StartAndExpand" Spacing="3" >
+                                            <Image Source="bike_black.png" HeightRequest="20" HorizontalOptions="FillAndExpand"  VerticalOptions="Center" ></Image>
+                                            <Label x:Name="labelTotalTwoWheeler"    Style="{StaticResource LabelProximaRegBoldGreenStyle}" VerticalOptions="End"  FontSize="20"></Label>
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal"  HorizontalOptions="StartAndExpand" Spacing="3" >
+                                            <Image Source="car_black.png" HeightRequest="20" HorizontalOptions="FillAndExpand"  VerticalOptions="Center" ></Image>
+                                            <Label x:Name="labelTotalFourWheeler"    Style="{StaticResource LabelProximaRegBoldGreenStyle}" VerticalOptions="End" FontSize="20"></Label>
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal"  HorizontalOptions="StartAndExpand" Spacing="3" >
+                                            <Image Source="hv_black.png" HeightRequest="20" HorizontalOptions="FillAndExpand"  VerticalOptions="Center" ></Image>
+                                            <Label x:Name="labelTotalHVWheeler"    Style="{StaticResource LabelProximaRegBoldGreenStyle}" VerticalOptions="End" FontSize="20"></Label>
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal"  HorizontalOptions="StartAndExpand" Spacing="3" >
+                                            <Image Source="ThreeW_black.png" HeightRequest="20" HorizontalOptions="FillAndExpand"  VerticalOptions="Center" ></Image>
+                                            <Label x:Name="labelTotalThreeWheeler"    Style="{StaticResource LabelProximaRegBoldGreenStyle}" VerticalOptions="End" FontSize="20"></Label>
+                                        </StackLayout>
+
+                                    </StackLayout>
+
+                                </Grid>
+                            </ScrollView>
+                        </Frame>
+                    </StackLayout>
+                </StackLayout>
+                <StackLayout  Margin="5" VerticalOptions="FillAndExpand"  >
+                    <ListView x:Name="LstDeSyncVehicle" IsPullToRefreshEnabled="True"   SeparatorColor="Black" RowHeight="45"   Refreshing="LstDeSyncVehicle_Refreshing" >
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Grid RowSpacing="5" VerticalOptions="FillAndExpand" >
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="5*"></ColumnDefinition>
+                                            <ColumnDefinition Width="2*"></ColumnDefinition>
+                                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                                            <ColumnDefinition Width="2*"></ColumnDefinition>
+
+                                        </Grid.ColumnDefinitions>
+                                        <StackLayout Margin="15,0,0,0" Orientation="Horizontal" Spacing="5" VerticalOptions="Center" HorizontalOptions="Fill" Grid.Row="0" Grid.Column="0">
+                                            <Image Source="{Binding VehicleImage}"   HeightRequest="20" ></Image>
+                                            <Label Text="{Binding RegistrationNumber}"    TextColor="{Binding BayNumberColor}" Style="{StaticResource LabelProximaRegStyle}" VerticalOptions="End" FontSize="16"></Label>
+                                        </StackLayout>
+                                        <Label Text="{Binding ParkingBayRange}"  TextColor="{Binding BayNumberColor}"   Style="{StaticResource LabelProximaRegStyle}"  Grid.Row="0" Grid.Column="1" VerticalOptions="Center" FontSize="16"></Label>
+
+                                        <Frame CornerRadius="3" Padding="0"   BorderColor="{Binding VehicleStatusColor}" BackgroundColor="{Binding VehicleStatusColor}"  Grid.Row="0" Grid.Column="2" VerticalOptions="Center" HorizontalOptions="Center">
+                                            <StackLayout HeightRequest="20" WidthRequest="21" HorizontalOptions="Center">
+                                                <Label Text="{Binding ApplicationTypeCode}"     TextColor="#FFFFFF"   Style="{StaticResource LabelProximaBoldStyle}" VerticalOptions="Center" HorizontalOptions="Center" FontSize="16" Margin="1,0,0,0"></Label>
+                                            </StackLayout>
+
+                                        </Frame>
+                                        <Image Source="{Binding VehicleClampImage}" HeightRequest="20" HorizontalOptions="CenterAndExpand"  VerticalOptions="Center" Grid.Row="0" Grid.Column="3"></Image>
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackLayout>
+            </StackLayout>
+            
+            <ContentView x:Name="StklauoutactivityIndicator" BackgroundColor="Transparent"  IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                <StackLayout Orientation="Vertical" HeightRequest="150" WidthRequest="100" BackgroundColor="Transparent" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="0">
+                    <ActivityIndicator  x:Name="activity" IsEnabled="True" IsVisible="False" IsRunning="False"   HeightRequest="80" Color="#010101"  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></ActivityIndicator>
+                    <Label x:Name="LabelLodaingMsg" Text="Loading..."  Style="{StaticResource LabelProximaBoldStyle}" FontSize="18" TextColor="#010101"   VerticalOptions="StartAndExpand" HorizontalOptions="CenterAndExpand"></Label>
+                </StackLayout>
+
+            </ContentView>
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>

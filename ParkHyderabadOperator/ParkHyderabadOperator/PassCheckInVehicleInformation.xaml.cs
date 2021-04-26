@@ -69,6 +69,7 @@ namespace ParkHyderabadOperator
 
                         decimal parkingAmount = objresult.PaidAmount;
                         labelParkingFeesDetails.Text = parkingAmount.ToString("N2") + "/-";
+                        labelPaidDueAmountDetails.Text ="( Parking Amount:"+ Math.Abs(objresult.Amount - objresult.PaidDueAmount).ToString("N2") + "/-, "+"Paid Due Amount:" + objresult.PaidDueAmount.ToString("N2") + "/- )";
 
                         TimeSpan parkingduration = Convert.ToDateTime(objresult.ActualEndTime) - Convert.ToDateTime(objresult.ExpectedStartTime);
                         if (objresult.Duration != "" && objresult.Duration != string.Empty)
@@ -76,10 +77,9 @@ namespace ParkHyderabadOperator
                             var parkhours = ((Math.Abs(parkingduration.Hours) == 0 || Math.Abs(parkingduration.Hours) == 1)) ? Convert.ToInt32(objresult.Duration) : Math.Abs(parkingduration.Hours);
                             labelParkingPaymentType.Text = "Paid for " + string.Format(parkhours + "hr") + " - By " + objresult.PaymentTypeID.PaymentTypeName;
                         }
-                        
                         labelVehicleDetails.Text = objresult.CustomerVehicleID.RegistrationNumber;
-                        imageVehicleImage.Source = (Convert.ToString(objresult.VehicleTypeID.VehicleTypeCode) == "2W" ? "bike_black.png" : (Convert.ToString(objresult.VehicleTypeID.VehicleTypeCode) == "4W") ? "car_black.png" : "bike_black.png");
-                        vehicleType = (Convert.ToString(objresult.VehicleTypeID.VehicleTypeCode) == "2W" ? "BIKE" : (Convert.ToString(objresult.VehicleTypeID.VehicleTypeCode) == "4W") ? "CAR" : "BIKE");
+                        imageVehicleImage.Source =objresult.CustomerVehicleID.VehicleTypeID.VehicleIcon;
+                        vehicleType = objresult.CustomerVehicleID.VehicleTypeID.VehicleTypeDisplayName;
 
                         User objloginuser = (User)App.Current.Properties["LoginUser"];
 
@@ -97,6 +97,7 @@ namespace ParkHyderabadOperator
                             labelParkingFeesDetails.Text = "Pass Check-In";
                             labelParkingPaymentType.Text = "";
                             imageParkingFeeImage.Source = "";
+                            labelPaidDueAmountDetails.Text = "";
 
                         }
                         if (objresult.StatusID.StatusCode.ToUpper() == "G")
@@ -110,6 +111,7 @@ namespace ParkHyderabadOperator
                             slVehicleWarning.IsVisible = false;
                             labelParkingFeesDetails.Text = "Free of charge - Government Vehicle";
                             labelParkingPaymentType.Text = "";
+                            labelPaidDueAmountDetails.Text = "";
                             imgGovPhone.Source = "phone.png";
                             imgGovPhone.HeightRequest = 20;
                             labelPhoneNumber.Text = objresult.CustomerID.PhoneNumber;
@@ -341,8 +343,7 @@ namespace ParkHyderabadOperator
         {
             try
             {
-                var checkIn = new CheckIn(objresult);
-                await Navigation.PushAsync(checkIn);
+                
             }
             catch (Exception ex)
             {
@@ -357,7 +358,7 @@ namespace ParkHyderabadOperator
                 ShowLoading(true);
                 BtnCheckOut.IsVisible = false;
                 CustomerParkingSlot objcheckoutresult = null;
-                MasterHomePage masterpage = null;
+                MasterDetailHomePage masterpage = null;
                 DALVehicleCheckOut dal_VehicleCheckOut = new DALVehicleCheckOut();
                 if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                 {
@@ -375,7 +376,7 @@ namespace ParkHyderabadOperator
                         objcheckoutresult = dal_VehicleCheckOut.VehicleCheckOut(Convert.ToString(App.Current.Properties["apitoken"]), objresult);
                         if (objcheckoutresult != null)
                         {
-                            masterpage = new MasterHomePage();
+                            masterpage = new MasterDetailHomePage();
                         }
                     });
                     if (objcheckoutresult != null)

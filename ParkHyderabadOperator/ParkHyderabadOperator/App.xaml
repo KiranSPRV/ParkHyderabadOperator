@@ -104,6 +104,7 @@
                 <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold"  />
                 <Setter Property="FontSize" Value="14"/>
             </Style>
+            
             <Style x:Key="LabelProximaRegBoldWhiteStyle" TargetType="Label">
                 <Setter Property="TextColor" Value="#FFFFFF" />
                 <Setter Property="FontFamily" Value="Proxima Nova Bold.otf#Proxima Nova Bold" />

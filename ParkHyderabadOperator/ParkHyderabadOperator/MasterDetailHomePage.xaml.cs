@@ -20,7 +20,7 @@ namespace ParkHyderabadOperator
     {
 
         DALExceptionManagment dal_Exceptionlog;
-        public bool IsPresented { get; private set; }
+        DALCheckIn dal_DALCheckIn;
         bool isAppearing = false;
         List<LocationLotParkedVehicles> lstdayvehicles = null;
         List<VMLocationLots> lstlots = null;
@@ -40,15 +40,22 @@ namespace ParkHyderabadOperator
 
         public MasterDetailHomePage()
         {
-            InitializeComponent();
-            dal_Exceptionlog = new DALExceptionManagment();
-            LoadLoginUserLocationLots();
-            Device.StartTimer(TimeSpan.FromMinutes(5), () =>
+            try
             {
-                LoadParkedVehicle(null);
-                LstVWParkingVehicle.IsRefreshing = false;
-                return true;
-            });
+                InitializeComponent();
+                dal_Exceptionlog = new DALExceptionManagment();
+                LoadLoginUserLocationLots();
+                Device.StartTimer(TimeSpan.FromMinutes(5), () =>
+                {
+                    LoadParkedVehicle(null);
+                    LstVWParkingVehicle.IsRefreshing = false;
+                    return true;
+                });
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
         protected override void OnAppearing()
         {
@@ -111,7 +118,15 @@ namespace ParkHyderabadOperator
                 {
                     DALHome dal_Home = new DALHome();
                     User objLoginUser = (User)App.Current.Properties["LoginUser"];
-                    lstlots = dal_Home.GetUserAllocatedLocationAndLots(Convert.ToString(App.Current.Properties["apitoken"]), objLoginUser);
+
+                    if (DeviceInternet.InternetConnected())
+                    {
+                        lstlots = dal_Home.GetUserAllocatedLocationAndLots(Convert.ToString(App.Current.Properties["apitoken"]), objLoginUser);
+                    }
+                    else
+                    {
+                        lstlots = dal_Home.GetUserAllocatedLocationAndLotsOffline(objLoginUser);
+                    }
                     if (lstlots.Count > 0)
                     {
                         pickerLocationLot.ItemsSource = lstlots;
@@ -136,7 +151,7 @@ namespace ParkHyderabadOperator
                                     todayLotOpenTime = lstlots[x].LotOpenTime;
                                     todayLotCloseTime = lstlots[x].LotCloseTime;
                                     pickerLocationLot.SelectedIndex = x;
-                                   
+
                                 }
                             }
 
@@ -175,12 +190,18 @@ namespace ParkHyderabadOperator
                             objLoginUser.LocationParkingLotID.LocationID.LocationID = objVMLocations.LocationID;
                             objLoginUser.LocationParkingLotID.LocationID.LocationName = objVMLocations.LocationName;
                             objLoginUser.LocationParkingLotID.LotOpenTime = objVMLocations.LotOpenTime;
+                            objLoginUser.LocationParkingLotID.LotCloseTime = objVMLocations.LotCloseTime;
+                            objLoginUser.LocationParkingLotID.LotVehicleAvailabilityName = objVMLocations.LotVehicleAvailabilityName;
+                           
                             IsTodayHoliday = objVMLocations.IsActive;
                             todayLotOpenTime = objVMLocations.LotOpenTime;
                             todayLotCloseTime = objVMLocations.LotCloseTime;
-                            objLoginUser.LocationParkingLotID.LotCloseTime= objVMLocations.LotCloseTime;
-                            
                             LoadParkedVehicle(objloclot);
+                            if (DeviceInternet.InternetConnected())
+                            {
+                                await App.SQLiteDb.SaveVehiclesParkingFeesDetailOnLogin(Convert.ToString(App.Current.Properties["apitoken"]), objVMLocations.LocationParkingLotID);
+                                await App.SQLiteDb.SaveAllVehicleTypesInSQLLite(Convert.ToString(App.Current.Properties["apitoken"]), objVMLocations.LocationID);
+                            }
                         }
                     }
                 }
@@ -215,21 +236,32 @@ namespace ParkHyderabadOperator
                         VMLocationLots objVMLocations = (VMLocationLots)pickerLocationLot.SelectedItem;
                         objinput.LocationID = objLoginUser.LocationParkingLotID.LocationID.LocationID;
                         objinput.LocationParkingLotID = objLoginUser.LocationParkingLotID.LocationParkingLotID;
-                        if (objLoginUser.LocationParkingLotID.LocationParkingLotID==null|| objLoginUser.LocationParkingLotID.LocationParkingLotID ==0)
+                        if (objLoginUser.LocationParkingLotID.LocationParkingLotID == null || objLoginUser.LocationParkingLotID.LocationParkingLotID == 0)
                         {
-                            if(objVMLocations!=null)
+                            if (objVMLocations != null)
                             {
                                 objinput.LocationParkingLotID = objVMLocations.LocationParkingLotID;
                             }
                         }
-                        
+
+                    }
+                    VMLocationLotParkedVehicles vmVehicles = null;
+
+                    if (DeviceInternet.InternetConnected())
+                    {
+                        vmVehicles = dal_Home.GetAllParkedVehicles(Convert.ToString(App.Current.Properties["apitoken"]), objinput);
+                    }
+                    else
+                    {
+                        vmVehicles = dal_Home.GetAllParkedVehiclesOffline();
                     }
 
-                    VMLocationLotParkedVehicles vmVehicles = dal_Home.GetAllParkedVehicles(Convert.ToString(App.Current.Properties["apitoken"]), objinput);
                     lstdayvehicles = vmVehicles.CustomerParkingSlotID;
                     LstVWParkingVehicle.ItemsSource = vmVehicles.CustomerParkingSlotID;
                     labelTotalTwoWheeler.Text = Convert.ToString(vmVehicles.TotalTwoWheeler) + "(" + Convert.ToString(vmVehicles.TotalOutTwoWheeler) + ")";
                     labelTotalFourWheeler.Text = Convert.ToString(vmVehicles.TotalFourWheeler) + "(" + Convert.ToString(vmVehicles.TotalOutFourWheeler) + ")";
+                    labelTotalHVWheeler.Text = Convert.ToString(vmVehicles.TotalHVWheeler) + "(" + Convert.ToString(vmVehicles.TotalOutHVWheeler) + ")";
+                    labelTotalThreeWheeler.Text = Convert.ToString(vmVehicles.TotalThreeWheeler) + "(" + Convert.ToString(vmVehicles.TotalOutThreeWheeler) + ")";
                 }
 
             }
@@ -258,7 +290,7 @@ namespace ParkHyderabadOperator
                 ShowLoading(false);
 
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "MasterDetailHomePage.xaml.cs", "", "SrbSearchVehicle_TextChanged");
             }
@@ -357,19 +389,17 @@ namespace ParkHyderabadOperator
             ShowLoading(false);
 
         }
-        private void LstVWParkingVehicle_Refreshing(object sender, EventArgs e)
+        private  void LstVWParkingVehicle_Refreshing(object sender, EventArgs e)
         {
             try
             {
-                if (DeviceInternet.InternetConnected())
-                {
-                    LoadParkedVehicle(null);
-                    LstVWParkingVehicle.IsRefreshing = false;
-                }
-                else
-                {
-                    LstVWParkingVehicle.IsRefreshing = false;
-                }
+
+                // Auto Offline-Sync
+                // var loguser = (User)App.Current.Properties["LoginUser"];
+                //dal_DALCheckIn = new DALCheckIn();
+                //await dal_DALCheckIn.CheckInOfflineSync(Convert.ToString(App.Current.Properties["apitoken"]), loguser);
+                LoadParkedVehicle(null);
+                LstVWParkingVehicle.IsRefreshing = false;
             }
             catch (Exception ex)
             {
@@ -413,36 +443,20 @@ namespace ParkHyderabadOperator
                 ShowLoading(true);
                 BtnCheckIn.IsVisible = false;
                 CheckIn checkInPage = null;
-                if (DeviceInternet.InternetConnected())
+                if (!IsTodayHoliday)
                 {
-                    if (!IsTodayHoliday)
+                    await Task.Run(() =>
                     {
-                        bool doesPageExists = Navigation.NavigationStack.Any(p => p is CheckIn);
-                        if (!doesPageExists)
-                        {
-                            await Task.Run(() =>
-                            {
-                                StopNFCListening();
-                                checkInPage = new CheckIn();
-                            });
-                            await Navigation.PushAsync(checkInPage);
-                        }
-                    }
-                    else
-                    {
-                        ShowLoading(false);
-                        BtnCheckIn.IsVisible = true;
-                        await DisplayAlert("Alert", "Please check Lot closed today.", "Ok");
-                    }
-
-
+                        StopNFCListening();
+                        checkInPage = new CheckIn();
+                    });
+                    await Navigation.PushAsync(checkInPage);
                 }
                 else
                 {
                     ShowLoading(false);
                     BtnCheckIn.IsVisible = true;
-                    await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
-
+                    await DisplayAlert("Alert", "Please check Lot closed today.", "Ok");
                 }
                 BtnCheckIn.IsVisible = true;
                 ShowLoading(false);
@@ -459,26 +473,34 @@ namespace ParkHyderabadOperator
             try
             {
                 ShowLoading(true);
-                BtnPass.IsVisible = false;
-                PassPage passPage = null;
-                if (!IsTodayHoliday)
+                if (DeviceInternet.InternetConnected())
                 {
-                    bool doesPageExists = Navigation.NavigationStack.Any(p => p is PassPage);
-                    if (!doesPageExists)
+                    BtnPass.IsVisible = false;
+                    PassPage passPage = null;
+                    if (!IsTodayHoliday)
                     {
-                        await Task.Run(() =>
+                        bool doesPageExists = Navigation.NavigationStack.Any(p => p is PassPage);
+                        if (!doesPageExists)
                         {
-                            StopNFCListening();
-                            passPage = new PassPage();
-                        });
-                        await Navigation.PushAsync(passPage);
+                            await Task.Run(() =>
+                            {
+                                StopNFCListening();
+                                passPage = new PassPage();
+                            });
+                            await Navigation.PushAsync(passPage);
+                        }
                     }
+                    else
+                    {
+                        await DisplayAlert("Alert", "Please check Lot closed today.", "Ok");
+                    }
+                    BtnPass.IsVisible = true;
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please check Lot closed today.", "Ok");
+                    await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
+
                 }
-                BtnPass.IsVisible = true;
                 ShowLoading(false);
             }
             catch (Exception ex)
@@ -493,11 +515,13 @@ namespace ParkHyderabadOperator
             try
             {
                 ShowLoading(true);
-                BtnViolation.IsVisible = false;
-                if (!IsTodayHoliday)
+                if (DeviceInternet.InternetConnected())
                 {
-                    var opentime=Convert.ToDateTime(todayLotOpenTime);
-                    
+                    BtnViolation.IsVisible = false;
+                    if (!IsTodayHoliday)
+                    {
+                        var opentime = Convert.ToDateTime(todayLotOpenTime);
+
                         bool doesPageExists = Navigation.NavigationStack.Any(p => p is ViolationPage);
                         if (!doesPageExists)
                         {
@@ -511,13 +535,19 @@ namespace ParkHyderabadOperator
 
                         }
 
-                    
+
+                    }
+                    else
+                    {
+                        await DisplayAlert("Alert", "Please check Lot closed today.", "Ok");
+                    }
+                    BtnViolation.IsVisible = true;
                 }
                 else
                 {
-                    await DisplayAlert("Alert", "Please check Lot closed today.", "Ok");
+                    await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
+
                 }
-                BtnViolation.IsVisible = true;
                 ShowLoading(false);
             }
             catch (Exception ex)

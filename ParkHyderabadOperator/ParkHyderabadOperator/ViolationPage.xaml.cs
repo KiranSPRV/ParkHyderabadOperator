@@ -1,12 +1,15 @@
 ﻿using ParkHyderabadOperator.DAL.DALCheckIn;
 using ParkHyderabadOperator.DAL.DALExceptionLog;
+using ParkHyderabadOperator.DAL.DALHome;
 using ParkHyderabadOperator.DAL.DALViolation;
 using ParkHyderabadOperator.Model;
 using ParkHyderabadOperator.Model.APIInputModel;
 using ParkHyderabadOperator.Model.APIOutPutModel;
+using ParkHyderabadOperator.ViewModel.VMPass;
 using Plugin.Media;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,6 +28,7 @@ namespace ParkHyderabadOperator
         CustomerVehiclePass objCustomerPass = null;
         BlueToothDevicePrinting ObjblueToothDevicePrinting;
         List<ParkingBay> lstparkingbay = null;
+        private ObservableCollection<VehicleType> obsvehicleType = null;
         string fileName = string.Empty;
         string SelectedVehicle = string.Empty;
         byte[] imgCameraByteData = null;
@@ -46,6 +50,7 @@ namespace ParkHyderabadOperator
 
             LoadLocationBayNumbers();
             LoadGetViolationReasons();
+            GetAllVehicleType();
         }
         protected async override void OnAppearing()
         {
@@ -58,28 +63,6 @@ namespace ParkHyderabadOperator
 
             }
         }
-        private void LoadDefaultLotVehicleType()
-        {
-            try
-            {
-                SelectedVehicle = "2W";
-                imgBtnTwoWheeler.Source = "Twowheeler_circle_ticked.png";
-                imgBtnFourWheeler.Source = "Fourwheeler_circle.png";
-                if (lstparkingbay.Count > 0)
-                {
-                    var twowheelerbayNumbers = lstparkingbay.Where(i => i.VehicleTypeID.VehicleTypeCode.ToUpper() == (SelectedVehicle)).ToList();
-                    if (twowheelerbayNumbers != null)
-                    {
-                        pickerBayNumers.ItemsSource = twowheelerbayNumbers;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-
-            }
-        }
-
         public void LoadLocationBayNumbers()
         {
             try
@@ -87,6 +70,7 @@ namespace ParkHyderabadOperator
                 if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                 {
                     User objloginuser = (User)App.Current.Properties["LoginUser"];
+                    lblcheckInLocation.Text = objloginuser.LocationParkingLotID.LocationParkingLotName;
                     lstparkingbay = dal_DALCheckIn.GetLocationParkingBay(Convert.ToString(App.Current.Properties["apitoken"]), objloginuser.LocationParkingLotID);
                 }
             }
@@ -99,7 +83,7 @@ namespace ParkHyderabadOperator
         {
 
             ViolationVehicleValidations();
-            violationTime = DateTime.Now.Date;
+            violationTime = DateTime.Now;
         }
         public async void ViolationVehicleValidations()
         {
@@ -112,11 +96,51 @@ namespace ParkHyderabadOperator
                     {
                         User objloginuser = (User)App.Current.Properties["LoginUser"];
                         objCustomerPass = dal_DALCheckIn.GetVerifyVehicleHasPass(Convert.ToString(App.Current.Properties["apitoken"]), entryRegistrationNumber.Text, objloginuser.LocationParkingLotID.LocationID.LocationID, objloginuser.LocationParkingLotID.LocationParkingLotID, objloginuser.UserID, "");
-                        if (objCustomerPass.CustomerVehiclePassID != 0)
+                        if ((objCustomerPass.CustomerVehiclePassID != 0) && ((Convert.ToDateTime(objCustomerPass.StartDate).Date <= DateTime.Now.Date) && (Convert.ToDateTime(objCustomerPass.ExpiryDate).Date >= DateTime.Now.Date)) )
                         {
-                            btnCheckIn.IsVisible = true;
-                            BtnViolation.IsVisible = false;
-                            await DisplayAlert("Alert", "" + entryRegistrationNumber.Text + " This vehicle has a valid pass", "Ok");
+                            if (SelectedVehicle == objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode.ToUpper())
+                            {
+                                if ((objCustomerPass.PassPriceID.StationAccess == "All Stations" || objCustomerPass.PassPriceID.StationAccess == "All Station"))
+                                {
+                                    btnCheckIn.IsVisible = true;
+                                    BtnViolation.IsVisible = false;
+                                    await DisplayAlert("Alert", "" + entryRegistrationNumber.Text + " This vehicle has a valid pass", "Ok");
+                                }
+                                else if (objCustomerPass.IsMultiLot)
+                                {
+                                    DALHome dal_Home = new DALHome();
+                                    List<VMMultiLocations> passLocations = dal_Home.GetAllPassLocationsByVehicleType(Convert.ToString(App.Current.Properties["apitoken"]), SelectedVehicle, objCustomerPass.CustomerVehiclePassID);
+                                    var isvalid = passLocations.Where(p => p.LocationID == objloginuser.LocationParkingLotID.LocationID.LocationID);
+                                    if (isvalid != null)
+                                    {
+                                        btnCheckIn.IsVisible = true;
+                                        BtnViolation.IsVisible = false;
+                                        await DisplayAlert("Alert", "" + entryRegistrationNumber.Text + " This vehicle has a valid pass", "Ok");
+                                    }
+
+                                }
+                                else if (objCustomerPass.LocationID.LocationID == objloginuser.LocationParkingLotID.LocationID.LocationID)
+                                {
+                                    btnCheckIn.IsVisible = true;
+                                    BtnViolation.IsVisible = false;
+                                    await DisplayAlert("Alert", "" + entryRegistrationNumber.Text + " This vehicle has a valid pass", "Ok");
+                                }
+                            }
+                            else
+                            {
+                                string passvehicletype = string.Empty;
+                                btnCheckIn.IsVisible = true;
+                                BtnViolation.IsVisible = false;
+                                if (objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode.ToUpper() == "2W")
+                                {
+                                    passvehicletype = "two wheeler";
+                                }
+                                else if (objCustomerPass.CustomerVehicleID.VehicleTypeID.VehicleTypeCode.ToUpper() == "4W")
+                                {
+                                    passvehicletype = "four wheeler";
+                                }
+                                await DisplayAlert("Alert", "" + entryRegistrationNumber.Text + " This vehicle has a " + passvehicletype + " pass,Please select valid vehicle type", "Ok");
+                            }
                         }
                         else
                         {
@@ -151,64 +175,6 @@ namespace ParkHyderabadOperator
             }
             catch (Exception ex) { }
         }
-
-        #region Vehicle-Type Selection
-        private async void SlTwoWheeler_Tapped(object sender, EventArgs e)
-        {
-            try
-            {
-
-                SelectedVehicle = "2W";
-                imgBtnTwoWheeler.Source = "Twowheeler_circle_ticked.png";
-                imgBtnFourWheeler.Source = "Fourwheeler_circle.png";
-                LoadLocationBayNumbers();
-                if (lstparkingbay.Count > 0)
-                {
-                    var twowheelerbayNumbers = lstparkingbay.Where(i => i.VehicleTypeID.VehicleTypeCode.ToUpper() == (SelectedVehicle)).ToList(); ;
-                    if (twowheelerbayNumbers != null)
-                    {
-                        pickerBayNumers.ItemsSource = twowheelerbayNumbers;
-                    }
-                    else
-                    {
-                        await DisplayAlert("Alert", "Bay numbers unavailable", "Ok");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ViolationPage.xaml.cs", "", "ImgBtnTwoWheeler_Clicked");
-            }
-        }
-        private async void SlFourWheeler_Tapped(object sender, EventArgs e)
-        {
-            try
-            {
-
-                SelectedVehicle = "4W";
-                imgBtnTwoWheeler.Source = ImageSource.FromFile("Twowheeler_circle.png");
-                imgBtnFourWheeler.Source = ImageSource.FromFile("Fourwheeler_circle_ticked.png");
-                LoadLocationBayNumbers();
-                if (lstparkingbay.Count > 0)
-                {
-                    var twowheelerbayNumbers = lstparkingbay.Where(i => i.VehicleTypeID.VehicleTypeCode.ToUpper() == (SelectedVehicle)).ToList(); ;
-                    if (twowheelerbayNumbers != null)
-                    {
-                        pickerBayNumers.ItemsSource = twowheelerbayNumbers;
-                    }
-                    else
-                    {
-                        await DisplayAlert("Alert", "Bay numbers unavailable", "Ok");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ViolationPage.xaml.cs", "", "ImgBtnFourWheeler_Clicked");
-            }
-        }
-
-        #endregion Vehicle-Type Selection
         private void CheckBoxClampVehicle_CheckedChanged(object sender, CheckedChangedEventArgs e)
         {
 
@@ -227,14 +193,11 @@ namespace ParkHyderabadOperator
                 {
                     var file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
                     {
-
                         PhotoSize = Plugin.Media.Abstractions.PhotoSize.Custom,
                         Directory = "Violation",
                         SaveToAlbum = false,
                         CustomPhotoSize = 20,//Resize to 90% of original
                         CompressionQuality = 92
-
-
                     });
                     if (file != null)
                     {
@@ -249,10 +212,7 @@ namespace ParkHyderabadOperator
                                 file.GetStream().CopyTo(memoryStream);
                                 imgCameraByteData = memoryStream.ToArray();
                                 btnCamera.Source = file.Path;
-                                //for (var i = 0; i < 1; i++)
-                                //{
-                                //    ObjblueToothDevicePrinting.PrintPdfFile(objfilestream, "InnerPrinter");
-                                //}
+
 
                             }
                             catch (Exception ex)
@@ -644,6 +604,138 @@ namespace ParkHyderabadOperator
                 // Unable to get location
             }
         }
+
+        #region Dynamic VehicleType
+        public async void GetAllVehicleType()
+        {
+            try
+            {
+
+                if (App.Current.Properties.ContainsKey("apitoken"))
+                {
+                    var lstVehicleType = await App.SQLiteDb.GetAllVehicleTypesInSQLLite();
+                    if (lstVehicleType.Count > 0)
+                    {
+
+
+                        lstVehicleType = lstVehicleType.OrderBy(i => i.VehicleTypeID).ToList();
+                        obsvehicleType = new ObservableCollection<VehicleType>(lstVehicleType);
+                        if (obsvehicleType.Count > 0)
+                        {
+                            collstviewVehicleTye.WidthRequest = 300;
+                            collstviewVehicleTye.ItemsSource = obsvehicleType.OrderBy(i => i.VehicleTypeID);
+                            collstviewVehicleTye.SelectedItem = obsvehicleType[0];
+
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ViolationPage.xaml.cs", "", "GetAllVehicleType");
+            }
+        }
+        public async void GetSelectedVehicleType(string VehicleTypeCode)
+        {
+            try
+            {
+
+
+                if (App.Current.Properties.ContainsKey("apitoken"))
+                {
+                    var lstVehicleType = await App.SQLiteDb.GetAllVehicleTypesInSQLLite();
+                    if (lstVehicleType.Count > 0)
+                    {
+                        var resultvehihcle = lstVehicleType.Where(v => v.VehicleTypeCode == VehicleTypeCode).ToList();
+                        if (resultvehihcle != null & resultvehihcle.Count > 0)
+                        {
+                            obsvehicleType = new ObservableCollection<VehicleType>(resultvehihcle);
+                            if (obsvehicleType.Count > 0)
+                            {
+                                for (var item = 0; item < obsvehicleType.Count; item++)
+                                {
+                                    obsvehicleType[item].VehicleDisplayImage = obsvehicleType[item].VehicleActiveImage;
+                                    obsvehicleType[item] = obsvehicleType[item];
+                                }
+                                collstviewVehicleTye.WidthRequest = 90;
+                                collstviewVehicleTye.ItemsSource = obsvehicleType;
+                                SelectedVehicle = obsvehicleType[0].VehicleTypeCode;
+                            }
+                        }
+
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ViolationPage.xaml.cs", "", "GetSelectedVehicleType");
+            }
+        }
+        private void collstviewVehicleTye_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+
+                var item = e.CurrentSelection;
+                var selectedvehicle = item[0] as VehicleType;
+                if (!string.IsNullOrEmpty(selectedvehicle.VehicleImage))
+                {
+                    SelectedVehicle = selectedvehicle.VehicleTypeCode;
+                    UpdateCollectionViewSelectedItem(selectedvehicle);
+                }
+
+
+
+            }
+            catch (Exception ex)
+            {
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ViolationPage.xaml.cs", "", "collstviewVehicleTye_SelectionChanged");
+            }
+        }
+        public void UpdateCollectionViewSelectedItem(VehicleType selectedVehicle)
+        {
+            try
+            {
+                for (var item = 0; item < obsvehicleType.Count; item++)
+                {
+                    if (obsvehicleType[item].VehicleTypeID == selectedVehicle.VehicleTypeID)
+                    {
+
+                        obsvehicleType[item].VehicleDisplayImage = obsvehicleType[item].VehicleActiveImage;
+                    }
+                    else
+                    {
+                        obsvehicleType[item].VehicleDisplayImage = obsvehicleType[item].VehicleInActiveImage;
+                    }
+                    obsvehicleType[item] = obsvehicleType[item];
+                }
+                collstviewVehicleTye.ItemsSource = obsvehicleType;
+                if (!string.IsNullOrEmpty(selectedVehicle.VehicleTypeCode))
+                {
+                    SelectedVehicleBayNumbers(selectedVehicle.VehicleTypeCode);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "ViolationPage.xaml.cs", "", "UpdateCollectionViewSelectedItem");
+            }
+        }
+        public async void SelectedVehicleBayNumbers(string SelectedVehicle)
+        {
+            var bayNumbers = lstparkingbay.Where(i => i.VehicleTypeID.VehicleTypeCode.ToUpper() == (SelectedVehicle)).ToList(); ;
+            if (bayNumbers != null)
+            {
+                pickerBayNumers.ItemsSource = bayNumbers;
+            }
+            else
+            {
+                await DisplayAlert("Alert", "Bay numbers unavailable", "Ok");
+            }
+        }
+        #endregion
         protected override bool OnBackButtonPressed()
         {
             return false;

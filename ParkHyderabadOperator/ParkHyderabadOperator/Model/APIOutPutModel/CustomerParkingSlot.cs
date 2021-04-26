@@ -60,6 +60,10 @@ namespace ParkHyderabadOperator.Model.APIOutPutModel
         public decimal PaidAmount { get; set; }
         public decimal DueAmount { get; set; }
 
+        public decimal PaidDueAmount { get; set; }
+        public bool IsDueAmountPaid { get; set; }
+        public DateTime? DueAmountPaidOn { get; set; }
+
         public decimal ViolationFees { get; set; }
         public decimal ExtendAmount { get; set; }
         public decimal ClampFees { get; set; }
@@ -68,5 +72,7 @@ namespace ParkHyderabadOperator.Model.APIOutPutModel
         public int ViolationWarningCount { get; set; }
         public decimal VehicleImageLottitude { get; set; }
         public decimal VehicleImageLongitude { get; set; }
+
+        public string GSTNumber { get; set; }
     }
 }

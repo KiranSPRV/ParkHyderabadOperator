@@ -21,7 +21,6 @@
                                 <Label x:Name="labelParkingLocation"  Style="{StaticResource LabelBoldPlaceHolderStyle}"  VerticalOptions="CenterAndExpand"   HorizontalOptions="CenterAndExpand"/>
                             </StackLayout>
                             <StackLayout  >
-                                
                                 <StackLayout Orientation="Horizontal" VerticalOptions="Center"   HorizontalOptions="CenterAndExpand" Spacing="10">
                                     <Label Text="AMOUNT"  Style="{StaticResource LabelExtraLargeProximaBoldStyle}"    />
                                     <StackLayout Orientation="Horizontal" Spacing="2">
@@ -30,6 +29,7 @@
                                     </StackLayout>
                                 </StackLayout>
                                 <Label  Text="( Weekly Pass )" Style="{StaticResource LabelBoldPlaceHolderStyle}"  VerticalOptions="CenterAndExpand"   HorizontalOptions="CenterAndExpand"/>
+                                <Label x:Name="labelAmountDetails"  Style="{StaticResource LabelBoldPlaceHolderStyle}"  VerticalOptions="CenterAndExpand"   HorizontalOptions="CenterAndExpand"/>
                             </StackLayout>
                         </StackLayout>
 

@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace ParkHyderabadOperator
 {
@@ -19,6 +21,7 @@ namespace ParkHyderabadOperator
         ParkedVehiclesFilter objFilter;
         List<ApplicationType> objSelectedAppTypes;
         List<Status> objSelectedStatus;
+        private ObservableCollection<VehicleType> filterVehicleType;
         public FiltersPage()
         {
             InitializeComponent();
@@ -29,30 +32,35 @@ namespace ParkHyderabadOperator
             dal_Home = new DALHome();
             GetAllApplicationTypes();
             GetAllStatus();
+            GetAllVehicleType();
         }
 
         private async void BtnApply_Clicked(object sender, EventArgs e)
         {
             try
             {
-                
-                if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
+                ShowLoading(true);
+                MasterHomePage filerpage = null;
+                if (App.Current.Properties.ContainsKey("LoginUser") )
                 {
                     User objloginuser = (User)App.Current.Properties["LoginUser"];
-
-                    objFilter.LocationID = objloginuser.LocationParkingLotID.LocationID.LocationID;
-                    objFilter.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
-                    objFilter.ApplicationTypeCode = objSelectedAppTypes;
-                    objFilter.StatusCode = objSelectedStatus;
-                    objFilter.VehicleTypeCode = SelectedVehicle;
-                    var filerpage = new MasterHomePage(objFilter);
-                     await Navigation.PushAsync(filerpage);
+                    await Task.Run(() =>
+                    {
+                        objFilter.LocationID = objloginuser.LocationParkingLotID.LocationID.LocationID;
+                        objFilter.LocationParkingLotID = objloginuser.LocationParkingLotID.LocationParkingLotID;
+                        objFilter.ApplicationTypeCode = objSelectedAppTypes;
+                        objFilter.StatusCode = objSelectedStatus;
+                        objFilter.VehicleTypeCode = SelectedVehicle;
+                        filerpage = new MasterHomePage(objFilter);
+                    });
+                    await Navigation.PushAsync(filerpage);
                 }
+                ShowLoading(false);
             }
             catch (Exception ex)
             {
+                ShowLoading(false);
             }
-
         }
 
         #region ApplicationTypes
@@ -128,7 +136,7 @@ namespace ParkHyderabadOperator
                 Status obj = swithch.BindingContext as Status;
                 if (swithch.IsToggled)
                 {
-                    if(obj.StatusCode.ToUpper()=="C")
+                    if (obj.StatusCode.ToUpper() == "C")
                     {
                         objFilter.IsClamped = true;
                     }
@@ -136,7 +144,7 @@ namespace ParkHyderabadOperator
                     {
                         objSelectedStatus.Add(obj);
                     }
-                    
+
                 }
                 else
                 {
@@ -155,7 +163,7 @@ namespace ParkHyderabadOperator
                             }
                         }
                     }
-                    
+
                 }
             }
             catch (Exception ex)
@@ -167,40 +175,89 @@ namespace ParkHyderabadOperator
 
         #endregion
 
-        #region Vehicle Type Selection
+        #region Dynamic Vehicle Type List
+        private void collstviewVehicleTye_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                var item = e.CurrentSelection;
+                var selectedvehicle = item[0] as VehicleType;
+                if (selectedvehicle.VehicleTypeID != 0)
+                {
+                    SelectedVehicle = selectedvehicle.VehicleTypeCode;
+                    UpdateCollectionViewSelectedItem(selectedvehicle);
+                }
 
-        private void ImgBtnTwoWheeler_Clicked(object sender, EventArgs e)
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+        public void UpdateCollectionViewSelectedItem(VehicleType selectedVehicle)
+        {
+            try
+            {
+                for (var item = 0; item < filterVehicleType.Count; item++)
+                {
+
+                    if (filterVehicleType[item].VehicleTypeID == selectedVehicle.VehicleTypeID)
+                    {
+
+                        filterVehicleType[item].VehicleDisplayImage = filterVehicleType[item].VehicleActiveImage;
+                    }
+                    else
+                    {
+                        filterVehicleType[item].VehicleDisplayImage = filterVehicleType[item].VehicleInActiveImage;
+                    }
+
+                    filterVehicleType[item] = filterVehicleType[item];
+                }
+                collstviewVehicleTye.ItemsSource = filterVehicleType;
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+        public async void GetAllVehicleType()
         {
             try
             {
 
-                SelectedVehicle = "2W";
-                imgBtnTwoWheeler.Source = ImageSource.FromFile("Twowheeler_circle_ticked.png");
-                imgBtnFourWheeler.Source = ImageSource.FromFile("Fourwheeler_circle.png");
+                if (App.Current.Properties.ContainsKey("apitoken"))
+                {
+                    var lstVehicleType = await App.SQLiteDb.GetAllVehicleTypesInSQLLite();
+                    if (lstVehicleType.Count > 0)
+                    {
+                        lstVehicleType = lstVehicleType.OrderBy(i => i.VehicleTypeID).ToList();
+                        filterVehicleType = new ObservableCollection<VehicleType>(lstVehicleType);
+                        collstviewVehicleTye.ItemsSource = filterVehicleType;
+                        collstviewVehicleTye.SelectedItem = filterVehicleType[0];
+                    }
+                }
             }
             catch (Exception ex)
             {
-                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "CheckInPage.xaml.cs", "", "ImgBtnTwoWheeler_Clicked");
+
             }
         }
-
-        private void ImgBtnFourWheeler_Clicked(object sender, EventArgs e)
-        {
-            try
-            {
-                SelectedVehicle = "4W";
-                imgBtnTwoWheeler.Source = ImageSource.FromFile("Twowheeler_circle.png");
-                imgBtnFourWheeler.Source = ImageSource.FromFile("Fourwheeler_circle_ticked.png");
-            }
-            catch (Exception ex)
-            {
-                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "CheckInPage.xaml.cs", "", "ImgBtnFourWheeler_Clicked");
-            }
-
-        }
-
         #endregion
 
+        public void ShowLoading(bool show)
+        {
+            StklauoutactivityIndicator.IsVisible = show;
+            activity.IsVisible = show;
+            activity.IsRunning = show;
+            if (show)
+            {
+                absFilterPage.Opacity = 0.5;
+            }
+            else
+            {
+                absFilterPage.Opacity = 1;
+            }
 
+        }
     }
 }

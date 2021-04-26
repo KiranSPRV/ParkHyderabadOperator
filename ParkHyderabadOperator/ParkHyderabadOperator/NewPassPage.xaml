@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ParkHyderabadOperator.NewPassPage"
+              xmlns:converters="clr-namespace:ParkHyderabadOperator.Converters"
              xmlns:local="clr-namespace:ParkHyderabadOperator.CustomXamarinElementsModel"
              NavigationPage.HasBackButton="True" >
     <NavigationPage.TitleView >
@@ -11,7 +12,7 @@
         <ResourceDictionary>
             <DataTemplate x:Key="evenTemplate">
                 <ViewCell>
-                    <StackLayout VerticalOptions="CenterAndExpand"  BackgroundColor="Transparent" Margin="0,10,0,10">
+                    <StackLayout VerticalOptions="FillAndExpand"  BackgroundColor="Transparent" Margin="0,10,0,10">
                         <Frame CornerRadius="5" Padding="1"  BorderColor="#efefef" >
                             <AbsoluteLayout >
                                 <StackLayout  BackgroundColor="#FFFFFF"  AbsoluteLayout.LayoutBounds="0,0,1,1"  AbsoluteLayout.LayoutFlags="All">
@@ -26,7 +27,7 @@
                                     <StackLayout  Orientation="Vertical"    VerticalOptions="Center">
                                         <Label Text="{Binding PassTypeID.PassTypeName}"  Style="{StaticResource LabelProximaRegBoldWhiteStyle}" HorizontalOptions="Center"   VerticalOptions="Center"/>
                                         <Label Text="{Binding StationAccess}" Style="{StaticResource LabelProximaRegBoldWhiteStyle}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
-
+                                        <Label Text="{Binding PassName}"  Style="{StaticResource LabelProximaRegBoldWhiteStyle}" HorizontalOptions="CenterAndExpand"   VerticalOptions="CenterAndExpand"/>
                                     </StackLayout>
                                 </Frame>
 
@@ -39,7 +40,7 @@
             </DataTemplate>
             <DataTemplate x:Key="unevenTemplate" >
                 <ViewCell >
-                    <StackLayout VerticalOptions="CenterAndExpand" BackgroundColor="Transparent"  Margin="0,10,0,10">
+                    <StackLayout VerticalOptions="FillAndExpand" BackgroundColor="Transparent"  Margin="0,10,0,10">
                         <Frame CornerRadius="5" Padding="1"  BorderColor="#efefef" >
                             <AbsoluteLayout >
                                 <StackLayout BackgroundColor="#FFFFFF"  AbsoluteLayout.LayoutBounds="0,0,1,1"  AbsoluteLayout.LayoutFlags="All">
@@ -50,9 +51,10 @@
                                     </StackLayout>
                                 </StackLayout>
                                 <Frame CornerRadius="5" Padding="10"  BorderColor="#f6f6f7" BackgroundColor="#FFFFFF"  AbsoluteLayout.LayoutBounds="0,0,0.7,1"  AbsoluteLayout.LayoutFlags="All" >
-                                    <StackLayout  Orientation="Vertical"    VerticalOptions="Center">
+                                    <StackLayout  Orientation="Vertical"    VerticalOptions="Center" Spacing="5">
                                         <Label Text="{Binding PassTypeID.PassTypeName}"  Style="{StaticResource LabelRegularBlackColorStyle}"  VerticalOptions="Center" HorizontalOptions="Center"/>
                                         <Label Text="{Binding StationAccess}" Style="{StaticResource LabelRegularBlackColorStyle}"    HorizontalOptions="CenterAndExpand"/>
+                                        <Label Text="{Binding PassName}"  Style="{StaticResource LabelRegularBlackColorStyle}" HorizontalOptions="CenterAndExpand"   VerticalOptions="Center"/>
                                     </StackLayout>
                                 </Frame>
                             </AbsoluteLayout>
@@ -71,27 +73,28 @@
             <StackLayout  AbsoluteLayout.LayoutBounds="0,0,1,1"  AbsoluteLayout.LayoutFlags="All" >
                 <StackLayout Spacing="5">
                     <StackLayout Orientation="Horizontal" x:Name="slPassTypePageHeadingImages" Spacing="10" VerticalOptions="FillAndExpand" HorizontalOptions="CenterAndExpand">
-                        <StackLayout Orientation="Vertical" Padding="8" Spacing="10" HorizontalOptions="CenterAndExpand"  x:Name="slTwoWheelerImage">
-                            <StackLayout.GestureRecognizers >
-                                <TapGestureRecognizer x:Name="slTwoWheeler" Tapped="SlTwoWheeler_Tapped"/>
-                            </StackLayout.GestureRecognizers>
-                            <Image x:Name="imgTwoWheeler"  HeightRequest="50"   BackgroundColor="Transparent"  Source="Twowheeler_circle_ticked.png" >
-                                <Image.GestureRecognizers>
-                                    <TapGestureRecognizer   Tapped="SlTwoWheeler_Tapped"  />
-                                </Image.GestureRecognizers>
-                            </Image>
-                            <Label Text="Two Wheeler" HorizontalOptions="CenterAndExpand" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
-                        </StackLayout>
-                        <StackLayout Orientation="Vertical" Padding="8" Spacing="10" x:Name="slFourWheelerImage">
-                            <StackLayout.GestureRecognizers>
-                                <TapGestureRecognizer x:Name="slFourWheeler" Tapped="SlFourWheeler_Tapped"/>
-                            </StackLayout.GestureRecognizers>
-                            <Image x:Name="imgFourWheeler" BackgroundColor="Transparent" HeightRequest="50"    Source="Fourwheeler_circle.png" >
-                                <Image.GestureRecognizers>
-                                    <TapGestureRecognizer   Tapped="SlFourWheeler_Tapped"  />
-                                </Image.GestureRecognizers>
-                            </Image>
-                            <Label Text="Four Wheeler" HorizontalOptions="Center" Style="{StaticResource LabelPlaceHolderStyle}"></Label>
+                        <StackLayout   BackgroundColor="#F4F4F4">
+                            <CollectionView x:Name="collstviewVehicleTye"    SelectionMode="Single"  Margin="5"  BackgroundColor="#F4F4F4"
+                                SelectionChanged="collstviewVehicleTye_SelectionChanged"  WidthRequest="300" HeightRequest="125"
+                                    VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"
+                                    FlowDirection="RightToLeft"
+                                    EmptyView="No items to display">
+                                <CollectionView.ItemsLayout>
+                                    <GridItemsLayout  Orientation="Horizontal" HorizontalItemSpacing="15"/>
+                                </CollectionView.ItemsLayout>
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Frame BackgroundColor="#FFFFFF"  CornerRadius="5" Padding="7" Margin="5" VerticalOptions="Center" HorizontalOptions="CenterAndExpand">
+                                            <StackLayout VerticalOptions="CenterAndExpand"     x:Name="slTwoWheelerImage" Margin="4">
+                                                <Image x:Name="imgTwoWheeler" HeightRequest="50"     HorizontalOptions="FillAndExpand"    BackgroundColor="Transparent"  
+                                                        Source="{Binding VehicleDisplayImage}" />
+                                                <Label Text="{Binding VehicleTypeName}" HorizontalOptions="CenterAndExpand" Style="{StaticResource LabelPlaceHolderStyle}"/>
+                                            </StackLayout>
+                                        </Frame>
+
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
                         </StackLayout>
                     </StackLayout>
                     <StackLayout  Padding="10" >

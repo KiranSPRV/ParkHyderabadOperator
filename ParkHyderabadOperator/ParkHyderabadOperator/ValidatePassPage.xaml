@@ -2,13 +2,14 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ParkHyderabadOperator.ValidatePassPage"
+             xmlns:converters="clr-namespace:ParkHyderabadOperator.Converters"
               NavigationPage.HasBackButton="True" >
 
     <NavigationPage.TitleView >
         <Label Text="VALIDATE PASS"  Style="{StaticResource LabelRegularPageTitlesStyle}" Padding="0,0,70,0"/>
     </NavigationPage.TitleView>
     <ContentPage.Content>
-        <AbsoluteLayout VerticalOptions="FillAndExpand" >
+        <AbsoluteLayout VerticalOptions="FillAndExpand" x:Name="absLayoutValidatePasspage">
             <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1"  AbsoluteLayout.LayoutFlags="All" >
                 <AbsoluteLayout VerticalOptions="FillAndExpand">
                     <StackLayout  BackgroundColor="#3293fa"  AbsoluteLayout.LayoutBounds="0,1,1,0.6"  AbsoluteLayout.LayoutFlags="All"   VerticalOptions="FillAndExpand">
@@ -67,16 +68,16 @@
                                         </StackLayout>
                                         <StackLayout Padding="0,5,0,5" Spacing="10" >
                                             <StackLayout Orientation="Horizontal" Spacing="10">
-                                                <Label  Text="NFC Card: "   Style="{StaticResource LabelProximaRegBoldStyle}"  TextColor="#3192F9"></Label>
+                                                <Label  x:Name="lableCardType"   Style="{StaticResource LabelProximaRegBoldStyle}"  TextColor="#3192F9"></Label>
                                                 <Label  x:Name="labelNFCCard"   Style="{StaticResource LabelProximaRegBoldStyle}"  TextColor="#3192F9"></Label>
                                             </StackLayout>
-                                            
+
                                             <StackLayout Orientation="Horizontal"  VerticalOptions="EndAndExpand"  >
                                                 <Button Text="PRINT" x:Name="BtnPrint" Style="{StaticResource ButtonRegularDodgerBlueStyle}"  Clicked="BtnPrint_Clicked"    />
                                                 <Button Text="DONE" x:Name="BtnDone"  Style="{StaticResource ButtonRegularShamrockStyle}"  Clicked="BtnDone_Clicked" />
                                             </StackLayout>
                                         </StackLayout>
-                                        
+
                                     </StackLayout>
                                 </Frame>
                             </StackLayout>
@@ -97,6 +98,13 @@
                     </StackLayout>
                 </AbsoluteLayout>
             </StackLayout>
+            <ContentView x:Name="StklauoutactivityIndicator" BackgroundColor="Transparent"  IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                <StackLayout Orientation="Vertical" HeightRequest="150" WidthRequest="100" BackgroundColor="Transparent" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="0">
+                    <ActivityIndicator  x:Name="activity" IsEnabled="True" IsVisible="False" IsRunning="False"   HeightRequest="80" Color="#010101"  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></ActivityIndicator>
+                    <Label x:Name="LabelLodaingMsg" Text="Loading..."  Style="{StaticResource LabelProximaBoldStyle}" FontSize="18" TextColor="#010101"   VerticalOptions="StartAndExpand" HorizontalOptions="CenterAndExpand"></Label>
+                </StackLayout>
+
+            </ContentView>
         </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>

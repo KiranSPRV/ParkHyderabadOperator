@@ -3,6 +3,7 @@ using ParkHyderabadOperator.DAL.DALExceptionLog;
 using ParkHyderabadOperator.Model;
 using ParkHyderabadOperator.Model.APIOutPutModel;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -32,23 +33,15 @@ namespace ParkHyderabadOperator
             ObjblueToothDevicePrinting = new BlueToothDevicePrinting();
             PageCalledBy = redirectdFrom;
             objviolationVehicleChekOut = objInput;
-            if (objInput.VehicleTypeID.VehicleTypeCode == "2W")
-            {
-                labelChekInAmount.Text = "(Two Wheeler - For " + objInput.Duration + " Hours)";
-                ImgVehicleType.Source = "bike_black.png";
-            }
-            else if (objInput.VehicleTypeID.VehicleTypeCode == "4W")
-            {
-                labelChekInAmount.Text = "(Four Wheeler - For " + objInput.Duration + " Hours)";
-                ImgVehicleType.Source = "car_black.png";
-            }
+            ImgVehicleType.Source = objInput.VehicleTypeID.VehicleIcon;
+            labelChekInAmount.Text = "(" + objInput.VehicleTypeID.VehicleTypeName + " - For " + objInput.Duration + " Hours)";
             labelVehicleRegNumber.Text = objInput.CustomerVehicleID.RegistrationNumber;
             labelParkingLocation.Text = objInput.LocationParkingLotID.LocationID.LocationName + "-" + objInput.LocationParkingLotID.LocationParkingLotName + "," + objInput.LocationParkingLotID.ParkingBayID.ParkingBayName + " " + objInput.LocationParkingLotID.ParkingBayID.ParkingBayRange;
 
             if (redirectdFrom == "ViolationVehicleInformation")
             {
-                labelChekInAmount.Text = "(Parking ₹" + objInput.Amount.ToString("N2") + " Clamp ₹" + objInput.ClampFees.ToString("N2") + ")";
-                lableAmount.Text = (objInput.Amount + objInput.ClampFees).ToString("N2");
+                labelChekInAmount.Text = "(Parking ₹" + objInput.Amount.ToString("N2") + " Clamp ₹" + objInput.ClampFees.ToString("N2") + " Due Amount ₹" + objInput.DueAmount.ToString("N2") + ")";
+                lableAmount.Text = (objInput.Amount + objInput.ClampFees + objInput.DueAmount).ToString("N2");
             }
             else if (redirectdFrom == "PassCheckInVehicleInformation")
             {
@@ -57,9 +50,7 @@ namespace ParkHyderabadOperator
             }
             else if (redirectdFrom == "OverstayVehicleInformation")
             {
-
                 lableAmount.Text = (objInput.ExtendAmount + objInput.ClampFees).ToString("N2");
-                labelChekInAmount.Text = "(Two Wheeler - For " + objInput.Duration + " Hours)";
             }
         }
         private async void BtnNo_Clicked(object sender, EventArgs e)
@@ -82,7 +73,7 @@ namespace ParkHyderabadOperator
                 ShowLoading(false);
             }
         }
-        private  void BtnYes_Clicked(object sender, EventArgs e)
+        private void BtnYes_Clicked(object sender, EventArgs e)
         {
             try
             {
@@ -95,7 +86,6 @@ namespace ParkHyderabadOperator
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "CheckOutPaymentConfirmationPage.xaml.cs", "", "BtnYes_Clicked");
             }
         }
-       
         private async void BtnCheckOut_Clicked(object sender, EventArgs e)
         {
             try
@@ -118,6 +108,10 @@ namespace ParkHyderabadOperator
                         });
                         if (VehicleCheckOut != null)
                         {
+                            if (VehicleCheckOut.PaymentTypeID != null)  // IF Payment Type NULL
+                            {
+                                VehicleCheckOut.PaymentTypeID.PaymentTypeName = objviolationVehicleChekOut.PaymentTypeID.PaymentTypeName;
+                            }
                             await Navigation.PushAsync(new CheckOutReceiptPage(PageCalledBy, VehicleCheckOut));
                         }
                         else

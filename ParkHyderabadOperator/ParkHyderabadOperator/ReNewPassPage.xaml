@@ -46,7 +46,7 @@
                                     </Entry>
                                 </StackLayout>
                                 <StackLayout  VerticalOptions="CenterAndExpand">
-                                    <Image x:Name="imgCustomerVehcileType" Source="bike_black.png" HeightRequest="25" VerticalOptions="CenterAndExpand" HorizontalOptions="EndAndExpand"/>
+                                    <Image x:Name="imgCustomerVehcileType"  HeightRequest="25" VerticalOptions="CenterAndExpand" HorizontalOptions="EndAndExpand"/>
                                 </StackLayout>
                             </StackLayout>
 

@@ -34,7 +34,7 @@
                         </StackLayout>
 
                     </Frame>
-                    <StackLayout Spacing="2" >
+                    <StackLayout Spacing="2" x:Name="slCardTypes">
                         <StackLayout Orientation="Horizontal"   x:Name="slNFCCard">
                             <StackLayout Orientation="Vertical" Spacing="2" HorizontalOptions="FillAndExpand">
                                 <StackLayout BackgroundColor="#f4f4f4" HorizontalOptions="FillAndExpand"  Spacing="0">

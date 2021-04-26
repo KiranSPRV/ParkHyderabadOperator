@@ -5,7 +5,6 @@
               xmlns:local="clr-namespace:ParkHyderabadOperator.CustomXamarinElementsModel"
               xmlns:localBehaviors="clr-namespace:ParkHyderabadOperator.Behaviors"
              NavigationPage.HasBackButton="True">
-
     <NavigationPage.TitleView >
         <StackLayout Orientation="Horizontal" VerticalOptions="CenterAndExpand">
             <Label Text="HISTORY" HorizontalOptions="CenterAndExpand"   VerticalOptions="Center"  Style="{StaticResource LabelPageHeadingStyle}" Margin="0,0,15,0"/>
@@ -20,8 +19,8 @@
             <DataTemplate x:Key="evenTemplate">
                 <ViewCell>
                     <Grid  BackgroundColor="#F5F5F5">
-                        <StackLayout Margin="15,5,15,10" Orientation="Horizontal"   BackgroundColor="#F5F5F5">
-                            <StackLayout  HorizontalOptions="FillAndExpand" Spacing="10" Margin="0,5,0,5">
+                        <StackLayout Margin="10,5,10,10" Orientation="Horizontal"  Spacing="0"  BackgroundColor="#F5F5F5">
+                            <StackLayout  HorizontalOptions="FillAndExpand" Spacing="3" Margin="0,5,0,5">
                                 <StackLayout   Spacing="5">
                                     <Label x:Name="labelParkingLocationDetails"  Style="{StaticResource LabelProximaRegBlackStyle}" TextColor="{Binding StatusID.StatusColor}" FontSize="16"  >
                                         <Label.FormattedText>
@@ -35,18 +34,18 @@
                                                 <Span  Text=" ("/>
                                                 <Span Text="{Binding CreatedByName }"/>
                                                 <Span  Text="-"/>
-                                                <Span  Text="{Binding  CreatedBy }"/>
+                                                <Span  Text="{Binding  UserCode }"/>
                                                 <Span  Text=")"/>
                                             </FormattedString>
                                         </Label.FormattedText>
                                     </Label>
                                     <StackLayout Orientation="Horizontal">
-                                        <Label x:Name="labelParkingTimeDetails" Style="{StaticResource LabelBoldPlaceHolderStyle}" TextColor="{Binding StatusID.StatusColor}"  >
+                                        <Label  Style="{StaticResource LabelBoldPlaceHolderStyle}"  TextColor="{Binding StatusID.StatusColor}">
                                             <Label.FormattedText>
                                                 <FormattedString>
                                                     <Span   Text="{Binding ExpectedStartTime, StringFormat=' {0:dd-MMM-yyyy hh:mm tt}'}"/>
                                                     <Span   Text=" to "/>
-                                                    <Span   Text="{Binding ActualEndTime , StringFormat=' {0:dd-MMM-yyyy hh:mm tt}'}"/>
+                                                    <Span   Text="{Binding ActualEndTime , StringFormat=' {0:dd-MMM-yyyy hh:mm tt}'}" />
                                                 </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
@@ -99,7 +98,7 @@
                                             </Label>
                                         </StackLayout>
                                         <StackLayout Orientation="Horizontal">
-                                            <Label    Style="{StaticResource LabelProximaRegBlackStyle}"    VerticalOptions="Center" TextColor="{Binding StatusID.StatusColor}">
+                                            <Label    Style="{StaticResource LabelProximaRegBlackStyle}"   HorizontalOptions="Start" VerticalOptions="Center" TextColor="{Binding StatusID.StatusColor}">
                                                 <Label.FormattedText>
                                                     <FormattedString>
                                                         <Span  Text="Status: " FontAttributes="Bold"/>
@@ -107,7 +106,7 @@
                                                     </FormattedString>
                                                 </Label.FormattedText>
                                             </Label>
-                                            <Label    Style="{StaticResource LabelProximaRegBlackStyle}"    VerticalOptions="Center" HorizontalOptions="EndAndExpand" TextColor="{Binding StatusID.StatusColor}">
+                                            <Label    Style="{StaticResource LabelProximaRegBlackStyle}"    VerticalOptions="Center" HorizontalOptions="End" TextColor="{Binding StatusID.StatusColor}">
                                                 <Label.FormattedText>
                                                     <FormattedString>
                                                         <Span  Text="FOC Reason: " FontAttributes="Bold"/>
@@ -115,6 +114,21 @@
                                                     </FormattedString>
                                                 </Label.FormattedText>
                                             </Label>
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label x:Name="labelDueAmountPaidDetails"  Style="{StaticResource LabelProximaRegBlackStyle}"    VerticalOptions="Center" TextColor="{Binding StatusID.StatusColor}" >
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span  Text="Paid Due Amt: " FontAttributes="Bold"/>
+                                                        <Span  Text="₹ "/>
+                                                        <Span  Text="{Binding PaidDueAmount}"/>
+                                                        <Span  Text="/-"/>
+                                                        <Span  Text="On:" FontAttributes="Bold"/>
+                                                        <Span  Text="{Binding DueAmountPaidOn, StringFormat=' {0:dd-MMM-yyyy hh:mm tt}'}"/>
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+
                                         </StackLayout>
                                     </StackLayout>
                                 </StackLayout>
@@ -131,8 +145,8 @@
             <DataTemplate x:Key="unevenTemplate" >
                 <ViewCell >
                     <Grid  BackgroundColor="#FFFFFF">
-                        <StackLayout Margin="15,5,15,10" Orientation="Horizontal"   BackgroundColor="#FFFFFF">
-                            <StackLayout  HorizontalOptions="FillAndExpand" Spacing="10" Margin="0,5,0,5">
+                        <StackLayout Margin="10,5,10,10" Orientation="Horizontal" Spacing="0"  BackgroundColor="#FFFFFF">
+                            <StackLayout  HorizontalOptions="FillAndExpand" Spacing="5" Margin="0,5,0,5">
                                 <StackLayout  Spacing="5">
                                     <Label x:Name="labelParkingLocationDetails"  Style="{StaticResource LabelProximaRegBlackStyle}" FontSize="16"  TextColor="{Binding StatusID.StatusColor}">
                                         <Label.FormattedText>
@@ -146,7 +160,7 @@
                                                 <Span  Text=" ("/>
                                                 <Span Text="{Binding CreatedByName }"/>
                                                 <Span  Text="-"/>
-                                                <Span  Text="{Binding  CreatedBy }"/>
+                                                <Span  Text="{Binding  UserCode }"/>
                                                 <Span  Text=")"/>
                                             </FormattedString>
                                         </Label.FormattedText>
@@ -199,6 +213,7 @@
                                                 </Label.FormattedText>
                                             </Label>
                                         </StackLayout>
+                                      
                                         <StackLayout Orientation="Horizontal">
                                             <Label x:Name="labelReason"   Style="{StaticResource LabelProximaRegBlackStyle}"    VerticalOptions="Center" TextColor="{Binding StatusID.StatusColor}">
                                                 <Label.FormattedText>
@@ -210,7 +225,7 @@
                                             </Label>
                                         </StackLayout>
                                         <StackLayout Orientation="Horizontal">
-                                            <Label    Style="{StaticResource LabelProximaRegBlackStyle}"    VerticalOptions="Center" TextColor="{Binding StatusID.StatusColor}">
+                                            <Label    Style="{StaticResource LabelProximaRegBlackStyle}"  HorizontalOptions="Start"  VerticalOptions="Center" TextColor="{Binding StatusID.StatusColor}">
                                                 <Label.FormattedText>
                                                     <FormattedString>
                                                         <Span  Text="Status: " FontAttributes="Bold"/>
@@ -218,7 +233,7 @@
                                                     </FormattedString>
                                                 </Label.FormattedText>
                                             </Label>
-                                            <Label    Style="{StaticResource LabelProximaRegBlackStyle}"    VerticalOptions="Center" HorizontalOptions="EndAndExpand" TextColor="{Binding StatusID.StatusColor}">
+                                            <Label    Style="{StaticResource LabelProximaRegBlackStyle}"    VerticalOptions="Center" HorizontalOptions="End" TextColor="{Binding StatusID.StatusColor}">
                                                 <Label.FormattedText>
                                                     <FormattedString>
                                                         <Span  Text="FOC Reason: " FontAttributes="Bold"/>
@@ -226,6 +241,21 @@
                                                     </FormattedString>
                                                 </Label.FormattedText>
                                             </Label>
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label x:Name="labelDueAmountPaidDetails"  Style="{StaticResource LabelProximaRegBlackStyle}"    VerticalOptions="Center" TextColor="{Binding StatusID.StatusColor}" >
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span  Text="Paid Due Amt: " FontAttributes="Bold"/>
+                                                        <Span  Text="₹ "/>
+                                                        <Span  Text="{Binding PaidDueAmount}"/>
+                                                        <Span  Text="/-"/>
+                                                        <Span  Text=" On:" FontAttributes="Bold"/>
+                                                        <Span  Text="{Binding DueAmountPaidOn, StringFormat=' {0:dd-MMM-yyyy hh:mm tt}'}"/>
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+
                                         </StackLayout>
                                     </StackLayout>
                                 </StackLayout>
@@ -287,7 +317,7 @@
                                     <ViewCell>
                                         <Frame CornerRadius="5" BackgroundColor="#FFFFFF" Padding="5" Margin="5">
                                             <StackLayout Orientation="Horizontal">
-                                                <Image HeightRequest="20" Source="{Binding VehicleTypeID.VehicleImage}"/>
+                                                <Image HeightRequest="20"  Source="{Binding VehicleTypeID.VehicleIcon}"/>
                                                 <Label Text="{Binding RegistrationNumber}" Style="{StaticResource LabelRegularEndBoldStyle}" />
                                             </StackLayout>
                                         </Frame>

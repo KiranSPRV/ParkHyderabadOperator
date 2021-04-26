@@ -4,6 +4,7 @@ using ParkHyderabadOperator.Model;
 using ParkHyderabadOperator.Model.APIInputModel;
 using ParkHyderabadOperator.Model.APIOutPutModel;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -32,6 +33,11 @@ namespace ParkHyderabadOperator
                     User loginUser = (User)App.Current.Properties["LoginUser"];
                     labelUserName.Text = loginUser.UserName;
                     labelUserID.Text = "ID: " + Convert.ToString(loginUser.UserCode);
+                    if(loginUser.Photo!=null&& loginUser.Photo.Length>0)
+                    {
+                        imgProfile.Source = ImageSource.FromStream(() => new MemoryStream(ByteArrayCompressionUtility.Decompress(loginUser.Photo)));
+                    }
+                  
                     if (loginUser.UserTypeID.UserTypeName.ToUpper() == "Administrator".ToUpper())
                     {
                         AdminHomePage adminhomePage = new AdminHomePage();
@@ -39,8 +45,8 @@ namespace ParkHyderabadOperator
                     }
                     else
                     {
-                        MasterDetailHomePage homePage = new MasterDetailHomePage();
-                        Detail = new NavigationPage(homePage);
+                        CheckIn checkInPage = new CheckIn();
+                        Detail = new NavigationPage(checkInPage);
                     }
 
                     IsPresented = false;
@@ -78,14 +84,21 @@ namespace ParkHyderabadOperator
             HistoryPage historyPage = null;
             try
             {
-
-                StklauoutactivityIndicator.IsVisible = true;
-                await Task.Run(() =>
+                if (DeviceInternet.InternetConnected())
                 {
-                    historyPage = new HistoryPage();
-                });
-                await Navigation.PushAsync(historyPage);
-                StklauoutactivityIndicator.IsVisible = false;
+                    StklauoutactivityIndicator.IsVisible = true;
+                    await Task.Run(() =>
+                    {
+                        historyPage = new HistoryPage();
+                    });
+                    await Navigation.PushAsync(historyPage);
+                    StklauoutactivityIndicator.IsVisible = false;
+                }
+                else
+                {
+                    await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
+
+                }
             }
             catch (Exception ex) { }
         }
@@ -93,8 +106,16 @@ namespace ParkHyderabadOperator
         {
             try
             {
-                var repPage = new ReportPage();
-                await Navigation.PushAsync(repPage);
+                if (DeviceInternet.InternetConnected())
+                {
+                    var repPage = new ReportPage();
+                    await Navigation.PushAsync(repPage);
+                }
+                else
+                {
+                    await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
+
+                }
             }
             catch (Exception ex)
             {
@@ -104,7 +125,15 @@ namespace ParkHyderabadOperator
         {
             try
             {
-                await Navigation.PushAsync(new ChangePasswordPage());
+                if (DeviceInternet.InternetConnected())
+                {
+                    await Navigation.PushAsync(new ChangePasswordPage());
+                }
+                else
+                {
+                    await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
+
+                }
             }
             catch (Exception ex)
             {
@@ -122,30 +151,38 @@ namespace ParkHyderabadOperator
                         await GetCurrentLocation();
                         //MasterDetailHomePage masterDetailHomePage = new MasterDetailHomePage();
                         //masterDetailHomePage.StopNFCListening();
-
-                        if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
+                        var lstchekIns = await App.SQLiteDb.GetAllVehicleAsync();
+                        if (lstchekIns != null && lstchekIns.Count > 0)
                         {
-                            User objloginuser = (User)App.Current.Properties["LoginUser"];
-                            objloginuser.LogoutTime = DateTime.Now;
-                            objloginuser.LocationParkingLotID.Lattitude = Latitude;
-                            objloginuser.LocationParkingLotID.Longitude = Longitude;
-                            string resultmsg = dal_Menubar.UpdateUserDailyLogOut(Convert.ToString(App.Current.Properties["apitoken"]), objloginuser);
-                            SecureStorage.RemoveAll();
-                            if (App.Current.Properties.ContainsKey("apitoken"))
-                            {
-                                App.Current.Properties.Remove("apitoken");
-                            }
-                            if (App.Current.Properties.ContainsKey("LoginUser"))
-                            {
-                                App.Current.Properties.Remove("LoginUser");
-                            }
-                            if (App.Current.Properties.ContainsKey("ReNewPassCustomerVehicle"))
-                            {
-                                App.Current.Properties.Remove("ReNewPassCustomerVehicle");
-                            }
-
-                            await Navigation.PushAsync(new LoginPage());
+                            await DisplayAlert("Alert", "Please check offline vehicles sync","Ok");
                         }
+                        else
+                        {
+                            if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
+                            {
+                                User objloginuser = (User)App.Current.Properties["LoginUser"];
+                                objloginuser.LogoutTime = DateTime.Now;
+                                objloginuser.LocationParkingLotID.Lattitude = Latitude;
+                                objloginuser.LocationParkingLotID.Longitude = Longitude;
+                                string resultmsg = dal_Menubar.UpdateUserDailyLogOut(Convert.ToString(App.Current.Properties["apitoken"]), objloginuser);
+                                SecureStorage.RemoveAll();
+                                if (App.Current.Properties.ContainsKey("apitoken"))
+                                {
+                                    App.Current.Properties.Remove("apitoken");
+                                }
+                                if (App.Current.Properties.ContainsKey("LoginUser"))
+                                {
+                                    App.Current.Properties.Remove("LoginUser");
+                                }
+                                if (App.Current.Properties.ContainsKey("ReNewPassCustomerVehicle"))
+                                {
+                                    App.Current.Properties.Remove("ReNewPassCustomerVehicle");
+                                }
+
+                                await Navigation.PushAsync(new LoginPage());
+                            }
+                        }
+                        
                     }
                 }
                 else
@@ -164,7 +201,16 @@ namespace ParkHyderabadOperator
         {
             try
             {
-                await Navigation.PushAsync(new TimeSheet());
+                if (DeviceInternet.InternetConnected())
+                {
+                      await Navigation.PushAsync(new TimeSheet());
+                   
+                }
+                else
+                {
+                    await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
+
+                }
             }
             catch (Exception ex) { }
         }
@@ -172,16 +218,24 @@ namespace ParkHyderabadOperator
         {
             try
             {
-                RecentCheckOuts pageRecentCheckOuts = null;
-                StklauoutactivityIndicator.IsVisible = true;
-                await Task.Run(() =>
+                if (DeviceInternet.InternetConnected())
                 {
-                    pageRecentCheckOuts = new RecentCheckOuts();
+                    RecentCheckOuts pageRecentCheckOuts = null;
+                    StklauoutactivityIndicator.IsVisible = true;
+                    await Task.Run(() =>
+                    {
+                        pageRecentCheckOuts = new RecentCheckOuts();
 
-                });
+                    });
 
-                await Navigation.PushAsync(pageRecentCheckOuts);
-                StklauoutactivityIndicator.IsVisible = false;
+                    await Navigation.PushAsync(pageRecentCheckOuts);
+                    StklauoutactivityIndicator.IsVisible = false;
+                }
+                else
+                {
+                    await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
+
+                }
             }
             catch (Exception ex) { }
         }
@@ -189,15 +243,23 @@ namespace ParkHyderabadOperator
         {
             try
             {
-                LotOccupancyPage lotOccupancyPage = null;
-                StklauoutactivityIndicator.IsVisible = true;
-                await Task.Run(() =>
+                if (DeviceInternet.InternetConnected())
                 {
-                    lotOccupancyPage = new LotOccupancyPage();
+                    LotOccupancyPage lotOccupancyPage = null;
+                    StklauoutactivityIndicator.IsVisible = true;
+                    await Task.Run(() =>
+                    {
+                        lotOccupancyPage = new LotOccupancyPage();
 
-                });
-                await Navigation.PushAsync(lotOccupancyPage);
-                StklauoutactivityIndicator.IsVisible = false;
+                    });
+                    await Navigation.PushAsync(lotOccupancyPage);
+                    StklauoutactivityIndicator.IsVisible = false;
+                }
+                else
+                {
+                    await DisplayAlert("Alert", "Please check your Internet connection", "Ok");
+
+                }
             }
             catch (Exception ex)
             {
@@ -216,12 +278,12 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
-                    DisplayAlert("Alert", "Please enable your Device location.", "Ok");
+                    await DisplayAlert("Alert", "Please enable your Device location.", "Ok");
                 }
             }
             catch (FeatureNotSupportedException fnsEx)
             {
-                DisplayAlert("Alert", "Please enable your Device location.", "Ok");
+                await DisplayAlert("Alert", "Please enable your Device location.", "Ok");
                 // Handle not supported on device exception
             }
             catch (FeatureNotEnabledException fneEx)
@@ -241,5 +303,23 @@ namespace ParkHyderabadOperator
             }
         }
 
+        private async void slOfflineRecords_Tapped(object sender, EventArgs e)
+        {
+            try
+            {
+                DeSyncRecordsPage pageDeSyncRecordsPage = null;
+                StklauoutactivityIndicator.IsVisible = true;
+                await Task.Run(() =>
+                {
+                    pageDeSyncRecordsPage = new DeSyncRecordsPage();
+
+                });
+
+                await Navigation.PushAsync(pageDeSyncRecordsPage);
+                StklauoutactivityIndicator.IsVisible = false;
+
+            }
+            catch (Exception ex) { }
+        }
     }
 }

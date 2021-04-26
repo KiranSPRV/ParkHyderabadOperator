@@ -6,7 +6,12 @@ namespace ParkHyderabadOperator.Model.APIOutPutModel
 {
     public class Location
     {
+        public Location()
+        {
+            LocationCardTypeID = new CardType();
+        }
         public int LocationID { get; set; }
+        public CardType LocationCardTypeID { get; set; }
         public string LocationCode { get; set; }
         public string LocationName { get; set; }
         public string LocationDesc { get; set; }

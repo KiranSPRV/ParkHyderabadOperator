@@ -49,15 +49,20 @@
                                                 </StackLayout>
                                                 <StackLayout >
                                                     <StackLayout Orientation="Horizontal">
-                                                        <Image x:Name="imageVehicleImage"  HeightRequest="20"  ></Image>
+                                                        <Image x:Name="imageVehicleImage"  HeightRequest="18"  ></Image>
                                                         <Label  x:Name="labelVehicleDetails"     Style="{StaticResource LabelProximaBoldStyle}" VerticalOptions="CenterAndExpand"></Label>
                                                         <Label x:Name="lblWarningCount" Style="{StaticResource LabelProximaRegRedStyle}"  HorizontalOptions="EndAndExpand" VerticalOptions="CenterAndExpand"/>
                                                     </StackLayout>
-                                                    <StackLayout Orientation="Horizontal" Margin="5,0,0,0">
-                                                        <Image x:Name="imageParkingFeeImage"  HeightRequest="20" ></Image>
-                                                        <Label  x:Name="labelParkingFeesDetails"  Style="{StaticResource LabelProximaBoldStyle}" ></Label>
-                                                        <Label  x:Name="labelParkingPaymentType"  Style="{StaticResource LabelProximaRegStyle}" ></Label>
+                                                    <StackLayout Spacing="3"  Margin="5,0,0,0">
+                                                        <StackLayout Orientation="Horizontal">
+                                                            <Image x:Name="imageParkingFeeImage"  HeightRequest="20" ></Image>
+                                                            <Label  x:Name="labelParkingFeesDetails"  Style="{StaticResource LabelProximaBoldStyle}" ></Label>
+                                                            <Label  x:Name="labelParkingPaymentType"  Style="{StaticResource LabelProximaRegStyle}" ></Label>
+                                                        </StackLayout>
+                                                        <Label  x:Name="labelPaidDueAmountDetails"  Style="{StaticResource LabelProximaRegStyle}" FontSize="10" ></Label>
                                                     </StackLayout>
+
+
                                                     <StackLayout Orientation="Horizontal">
                                                         <Image x:Name="imgGovPhone" ></Image>
                                                         <Label  x:Name="labelPhoneNumber"     Style="{StaticResource LabelProximaBoldStyle}" VerticalOptions="CenterAndExpand"></Label>
@@ -171,7 +176,7 @@
                                         </StackLayout>
                                     </FlexLayout>
                                 </ScrollView>
-                               
+
                             </Frame>
                         </StackLayout>
                     </StackLayout>

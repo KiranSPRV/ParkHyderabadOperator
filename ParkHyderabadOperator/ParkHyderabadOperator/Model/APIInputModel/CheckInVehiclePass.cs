@@ -3,6 +3,7 @@
     public class CheckInVehiclePass
     {
         public string RegistrationNumber { get; set; }
+        public string VehicleTypeCode { get; set; }
         public int LocationID { get; set; }
         public int UserID { get; set; }
         public int LocationParkingLotID { get; set; }

@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace ParkHyderabadOperator.Droid
 {
-    [Activity(Label = "InstaOperator",  Theme = "@style/MainTheme", MainLauncher = false, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, ScreenOrientation = ScreenOrientation.Portrait)]
+    [Activity(Label = "InstaOperator",  Theme = "@style/MainTheme", MainLauncher = false,  ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, ScreenOrientation = ScreenOrientation.Portrait)]
     [IntentFilter(new[] { NfcAdapter.ActionNdefDiscovered }, Categories = new[] { Intent.CategoryDefault }, DataMimeType = MonthlyPassCashPaymentPage.MIME_TYPE)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
