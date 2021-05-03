@@ -60,7 +60,7 @@
                                     </StackLayout>
                                     <StackLayout   Grid.Column="1" Spacing="5" >
                                         <StackLayout Orientation="Horizontal" Spacing="10">
-                                            <Label  TextColor="{Binding VehilceStatusColor}" Style="{StaticResource LabelRegularBlackColorStyle}"   VerticalOptions="CenterAndExpand"  FontSize="12" Margin="10,0,0,0">
+                                            <Label  TextColor="{Binding VehilceStatusColor}" Style="{StaticResource LabelRegularBlackColorStyle}"   VerticalOptions="CenterAndExpand"  FontSize="12" Margin="9,0,0,0">
                                                 <Label.FormattedText>
                                                     <FormattedString>
                                                         <Span  Text="{Binding Duration}" />
@@ -77,16 +77,16 @@
                                         <Label  Style="{StaticResource LabelRegularBlackColorStyle}" TextColor="{Binding VehilceStatusColor}"   FontSize="12"  >
                                             <Label.FormattedText>
                                                 <FormattedString>
-                                                    <Span  Text="{Binding ActualStartTime, StringFormat='  {0: MMM dd yyyy hh:mm tt}'}"   />
-                                                    <Span  Text="{Binding ActualEndTime, StringFormat='  {0: MMM dd yyyy hh:mm tt}'}"/>
+                                                    <Span  Text="{Binding ActualStartTime, StringFormat=' {0: MMM dd yyyy hh:mm tt}'}"   />
+                                                    <Span  Text="{Binding ActualEndTime, StringFormat=' {0: MMM dd yyyy hh:mm tt}'}"/>
                                                 </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
-                                        <Label Style="{StaticResource LabelRegularBlackColorStyle}" TextColor="{Binding VehilceStatusColor}"   FontSize="12" Margin="10,0,0,0">
+                                        <Label Style="{StaticResource LabelRegularBlackColorStyle}" TextColor="{Binding VehilceStatusColor}"   FontSize="12" Margin="9,0,0,0">
                                             <Label.FormattedText>
                                                 <FormattedString>
                                                     <Span  Text="{Binding Operator.UserName }"/>
-                                                    <Span  Text=" #"/>
+                                                    <Span  Text="  #"/>
                                                     <Span  Text="{Binding Operator.UserCode}"/>
                                                 </FormattedString>
                                             </Label.FormattedText>

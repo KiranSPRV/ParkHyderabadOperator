@@ -8,11 +8,16 @@
             <ContentPage.Content>
                 <AbsoluteLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" >
                     <StackLayout Padding="20,10,0,0"    AbsoluteLayout.LayoutBounds="0,0,1,0.1"  AbsoluteLayout.LayoutFlags="All" Orientation="Vertical"  HorizontalOptions="FillAndExpand" BackgroundColor="#f4f4f4">
-                        <StackLayout Orientation="Horizontal" Spacing="20" VerticalOptions="CenterAndExpand" >
-                            <Image x:Name="imgProfile" Source="profilepic.png" HeightRequest="40" VerticalOptions="CenterAndExpand"></Image>
+                        <StackLayout Orientation="Horizontal" Spacing="10" VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand">
+                            <Frame  CornerRadius="100"    HeightRequest="40"   WidthRequest="40"   HorizontalOptions="Center"
+                               Padding="0" IsClippedToBounds="True"  VerticalOptions="Center"  >
+                                <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" HeightRequest="40">
+                                    <Image x:Name="imgProfile" Aspect="Fill" HeightRequest="40" Source="profilepic.png"    HorizontalOptions="Center"   VerticalOptions="FillAndExpand"></Image>
+                                </Grid>
+                            </Frame>
                             <StackLayout Orientation="Vertical" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" Spacing="2">
-                                <Label x:Name="labelUserName"  Style="{StaticResource LabelProximaRegBlackStyle}" FontSize="16"/>
-                                <Label x:Name="labelUserID" Text="#User ID" Style="{StaticResource LabelProximaRegStyle}" FontSize="16" TextColor="#7E708C"/>
+                                <Label x:Name="labelUserName"  Style="{StaticResource LabelProximaBoldStyle}" FontSize="16"/>
+                                <Label x:Name="labelUserID" Text="#User ID" Style="{StaticResource LabelPlaceHolderStyle}" FontSize="16" TextColor="#7E708C"/>
                             </StackLayout>
                         </StackLayout>
                     </StackLayout>
@@ -76,7 +81,7 @@
                             </StackLayout>
                            
                         </StackLayout>
-                        <Label  Text="UAT V 1.0.9"  Style="{StaticResource LabelProximaBoldStyle}" FontSize="12" TextColor="#010101"   VerticalOptions="EndAndExpand" HorizontalOptions="CenterAndExpand" Margin="0,0,0,5"></Label>
+                        <Label  Text="QA V 1.0.9"  Style="{StaticResource LabelProximaBoldStyle}" FontSize="12" TextColor="#010101"   VerticalOptions="EndAndExpand" HorizontalOptions="CenterAndExpand" Margin="0,0,0,5"></Label>
                     </StackLayout>
                     <ContentView x:Name="StklauoutactivityIndicator" BackgroundColor="Transparent"  IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
                         <StackLayout Orientation="Vertical" HeightRequest="150" WidthRequest="100" BackgroundColor="Transparent" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="0">

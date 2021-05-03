@@ -31,9 +31,9 @@ namespace ParkHyderabadOperator
                 if (App.Current.Properties.ContainsKey("LoginUser"))
                 {
                     User loginUser = (User)App.Current.Properties["LoginUser"];
-                    labelUserName.Text = loginUser.UserName;
+                    labelUserName.Text =  loginUser.UserName.ToUpper();
                     labelUserID.Text = "ID: " + Convert.ToString(loginUser.UserCode);
-                    if(loginUser.Photo!=null&& loginUser.Photo.Length>0)
+                    if(loginUser.Photo!=null&& loginUser.Photo.Length>0)  // Show User Profile Image
                     {
                         imgProfile.Source = ImageSource.FromStream(() => new MemoryStream(ByteArrayCompressionUtility.Decompress(loginUser.Photo)));
                     }

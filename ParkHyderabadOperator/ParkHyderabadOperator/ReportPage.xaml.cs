@@ -17,7 +17,7 @@ namespace ParkHyderabadOperator
     public partial class ReportPage : ContentPage
     {
 
-        BlueToothDevicePrinting ObjblueToothDevicePrinting;
+        BlueToothDevicePrinting ObjblueToothDevicePrinting;   
         DALExceptionManagment dal_Exceptionlog;
         List<VMLocationLots> lstlots = null;
         List<User> lstOperators = null;

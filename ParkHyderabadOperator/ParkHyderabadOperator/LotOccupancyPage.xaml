@@ -27,8 +27,8 @@
                         <ScrollView x:Name="scroller" Orientation="Horizontal" >
                             <Grid ColumnSpacing="1" RowSpacing="5"  VerticalOptions="FillAndExpand"  >
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="3.8*"></ColumnDefinition>
-                                    <ColumnDefinition Width="6.2*"></ColumnDefinition>
+                                    <ColumnDefinition Width="4*"></ColumnDefinition>
+                                    <ColumnDefinition Width="6*"></ColumnDefinition>
 
                                 </Grid.ColumnDefinitions>
                                 <Label Text="Lot Capacity"  Grid.Column="0"  Style="{StaticResource LabelProximaRegBoldGreenStyle}" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand"/>
@@ -63,11 +63,11 @@
                             <StackLayout BackgroundColor="#F2F2F2F2"  VerticalOptions="StartAndExpand" >
                                 <Grid ColumnSpacing="2"   Margin="5,5,15,5" VerticalOptions="StartAndExpand">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="4*"></ColumnDefinition>
+                                        <ColumnDefinition Width="3.8*"></ColumnDefinition>
+                                        <ColumnDefinition Width="1.6*"></ColumnDefinition>
                                         <ColumnDefinition Width="1.5*"></ColumnDefinition>
                                         <ColumnDefinition Width="1.5*"></ColumnDefinition>
-                                        <ColumnDefinition Width="1.5*"></ColumnDefinition>
-                                        <ColumnDefinition Width="1.5*"></ColumnDefinition>
+                                        <ColumnDefinition Width="1.6*"></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
                                     <Label Text="CheckIns" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="0" TextColor="#2ecc71" HorizontalOptions="StartAndExpand"/>
                                     <Image  Source="bike_black.png" HeightRequest="15"    HorizontalOptions="EndAndExpand" Grid.Column="1"/>
@@ -82,11 +82,11 @@
                                 <ViewCell>
                                     <Grid ColumnSpacing="1" RowSpacing="5"   Margin="0,0,15,0"  VerticalOptions="FillAndExpand">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="4*"></ColumnDefinition>
+                                            <ColumnDefinition Width="3.8*"></ColumnDefinition>
+                                            <ColumnDefinition Width="1.6*"></ColumnDefinition>
                                             <ColumnDefinition Width="1.5*"></ColumnDefinition>
                                             <ColumnDefinition Width="1.5*"></ColumnDefinition>
-                                            <ColumnDefinition Width="1.5*"></ColumnDefinition>
-                                            <ColumnDefinition Width="1.5*"></ColumnDefinition>
+                                            <ColumnDefinition Width="1.6*"></ColumnDefinition>
                                         </Grid.ColumnDefinitions>
                                         <Label Text="{Binding ChekcInDuration}" Margin="5,0,0,0"  Grid.Column="0"  Style="{StaticResource LabelRegularBlackColorStyle}" HorizontalOptions="StartAndExpand"/>
                                         <Label Text="{Binding TwoWheeler}"  Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="1"   HorizontalOptions="EndAndExpand"  Margin="5,0,0,0"/>
@@ -106,11 +106,11 @@
                 <StackLayout Padding="10" VerticalOptions="EndAndExpand"  BackgroundColor="#3293fa">
                     <Grid ColumnSpacing="1" RowSpacing="5"  VerticalOptions="End"  >
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="4*"></ColumnDefinition>
+                            <ColumnDefinition Width="3.8*"></ColumnDefinition>
+                            <ColumnDefinition Width="1.6*"></ColumnDefinition>
                             <ColumnDefinition Width="1.5*"></ColumnDefinition>
                             <ColumnDefinition Width="1.5*"></ColumnDefinition>
-                            <ColumnDefinition Width="1.5*"></ColumnDefinition>
-                            <ColumnDefinition Width="1.5*"></ColumnDefinition>
+                            <ColumnDefinition Width="1.6*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <Label Text="Lot Occupancy(%)"  Grid.Column="0"  Style="{StaticResource LabelProximaRegBoldWhiteStyle}" HorizontalOptions="StartAndExpand"/>
                         <Label x:Name="labelTwoWheelerLotOccupancyPer"   Style="{StaticResource LabelProximaRegBoldWhiteStyle}" Grid.Column="1"   HorizontalOptions="EndAndExpand"  />
