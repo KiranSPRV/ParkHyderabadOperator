@@ -90,7 +90,7 @@
                                         <Label x:Name="labelPaymentDetails"  Style="{StaticResource LabelProximaRegBlackStyle}"   VerticalOptions="Center" TextColor="{Binding StatusID.StatusColor}">
                                             <Label.FormattedText>
                                                 <FormattedString>
-                                                    <Span  Text="Amt: ₹" FontAttributes="Bold"/>
+                                                    <Span  Text="Paid: ₹" FontAttributes="Bold"/>
                                                     <Span  Text="{Binding PaidAmount , StringFormat=' {0:F2}'}"/>
                                                     <Span  Text=" By "/>
                                                     <Span  Text="{Binding PaymentTypeID.PaymentTypeName}"/>
@@ -201,7 +201,7 @@
                                     <Label x:Name="labelPaymentDetails"  Style="{StaticResource LabelProximaRegBlackStyle}"   VerticalOptions="Center" TextColor="{Binding StatusID.StatusColor}">
                                         <Label.FormattedText>
                                             <FormattedString>
-                                                <Span  Text="Amt: ₹" FontAttributes="Bold"/>
+                                                <Span  Text="Paid: ₹" FontAttributes="Bold"/>
                                                 <Span  Text="{Binding PaidAmount , StringFormat=' {0:F2}'}"/>
                                                 <Span  Text=" By "/>
                                                 <Span  Text="{Binding PaymentTypeID.PaymentTypeName}"/>
