@@ -8,10 +8,10 @@
     <NavigationPage.TitleView >
         <StackLayout Orientation="Horizontal" VerticalOptions="CenterAndExpand">
             <Label Text="HISTORY" HorizontalOptions="CenterAndExpand"   VerticalOptions="Center"  Style="{StaticResource LabelPageHeadingStyle}" Margin="0,0,15,0"/>
-            <Frame CornerRadius="5" BorderColor="#D4D5D9" Padding="5" HasShadow ="False"  BackgroundColor="#F0F0F0" HorizontalOptions="EndAndExpand" Margin="0,0,15,0" >
+            <Frame IsVisible="False" CornerRadius="5" BorderColor="#D4D5D9" Padding="5" HasShadow ="False"  BackgroundColor="#F0F0F0" HorizontalOptions="EndAndExpand" Margin="0,0,15,0" >
                 <ImageButton x:Name="imgbtnPrint" HeightRequest="30" Source="print.png" HorizontalOptions="FillAndExpand"  Clicked="ImgbtnPrint_Clicked" ></ImageButton>
             </Frame>
-           
+
         </StackLayout>
     </NavigationPage.TitleView>
     <ContentPage.Resources>
@@ -213,7 +213,7 @@
                                                 </Label.FormattedText>
                                             </Label>
                                         </StackLayout>
-                                      
+
                                         <StackLayout Orientation="Horizontal">
                                             <Label x:Name="labelReason"   Style="{StaticResource LabelProximaRegBlackStyle}"    VerticalOptions="Center" TextColor="{Binding StatusID.StatusColor}">
                                                 <Label.FormattedText>
@@ -283,13 +283,17 @@
                             <RowDefinition Height="0.8*"/>
                             <RowDefinition Height="9.2*"/>
                         </Grid.RowDefinitions>
-                        <Frame Margin="15,0,15,0" Grid.Row="0" CornerRadius="25" Padding="2" BorderColor="#f9f9f9" BackgroundColor="#f9f9f9"  >
-                            <SearchBar   BackgroundColor="Transparent" Margin="-20,0,0,0" Keyboard="Numeric"   FontSize="16" FontFamily="Proxima Nova Bold.otf#Proxima Nova Bold"   Placeholder="Search..."   PlaceholderColor="#676767" x:Name="searchBar"   TextChanged="SearchBar_OnTextChanged"  VerticalOptions="EndAndExpand" HorizontalOptions="StartAndExpand">
-                                <SearchBar.Behaviors>
-                                    <localBehaviors:TextChangedBehavior />
-                                </SearchBar.Behaviors>
-                            </SearchBar>
-                        </Frame>
+                        <StackLayout Orientation="Horizontal"  Grid.Row="0">
+                            <Frame Margin="15,0,15,0" CornerRadius="25" Padding="2" BorderColor="#f9f9f9" BackgroundColor="#f9f9f9"  HorizontalOptions="FillAndExpand" >
+                                <SearchBar   BackgroundColor="Transparent" CancelButtonColor="Black" Margin="-20,0,0,0" Keyboard="Numeric"   FontSize="16" FontFamily="Proxima Nova Bold.otf#Proxima Nova Bold"   Placeholder="Search..."   PlaceholderColor="#676767" x:Name="searchBar"   TextChanged="SearchBar_OnTextChanged"  VerticalOptions="EndAndExpand" HorizontalOptions="StartAndExpand"  >
+                                    <SearchBar.Behaviors>
+                                        <localBehaviors:TextChangedBehavior />
+                                    </SearchBar.Behaviors>
+                                </SearchBar>
+                            </Frame>
+                            
+                        </StackLayout>
+
                         <StackLayout Grid.Row="1"   Orientation="Vertical" Spacing="20" Margin="0,35,0,0">
                             <Frame CornerRadius="2" BackgroundColor="#F5F5F5" Padding="5">
                                 <StackLayout Orientation="Horizontal" VerticalOptions="Center" Margin="15,0,15,0">

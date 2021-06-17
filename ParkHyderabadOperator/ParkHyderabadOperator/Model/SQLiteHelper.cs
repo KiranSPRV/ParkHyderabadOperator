@@ -18,7 +18,7 @@ namespace ParkHyderabadOperator.Model
             db = new SQLiteAsyncConnection(dbPath);
             db.CreateTableAsync<VehicleCheckIn>().Wait();
             db.CreateTableAsync<DeSyncVehicleCheckIn>().Wait();
-
+           
         }
         public bool IsTableExists(SQLiteAsyncConnection connection, string tableName)
         {
@@ -242,5 +242,6 @@ namespace ParkHyderabadOperator.Model
 
         }
         #endregion
+
     }
 }

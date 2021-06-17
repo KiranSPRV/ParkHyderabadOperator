@@ -61,7 +61,7 @@
                                     </StackLayout>
                                 </StackLayout>
                                 <StackLayout Orientation="Horizontal" >
-                                    <Button Text="PRINT" x:Name="BtnPrint" Style="{StaticResource ButtonRegularDodgerBlueStyle}"    Clicked="BtnPrint_Clicked" />
+                                    <Button  IsVisible="False" Text="PRINT" x:Name="BtnPrint" Style="{StaticResource ButtonRegularDodgerBlueStyle}"    Clicked="BtnPrint_Clicked" />
                                     <Button Text="DONE" x:Name="BtnDone"  Style="{StaticResource ButtonRegularShamrockStyle}"           Clicked="BtnDone_Clicked" />
                                 </StackLayout>
                             </StackLayout>

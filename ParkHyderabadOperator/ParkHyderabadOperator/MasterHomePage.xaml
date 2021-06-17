@@ -79,9 +79,8 @@
                                 <Image Source="logout.png" HeightRequest="18" ></Image>
                                 <Label Text="Log Out" Style="{StaticResource LabelProximaRegBlackStyle}" VerticalOptions="CenterAndExpand"  FontSize="16" ></Label>
                             </StackLayout>
-                           
                         </StackLayout>
-                        <Label  Text="UAT V 1.0.9"  Style="{StaticResource LabelProximaBoldStyle}" FontSize="12" TextColor="#010101"   VerticalOptions="EndAndExpand" HorizontalOptions="CenterAndExpand" Margin="0,0,0,5"></Label>
+                        <Label  Text="QA V 1.1.1"  Style="{StaticResource LabelProximaBoldStyle}" FontSize="12" TextColor="#010101"   VerticalOptions="EndAndExpand" HorizontalOptions="CenterAndExpand" Margin="0,0,0,5"></Label>
                     </StackLayout>
                     <ContentView x:Name="StklauoutactivityIndicator" BackgroundColor="Transparent"  IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
                         <StackLayout Orientation="Vertical" HeightRequest="150" WidthRequest="100" BackgroundColor="Transparent" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="0">

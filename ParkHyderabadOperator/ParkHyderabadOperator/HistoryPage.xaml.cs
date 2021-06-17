@@ -85,6 +85,8 @@ namespace ParkHyderabadOperator
                 }
                 else
                 {
+                    ImgSelectedVehicle.Source = null;
+                    labelSelectedVehicleRegNumber.Text = "";
                     LstVWParkingVehicle.ItemsSource = null;
                     listViewVehicleRegistrationNumbers.IsVisible = false;
 

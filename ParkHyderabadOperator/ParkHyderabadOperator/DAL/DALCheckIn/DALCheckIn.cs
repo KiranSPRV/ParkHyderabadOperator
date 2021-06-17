@@ -27,6 +27,7 @@ namespace ParkHyderabadOperator.DAL.DALCheckIn
                 //lstParkingHours.Add("00");
                 lstParkingHours.Add(6.ToString("D2"));
                 lstParkingHours.Add(5.ToString("D2"));
+                lstParkingHours.Add(4.ToString("D2"));
                 lstParkingHours.Add(3.ToString("D2"));
                 lstParkingHours.Add(2.ToString("D2"));
             }
@@ -133,8 +134,8 @@ namespace ParkHyderabadOperator.DAL.DALCheckIn
 
             try
             {
-                lstParkingBay.Add(new ParkingBay() { ParkingBayID = 1, ParkingBayRange = "A1-A10", ParkingBayName = "A1-A10", IsActive = true });
-                lstParkingBay.Add(new ParkingBay() { ParkingBayID = 2, ParkingBayRange = "A11-A20", ParkingBayName = "A11-A20", IsActive = true });
+                lstParkingBay.Add(new ParkingBay() { ParkingBayID = 80, ParkingBayRange = "A1-A10", ParkingBayName = "A1-A10", IsActive = true });
+                lstParkingBay.Add(new ParkingBay() { ParkingBayID = 81, ParkingBayRange = "A11-A20", ParkingBayName = "A11-A20", IsActive = true });
 
             }
             catch (Exception ex)

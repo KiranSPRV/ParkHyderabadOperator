@@ -40,20 +40,20 @@
                                     <StackLayout Orientation="Horizontal"  Margin="15,4,0,4" VerticalOptions="Center" HorizontalOptions="Fill" Grid.Row="0" Grid.Column="0">
                                         <Label Text="Total Check-Ins (Outs)"    Style="{StaticResource LabelProximaRegBoldGreenStyle}" VerticalOptions="End" FontSize="14"></Label>
                                     </StackLayout>
-                                    <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="1" VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand" Spacing="8" >
-                                        <StackLayout Orientation="Horizontal"  HorizontalOptions="StartAndExpand" Spacing="3" >
+                                    <StackLayout Orientation="Horizontal" Margin="20,0,0,0" Grid.Row="0" Grid.Column="1" VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand" Spacing="10" >
+                                        <StackLayout Orientation="Horizontal"  HorizontalOptions="StartAndExpand" Spacing="3" x:Name="slTWIns">
                                             <Image Source="bike_black.png" HeightRequest="20" HorizontalOptions="FillAndExpand"  VerticalOptions="Center" ></Image>
                                             <Label x:Name="labelTotalTwoWheeler"    Style="{StaticResource LabelProximaRegBoldGreenStyle}" VerticalOptions="End"  FontSize="20"></Label>
                                         </StackLayout>
-                                        <StackLayout Orientation="Horizontal"  HorizontalOptions="StartAndExpand" Spacing="3" >
+                                        <StackLayout Orientation="Horizontal"  HorizontalOptions="StartAndExpand" Spacing="3" x:Name="slFWIns">
                                             <Image Source="car_black.png" HeightRequest="20" HorizontalOptions="FillAndExpand"  VerticalOptions="Center" ></Image>
                                             <Label x:Name="labelTotalFourWheeler"    Style="{StaticResource LabelProximaRegBoldGreenStyle}" VerticalOptions="End" FontSize="20"></Label>
                                         </StackLayout>
-                                        <StackLayout Orientation="Horizontal"  HorizontalOptions="StartAndExpand" Spacing="3" >
+                                        <StackLayout Orientation="Horizontal"  HorizontalOptions="StartAndExpand" Spacing="3" x:Name="slHWIns">
                                             <Image Source="hv_black.png" HeightRequest="20" HorizontalOptions="FillAndExpand"  VerticalOptions="Center" ></Image>
                                             <Label x:Name="labelTotalHVWheeler"    Style="{StaticResource LabelProximaRegBoldGreenStyle}" VerticalOptions="End" FontSize="20"></Label>
                                         </StackLayout>
-                                        <StackLayout Orientation="Horizontal"  HorizontalOptions="StartAndExpand" Spacing="3" >
+                                        <StackLayout Orientation="Horizontal"  HorizontalOptions="StartAndExpand" Spacing="3" x:Name="slTHIns">
                                             <Image Source="ThreeW_black.png" HeightRequest="20" HorizontalOptions="FillAndExpand"  VerticalOptions="Center" ></Image>
                                             <Label x:Name="labelTotalThreeWheeler"     Style="{StaticResource LabelProximaRegBoldGreenStyle}" VerticalOptions="End" FontSize="20"></Label>
                                         </StackLayout>

@@ -116,12 +116,14 @@ namespace ParkHyderabadOperator
             {
                 if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                 {
-                    DALHome dal_Home = new DALHome();
-                    User objLoginUser = (User)App.Current.Properties["LoginUser"];
+                     DALHome dal_Home = new DALHome();
+                     User objLoginUser = (User)App.Current.Properties["LoginUser"];
+                    
 
                     if (DeviceInternet.InternetConnected())
                     {
                         lstlots = dal_Home.GetUserAllocatedLocationAndLots(Convert.ToString(App.Current.Properties["apitoken"]), objLoginUser);
+                       
                     }
                     else
                     {
@@ -192,7 +194,7 @@ namespace ParkHyderabadOperator
                             objLoginUser.LocationParkingLotID.LotOpenTime = objVMLocations.LotOpenTime;
                             objLoginUser.LocationParkingLotID.LotCloseTime = objVMLocations.LotCloseTime;
                             objLoginUser.LocationParkingLotID.LotVehicleAvailabilityName = objVMLocations.LotVehicleAvailabilityName;
-                           
+
                             IsTodayHoliday = objVMLocations.IsActive;
                             todayLotOpenTime = objVMLocations.LotOpenTime;
                             todayLotCloseTime = objVMLocations.LotCloseTime;
@@ -201,6 +203,11 @@ namespace ParkHyderabadOperator
                             {
                                 await App.SQLiteDb.SaveVehiclesParkingFeesDetailOnLogin(Convert.ToString(App.Current.Properties["apitoken"]), objVMLocations.LocationParkingLotID);
                                 await App.SQLiteDb.SaveAllVehicleTypesInSQLLite(Convert.ToString(App.Current.Properties["apitoken"]), objVMLocations.LocationID);
+                                var bayinputLocationLot = new LocationParkingLot();
+                                bayinputLocationLot.LocationParkingLotID = objVMLocations.LocationParkingLotID;
+                                bayinputLocationLot.LocationID.LocationID = objVMLocations.LocationID;
+                                dal_DALCheckIn = new DALCheckIn();
+                                objLoginUser.LocationParkingLotID.LotBayIDs= dal_DALCheckIn.GetLocationParkingBay(Convert.ToString(App.Current.Properties["apitoken"]), bayinputLocationLot);
                             }
                         }
                     }
@@ -228,14 +235,17 @@ namespace ParkHyderabadOperator
                 if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                 {
                     DALHome dal_Home = new DALHome();
-
+                    string[] LotVehicleCapability = null;
+                    User objLoginUser = (User)App.Current.Properties["LoginUser"];
                     if (objinput == null)
                     {
-                        User objLoginUser = (User)App.Current.Properties["LoginUser"];
+                       
                         objinput = new ParkedVehiclesFilter();
                         VMLocationLots objVMLocations = (VMLocationLots)pickerLocationLot.SelectedItem;
                         objinput.LocationID = objLoginUser.LocationParkingLotID.LocationID.LocationID;
                         objinput.LocationParkingLotID = objLoginUser.LocationParkingLotID.LocationParkingLotID;
+                        
+
                         if (objLoginUser.LocationParkingLotID.LocationParkingLotID == null || objLoginUser.LocationParkingLotID.LocationParkingLotID == 0)
                         {
                             if (objVMLocations != null)
@@ -258,10 +268,35 @@ namespace ParkHyderabadOperator
 
                     lstdayvehicles = vmVehicles.CustomerParkingSlotID;
                     LstVWParkingVehicle.ItemsSource = vmVehicles.CustomerParkingSlotID;
-                    labelTotalTwoWheeler.Text = Convert.ToString(vmVehicles.TotalTwoWheeler) + "(" + Convert.ToString(vmVehicles.TotalOutTwoWheeler) + ")";
-                    labelTotalFourWheeler.Text = Convert.ToString(vmVehicles.TotalFourWheeler) + "(" + Convert.ToString(vmVehicles.TotalOutFourWheeler) + ")";
-                    labelTotalHVWheeler.Text = Convert.ToString(vmVehicles.TotalHVWheeler) + "(" + Convert.ToString(vmVehicles.TotalOutHVWheeler) + ")";
-                    labelTotalThreeWheeler.Text = Convert.ToString(vmVehicles.TotalThreeWheeler) + "(" + Convert.ToString(vmVehicles.TotalOutThreeWheeler) + ")";
+                    if (objLoginUser.LocationParkingLotID.LotVehicleAvailabilityName != null && objLoginUser.LocationParkingLotID.LotVehicleAvailabilityName.Length > 0)
+                    {
+                        LotVehicleCapability = objLoginUser.LocationParkingLotID.LotVehicleAvailabilityName;
+                    }
+                    // Show only Lot vehicles
+                    if (LotVehicleCapability != null && LotVehicleCapability.Length > 0)
+                    {
+                        slTWIns.IsVisible = slFWIns.IsVisible = slHWIns.IsVisible = slTHIns.IsVisible = false;
+                        if (LotVehicleCapability.Any(x => x.ToUpper() == "2W".ToUpper()))
+                        {
+                            labelTotalTwoWheeler.Text = Convert.ToString(vmVehicles.TotalTwoWheeler) + "(" + Convert.ToString(vmVehicles.TotalOutTwoWheeler) + ")";
+                            slTWIns.IsVisible = true;
+                        }
+                        if (LotVehicleCapability.Contains("4W"))
+                        {
+                            labelTotalFourWheeler.Text = Convert.ToString(vmVehicles.TotalFourWheeler) + "(" + Convert.ToString(vmVehicles.TotalOutFourWheeler) + ")";
+                            slFWIns.IsVisible = true;
+                        }
+                        if (LotVehicleCapability.Contains("HW"))
+                        {
+                            labelTotalHVWheeler.Text = Convert.ToString(vmVehicles.TotalHVWheeler) + "(" + Convert.ToString(vmVehicles.TotalOutHVWheeler) + ")";
+                            slHWIns.IsVisible = true;
+                        }
+                        if (LotVehicleCapability.Contains("3W"))
+                        {
+                            labelTotalThreeWheeler.Text = Convert.ToString(vmVehicles.TotalThreeWheeler) + "(" + Convert.ToString(vmVehicles.TotalOutThreeWheeler) + ")";
+                            slTHIns.IsVisible = true;
+                        }
+                    }
                 }
 
             }
@@ -389,7 +424,7 @@ namespace ParkHyderabadOperator
             ShowLoading(false);
 
         }
-        private  void LstVWParkingVehicle_Refreshing(object sender, EventArgs e)
+        private void LstVWParkingVehicle_Refreshing(object sender, EventArgs e)
         {
             try
             {

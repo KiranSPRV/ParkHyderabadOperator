@@ -36,7 +36,7 @@ namespace ParkHyderabadOperator
             dal_Exceptionlog = new DALExceptionManagment();
             ObjblueToothDevicePrinting = new BlueToothDevicePrinting();
             LoadVehicleChekInDetails(obj);
-            printerName = ObjblueToothDevicePrinting.GetBlueToothDevices();
+            //printerName = ObjblueToothDevicePrinting.GetBlueToothDevices();
 
         }
         public async void LoadVehicleChekInDetails(VehicleCheckIn obj)
@@ -123,7 +123,6 @@ namespace ParkHyderabadOperator
                                     }
                                     else
                                     {
-
                                         await DisplayAlert("Alert", "Unable to find Bluetooth device", "Ok");
                                         await Navigation.PushAsync(checkInPage);
                                         ShowLoading(false);

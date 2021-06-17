@@ -23,32 +23,32 @@
             </StackLayout>
             <StackLayout AbsoluteLayout.LayoutBounds="0,0.38,1,0.7"  AbsoluteLayout.LayoutFlags="All" BackgroundColor="#FFFFFF" HorizontalOptions="FillAndExpand"  VerticalOptions="FillAndExpand">
                 <StackLayout  VerticalOptions="StartAndExpand" >
-                    <StackLayout Padding="10"  BackgroundColor="#f4f4f4"  Margin="15,0,15,0" VerticalOptions="StartAndExpand" >
+                    <StackLayout   BackgroundColor="#f4f4f4"  Margin="15,0,15,0" VerticalOptions="StartAndExpand" >
                         <ScrollView x:Name="scroller" Orientation="Horizontal" >
-                            <Grid ColumnSpacing="1" RowSpacing="5"  VerticalOptions="FillAndExpand"  >
+                            <Grid ColumnSpacing="1" RowSpacing="5"  VerticalOptions="FillAndExpand" Margin="0,5,0,5" >
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="4*"></ColumnDefinition>
-                                    <ColumnDefinition Width="6*"></ColumnDefinition>
-
+                                    <ColumnDefinition Width="2.5*"></ColumnDefinition>
+                                    <ColumnDefinition Width="1.875*"></ColumnDefinition>
+                                    <ColumnDefinition Width="1.875*"></ColumnDefinition>
+                                    <ColumnDefinition Width="1.875*"></ColumnDefinition>
+                                    <ColumnDefinition Width="1.875*"></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
-                                <Label Text="Lot Capacity"  Grid.Column="0"  Style="{StaticResource LabelProximaRegBoldGreenStyle}" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand"/>
-                                <StackLayout Orientation="Horizontal" Spacing="8" Grid.Column="1"  VerticalOptions="CenterAndExpand" >
-                                    <StackLayout Orientation="Horizontal" Spacing="0"  VerticalOptions="FillAndExpand">
-                                        <Image x:Name="ImgVehicleType" Source="bike_black.png" HeightRequest="20" HorizontalOptions="StartAndExpand"/>
-                                        <Label x:Name="labelTwoWheelerLotCapcity"   Style="{StaticResource LabelProximaRegBoldGreenStyle}"  HorizontalOptions="StartAndExpand"  VerticalOptions="CenterAndExpand"/>
-                                    </StackLayout>
-                                    <StackLayout Orientation="Horizontal"  Spacing="0"  VerticalOptions="FillAndExpand">
-                                        <Image  Source="ThreeW_black.png" HeightRequest="20" HorizontalOptions="StartAndExpand" VerticalOptions="FillAndExpand"/>
-                                        <Label x:Name="labelThreeWheelerLotCapcity"   Style="{StaticResource LabelProximaRegBoldGreenStyle}"  HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand"/>
-                                    </StackLayout>
-                                    <StackLayout Orientation="Horizontal"  Spacing="0"  VerticalOptions="FillAndExpand" >
-                                        <Image Source="car_black.png" HeightRequest="20" HorizontalOptions="StartAndExpand" VerticalOptions="FillAndExpand" ></Image>
-                                        <Label x:Name="labelFourWheelerLotCapacity"   Style="{StaticResource LabelProximaRegBoldGreenStyle}"  HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand"></Label>
-                                    </StackLayout>
-                                    <StackLayout Orientation="Horizontal"   Spacing="0"   VerticalOptions="FillAndExpand" >
-                                        <Image Source="hv_black.png" HeightRequest="20" HorizontalOptions="StartAndExpand" VerticalOptions="FillAndExpand" ></Image>
-                                        <Label x:Name="labelHVWheelerLotCapcity"    Style="{StaticResource LabelProximaRegBoldGreenStyle}"  HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand"></Label>
-                                    </StackLayout>
+                                <Label Text=" Lot Capacity"  Grid.Column="0"  Style="{StaticResource LabelProximaRegBoldGreenStyle}" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand"/>
+                                <StackLayout Orientation="Horizontal" Spacing="0"  VerticalOptions="FillAndExpand"  Grid.Column="1" >
+                                    <Image x:Name="ImgVehicleType" Source="bike_black.png" HeightRequest="20" HorizontalOptions="StartAndExpand"/>
+                                    <Label x:Name="labelTwoWheelerLotCapcity"   Style="{StaticResource LabelProximaRegBoldGreenStyle}"  HorizontalOptions="StartAndExpand"  VerticalOptions="CenterAndExpand"/>
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal"  Spacing="0"  VerticalOptions="FillAndExpand"  Grid.Column="2" >
+                                    <Image  Source="ThreeW_black.png" HeightRequest="20" HorizontalOptions="StartAndExpand" VerticalOptions="FillAndExpand"/>
+                                    <Label x:Name="labelThreeWheelerLotCapcity"   Style="{StaticResource LabelProximaRegBoldGreenStyle}"  HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand"/>
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal"  Spacing="0"  VerticalOptions="FillAndExpand"  Grid.Column="3" >
+                                    <Image Source="car_black.png" HeightRequest="20" HorizontalOptions="StartAndExpand" VerticalOptions="FillAndExpand" ></Image>
+                                    <Label x:Name="labelFourWheelerLotCapacity"   Style="{StaticResource LabelProximaRegBoldGreenStyle}"  HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand"></Label>
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal"   Spacing="0"   VerticalOptions="FillAndExpand" Grid.Column="4"  >
+                                    <Image Source="hv_black.png" HeightRequest="20" HorizontalOptions="StartAndExpand"  ></Image>
+                                    <Label x:Name="labelHVWheelerLotCapcity"    Style="{StaticResource LabelProximaRegBoldGreenStyle}"  HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand"></Label>
                                 </StackLayout>
 
 
@@ -61,38 +61,38 @@
                                     HeightRequest="400">
                         <ListView.Header >
                             <StackLayout BackgroundColor="#F2F2F2F2"  VerticalOptions="StartAndExpand" >
-                                <Grid ColumnSpacing="2"   Margin="5,5,15,5" VerticalOptions="StartAndExpand">
+                                <Grid ColumnSpacing="1" RowSpacing="5"   VerticalOptions="StartAndExpand" Margin="0,5,0,5">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="3.8*"></ColumnDefinition>
-                                        <ColumnDefinition Width="1.6*"></ColumnDefinition>
-                                        <ColumnDefinition Width="1.5*"></ColumnDefinition>
-                                        <ColumnDefinition Width="1.5*"></ColumnDefinition>
-                                        <ColumnDefinition Width="1.6*"></ColumnDefinition>
+                                        <ColumnDefinition Width="2.5*"></ColumnDefinition>
+                                        <ColumnDefinition Width="1.875*"></ColumnDefinition>
+                                        <ColumnDefinition Width="1.875*"></ColumnDefinition>
+                                        <ColumnDefinition Width="1.875*"></ColumnDefinition>
+                                        <ColumnDefinition Width="1.875*"></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
-                                    <Label Text="CheckIns" Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="0" TextColor="#2ecc71" HorizontalOptions="StartAndExpand"/>
-                                    <Image  Source="bike_black.png" HeightRequest="15"    HorizontalOptions="EndAndExpand" Grid.Column="1"/>
-                                    <Image  Source="ThreeW_black.png" HeightRequest="15" HorizontalOptions="EndAndExpand" Grid.Column="2"/>
-                                    <Image Source="car_black.png" HeightRequest="15" HorizontalOptions="EndAndExpand"  Grid.Column="3" ></Image>
-                                    <Image Source="hv_black.png" HeightRequest="15" HorizontalOptions="EndAndExpand"  Grid.Column="4" ></Image>
+                                    <Label Text=" CheckIns   " Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="0" TextColor="#2ecc71" HorizontalOptions="StartAndExpand"/>
+                                    <Image  Source="bike_black.png" HeightRequest="15"    HorizontalOptions="StartAndExpand" Grid.Column="1"/>
+                                    <Image  Source="ThreeW_black.png" HeightRequest="15" HorizontalOptions="StartAndExpand" Grid.Column="2"/>
+                                    <Image Source="car_black.png" HeightRequest="15" HorizontalOptions="StartAndExpand"  Grid.Column="3"></Image>
+                                    <Image Source="hv_black.png" HeightRequest="15" HorizontalOptions="StartAndExpand"  Grid.Column="4" ></Image>
                                 </Grid>
                             </StackLayout>
                         </ListView.Header>
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <Grid ColumnSpacing="1" RowSpacing="5"   Margin="0,0,15,0"  VerticalOptions="FillAndExpand">
+                                    <Grid ColumnSpacing="1" RowSpacing="5"    VerticalOptions="StartAndExpand"  Margin="5">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="3.8*"></ColumnDefinition>
-                                            <ColumnDefinition Width="1.6*"></ColumnDefinition>
-                                            <ColumnDefinition Width="1.5*"></ColumnDefinition>
-                                            <ColumnDefinition Width="1.5*"></ColumnDefinition>
-                                            <ColumnDefinition Width="1.6*"></ColumnDefinition>
+                                            <ColumnDefinition Width="2.5*"></ColumnDefinition>
+                                            <ColumnDefinition Width="1.875*"></ColumnDefinition>
+                                            <ColumnDefinition Width="1.875*"></ColumnDefinition>
+                                            <ColumnDefinition Width="1.875*"></ColumnDefinition>
+                                            <ColumnDefinition Width="1.875*"></ColumnDefinition>
                                         </Grid.ColumnDefinitions>
-                                        <Label Text="{Binding ChekcInDuration}" Margin="5,0,0,0"  Grid.Column="0"  Style="{StaticResource LabelRegularBlackColorStyle}" HorizontalOptions="StartAndExpand"/>
-                                        <Label Text="{Binding TwoWheeler}"  Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="1"   HorizontalOptions="EndAndExpand"  Margin="5,0,0,0"/>
-                                        <Label Text="{Binding ThreeWheeler}"  Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="2"   HorizontalOptions="EndAndExpand"   Margin="5,0,0,0"/>
-                                        <Label Text="{Binding FourWheeler}"  Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="3"   HorizontalOptions="EndAndExpand"  Margin="5,0,0,0"/>
-                                        <Label Text="{Binding HeavyWheeler}"  Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="4"   HorizontalOptions="EndAndExpand"   Margin="5,0,0,0"/>
+                                        <Label Text="{Binding ChekcInDuration}"   Grid.Column="0"  Style="{StaticResource LabelRegularBlackColorStyle}" HorizontalOptions="StartAndExpand"/>
+                                        <Label Text="{Binding TwoWheeler}"  Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="1"   HorizontalOptions="StartAndExpand"  />
+                                        <Label Text="{Binding ThreeWheeler}"  Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="2"   HorizontalOptions="StartAndExpand"   />
+                                        <Label Text="{Binding FourWheeler}"  Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="3"   HorizontalOptions="StartAndExpand"   Margin="5,0,0,0"/>
+                                        <Label Text="{Binding HeavyWheeler}"  Style="{StaticResource LabelRegularBlackColorStyle}" Grid.Column="4"   HorizontalOptions="StartAndExpand"   Margin="5,0,0,0" />
 
                                     </Grid>
                                 </ViewCell>
@@ -106,17 +106,17 @@
                 <StackLayout Padding="10" VerticalOptions="EndAndExpand"  BackgroundColor="#3293fa">
                     <Grid ColumnSpacing="1" RowSpacing="5"  VerticalOptions="End"  >
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="3.8*"></ColumnDefinition>
-                            <ColumnDefinition Width="1.6*"></ColumnDefinition>
-                            <ColumnDefinition Width="1.5*"></ColumnDefinition>
-                            <ColumnDefinition Width="1.5*"></ColumnDefinition>
-                            <ColumnDefinition Width="1.6*"></ColumnDefinition>
+                            <ColumnDefinition Width="2.5*"></ColumnDefinition>
+                            <ColumnDefinition Width="1.875*"></ColumnDefinition>
+                            <ColumnDefinition Width="1.875*"></ColumnDefinition>
+                            <ColumnDefinition Width="1.875*"></ColumnDefinition>
+                            <ColumnDefinition Width="1.875*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        <Label Text="Lot Occupancy(%)"  Grid.Column="0"  Style="{StaticResource LabelProximaRegBoldWhiteStyle}" HorizontalOptions="StartAndExpand"/>
-                        <Label x:Name="labelTwoWheelerLotOccupancyPer"   Style="{StaticResource LabelProximaRegBoldWhiteStyle}" Grid.Column="1"   HorizontalOptions="EndAndExpand"  />
-                        <Label x:Name="labelThreeWheelerLotOccupancyPer"   Style="{StaticResource LabelProximaRegBoldWhiteStyle}" Grid.Column="2"  HorizontalOptions="EndAndExpand" />
-                        <Label x:Name="labelFourWheelerLotOccupancyPer"   Style="{StaticResource LabelProximaRegBoldWhiteStyle}" Grid.Column="3"   HorizontalOptions="EndAndExpand"  />
-                        <Label x:Name="labelHeavyWheelerLotOccupancyPer"   Style="{StaticResource LabelProximaRegBoldWhiteStyle}" Grid.Column="4"  HorizontalOptions="EndAndExpand"  />
+                        <Label Text="Occup(%)"    Style="{StaticResource LabelProximaRegBoldWhiteStyle}" Grid.Column="0" HorizontalOptions="StartAndExpand"/>
+                        <Label x:Name="labelTwoWheelerLotOccupancyPer"   Style="{StaticResource LabelProximaRegBoldWhiteStyle}" Grid.Column="1"   HorizontalOptions="StartAndExpand"  />
+                        <Label x:Name="labelThreeWheelerLotOccupancyPer"   Style="{StaticResource LabelProximaRegBoldWhiteStyle}" Grid.Column="2"  HorizontalOptions="StartAndExpand" />
+                        <Label x:Name="labelFourWheelerLotOccupancyPer"   Style="{StaticResource LabelProximaRegBoldWhiteStyle}" Grid.Column="3"   HorizontalOptions="StartAndExpand"  />
+                        <Label x:Name="labelHeavyWheelerLotOccupancyPer"   Style="{StaticResource LabelProximaRegBoldWhiteStyle}" Grid.Column="4"  HorizontalOptions="StartAndExpand"  />
                     </Grid>
                 </StackLayout>
             </StackLayout>

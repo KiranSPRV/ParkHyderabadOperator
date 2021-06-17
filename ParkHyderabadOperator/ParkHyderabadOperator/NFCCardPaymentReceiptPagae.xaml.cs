@@ -141,7 +141,7 @@ namespace ParkHyderabadOperator
                         sbSMS.AppendLine(vehicleType + ": " + objReceipt.CustomerVehicleID.RegistrationNumber);
                         sbSMS.AppendLine("Valid From: " + Convert.ToDateTime(objReceipt.StartDate).ToString("dd MMM yyyy"));
                         sbSMS.AppendLine("Valid Till: " + Convert.ToDateTime(objReceipt.ExpiryDate).ToString("dd MMM yyyy"));
-                        sbSMS.AppendLine("Pass Type: " + objReceipt.PassPriceID.PassTypeID.PassTypeName);
+                        sbSMS.AppendLine("Pass Type: " + "TAG");
                         sbSMS.AppendLine("Station(s): " + stations);
                         ParkingAmount = objReceipt.PassPriceID.CardPrice.ToString("N2");
                         decimal GSTPercentage = 18;

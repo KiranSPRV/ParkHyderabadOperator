@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ParkHyderabadOperator.Model.APIOutPutModel
 {
@@ -8,6 +9,8 @@ namespace ParkHyderabadOperator.Model.APIOutPutModel
         {
             LocationID = new Location();
             ParkingBayID = new ParkingBay();
+            LotBayIDs = new List<ParkingBay>();
+
         }
         public int LocationParkingLotID { get; set; }
         public Location LocationID { get; set; }
@@ -16,6 +19,7 @@ namespace ParkHyderabadOperator.Model.APIOutPutModel
         public string[] LotVehicleAvailabilityName { get; set; }
         
         public ParkingBay ParkingBayID { get; set; }
+        public List<ParkingBay> LotBayIDs { get; set; }
         public int ParentLocationParkingLotID { get; set; }
         public string LocationParkingLotCode { get; set; }
         public string LocationParkingLotName { get; set; }

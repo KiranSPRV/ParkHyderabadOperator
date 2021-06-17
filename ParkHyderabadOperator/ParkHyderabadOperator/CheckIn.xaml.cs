@@ -97,12 +97,15 @@ namespace ParkHyderabadOperator
         {
             try
             {
-                lstparkingbay = dal_DALCheckIn.GetLocationParkingBayOffline();
-                if (lstparkingbay.Count > 0)
+                if (App.Current.Properties.ContainsKey("LoginUser"))
                 {
-                    pickerBayNumers.ItemsSource = lstparkingbay;
+                    User objloginuser = (User)App.Current.Properties["LoginUser"];
+                    lstparkingbay = objloginuser.LocationParkingLotID.LotBayIDs;
+                    if (lstparkingbay.Count > 0)
+                    {
+                        pickerBayNumers.ItemsSource = lstparkingbay;
+                    }
                 }
-
             }
             catch (Exception ex)
             {
@@ -213,7 +216,7 @@ namespace ParkHyderabadOperator
                 List<VehicleParkingFee> lstLocationParkingLotVehiclePrice = new List<VehicleParkingFee>();
                 DateTime checkInStarttime;
                 decimal paidParkingFees = 0;
-
+                
                 if (string.IsNullOrEmpty(labelDueAmount.Text)) //Default Zero
                 {
                     labelDueAmount.Text = "0";
@@ -286,6 +289,7 @@ namespace ParkHyderabadOperator
                                     }
                                     else
                                     {
+                                        labelTotalFee.Text = string.Empty;
                                         stlayoutCheckInPayment.IsVisible = false;
                                         return;
                                     }
@@ -1272,6 +1276,7 @@ namespace ParkHyderabadOperator
                     SelectedVehicle = selectedvehicle.VehicleTypeCode;
                     pickerBayNumers.SelectedIndex = -1;
                     UpdateCollectionViewSelectedItem(selectedvehicle);
+                    LoadSelectedVehicleBayNumbers(SelectedVehicle);
                     if (chkGovernment.IsChecked)
                     {
                         stLayoutCheckIn.IsVisible = true;
@@ -1326,7 +1331,26 @@ namespace ParkHyderabadOperator
                 dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "CheckIn.xaml.cs", "", "UpdateCollectionViewSelectedItem");
             }
         }
-
+        public void LoadSelectedVehicleBayNumbers(string vehicleTypeCode)
+        {
+            try
+            {
+                if (App.Current.Properties.ContainsKey("LoginUser"))
+                {
+                    User objloginuser = (User)App.Current.Properties["LoginUser"];
+                    lstparkingbay = objloginuser.LocationParkingLotID.LotBayIDs;
+                    if (lstparkingbay.Count > 0)
+                    {
+                        var resultlst = lstparkingbay.Where(i => i.VehicleTypeID.VehicleTypeCode == vehicleTypeCode).ToList();
+                        pickerBayNumers.ItemsSource = resultlst;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                dal_Exceptionlog.InsertException(Convert.ToString(App.Current.Properties["apitoken"]), "Operator App", ex.Message, "CheckInPage.xaml.cs", "", "LoadSelectedVehicleBayNumbers");
+            }
+        }
         #endregion
 
         #region Navigation BackButton

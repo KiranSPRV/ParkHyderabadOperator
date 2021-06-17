@@ -24,12 +24,14 @@ namespace ParkHyderabadOperator
         public LotOccupancyPage()
         {
             InitializeComponent();
+
             objReportUser = new User();
             dal_Exceptionlog = new DALExceptionManagment();
             lstlots = new List<VMLocationLots>();
             LoadLoginUserLocationLots();
 
         }
+     
         #region Picker Location Lot
         private void LoadLoginUserLocationLots()
         {
@@ -167,7 +169,7 @@ namespace ParkHyderabadOperator
             {
                 ShowLoading(true);
                 lvLotOccupancyReport.ItemsSource = null;
-                
+
                 labelTwoWheelerLotCapcity.Text = string.Empty;
                 labelThreeWheelerLotCapcity.Text = string.Empty;
                 labelFourWheelerLotCapacity.Text = string.Empty;
@@ -178,7 +180,7 @@ namespace ParkHyderabadOperator
                 labelFourWheelerLotOccupancyPer.Text = string.Empty;
                 labelHeavyWheelerLotOccupancyPer.Text = string.Empty;
 
-                List <VMLocationLotOccupancyReport> lstOccupancy = new List<VMLocationLotOccupancyReport>();
+                List<VMLocationLotOccupancyReport> lstOccupancy = new List<VMLocationLotOccupancyReport>();
                 if (App.Current.Properties.ContainsKey("LoginUser") && App.Current.Properties.ContainsKey("apitoken"))
                 {
                     DALReport dal_Report = new DALReport();
@@ -190,18 +192,18 @@ namespace ParkHyderabadOperator
                     {
                         lvLotOccupancyReport.ItemsSource = objOccupancy.LocationLotOccupancyReportID;
 
-                        labelTwoWheelerLotCapcity.Text = objOccupancy.TotalTwoWheelerLotCapacity;
-                        labelThreeWheelerLotCapcity.Text = objOccupancy.TotalThreeWheelerLotCapacity;
-                        labelFourWheelerLotCapacity.Text = objOccupancy.TotalFourWheelerLotCapacity;
-                        labelHVWheelerLotCapcity.Text = objOccupancy.TotalHeavyWheelerLotCapacity;
+                        labelTwoWheelerLotCapcity.Text = string.IsNullOrEmpty(objOccupancy.TotalTwoWheelerLotCapacity) ? "0" : objOccupancy.TotalTwoWheelerLotCapacity;
+                        labelThreeWheelerLotCapcity.Text = string.IsNullOrEmpty(objOccupancy.TotalThreeWheelerLotCapacity) ? "0" : objOccupancy.TotalThreeWheelerLotCapacity;
+                        labelFourWheelerLotCapacity.Text = string.IsNullOrEmpty(objOccupancy.TotalFourWheelerLotCapacity) ? "0" : objOccupancy.TotalFourWheelerLotCapacity;
+                        labelHVWheelerLotCapcity.Text = string.IsNullOrEmpty(objOccupancy.TotalHeavyWheelerLotCapacity) ? "0" : objOccupancy.TotalHeavyWheelerLotCapacity;
 
-                        labelTwoWheelerLotOccupancyPer.Text = objOccupancy.TotalTwoWheelerPercentage ;
-                        labelThreeWheelerLotOccupancyPer.Text = objOccupancy.TotalThreeWheelerPercentage; 
-                        labelFourWheelerLotOccupancyPer.Text = objOccupancy.TotalFourWheelerPercentage;
-                        labelHeavyWheelerLotOccupancyPer.Text = objOccupancy.TotalHeavyWheelerPercentage;
-                        
+                        labelTwoWheelerLotOccupancyPer.Text = string.IsNullOrEmpty(objOccupancy.TotalTwoWheelerPercentage) ? "0" : objOccupancy.TotalTwoWheelerPercentage;
+                        labelThreeWheelerLotOccupancyPer.Text = string.IsNullOrEmpty(objOccupancy.TotalThreeWheelerPercentage) ? "0" : objOccupancy.TotalThreeWheelerPercentage;
+                        labelFourWheelerLotOccupancyPer.Text = string.IsNullOrEmpty(objOccupancy.TotalFourWheelerPercentage) ? "0" : objOccupancy.TotalFourWheelerPercentage;
+                        labelHeavyWheelerLotOccupancyPer.Text = string.IsNullOrEmpty(objOccupancy.TotalHeavyWheelerPercentage) ? "0" : objOccupancy.TotalHeavyWheelerPercentage;
+
                     }
-                    
+
                 }
                 ShowLoading(false);
             }

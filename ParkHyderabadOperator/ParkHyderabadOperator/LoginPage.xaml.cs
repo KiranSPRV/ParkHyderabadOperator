@@ -34,7 +34,13 @@ namespace ParkHyderabadOperator
         {
             InitializeComponent();
             dal_Exceptionlog = new DALExceptionManagment();
-            App.Current.Properties["BaseURL"] = "http://35.202.198.25:81/InstaParkingOperatorAPIProd/";
+            App.Current.Properties["BaseURL"] = "http://35.202.198.25:81/InstaParkingOperatorAPI/";
+
+            /* PROD API  http://optapi.instaparking.in/
+               UAT  API  http://35.202.198.25:81/InstaParkingOperatorAPIProd/
+               QA   API  http://35.202.198.25:81/InstaParkingOperatorAPI/
+             */
+
 
         }
         protected async override void OnAppearing()
